@@ -22,23 +22,34 @@ if __name__ == '__main__':
     sys.exit(app.exec_())
 '''
 
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+# 导入 socket、sys 模块
+import socket
 import sys
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtWebEngineWidgets import *
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super(MainWindow, self).__init__()
-        self.setWindowTitle('百度')  #窗口标题
-        self.setGeometry(5,30,1355,730)  #窗口的大小和位置设置
-        self.browser=QWebEngineView()
-        #加载外部的web界面
-        self.browser.load(QUrl('http://www.baidu.com/'))
-        self.setCentralWidget(self.browser)
-if __name__ == '__main__':
+
+# 创建 socket 对象
+serversocket = socket.socket(
+            socket.AF_INET, socket.SOCK_STREAM) 
+
+# 获取本地主机名
+#host = socket.gethostname()
+host = '0.0.0.0'
+port = 9999
+
+# 绑定端口号
+serversocket.bind((host, port))
+
+# 设置最大连接数，超过后排队
+serversocket.listen(5)
+
+while True:
+    # 建立客户端连接
+    clientsocket,addr = serversocket.accept()      
+
+    print("连接地址: %s" % str(addr))
     
-    app=QApplication(sys.argv)
-    win=MainWindow()
-    win.show()
-    app.exit(app.exec_())
+    msg='欢迎访问菜鸟教程！'+ "\r\n"
+    clientsocket.send(msg.encode('utf-8'))
+    clientsocket.close()
