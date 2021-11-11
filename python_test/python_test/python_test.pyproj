@@ -22,7 +22,13 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="example.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="func_main.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="func_modbus_tcp.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="main.py">

@@ -305,35 +305,35 @@
                  <item>
                   <layout class="QVBoxLayout" name="verticalLayout_8">
                    <item>
-                    <widget class="QLabel" name="label_8">
+                    <widget class="QLabel" name="label_heartbeat">
                      <property name="text">
                       <string>通讯：正常</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLabel" name="label_2">
+                    <widget class="QLabel" name="label_robo_speed">
                      <property name="text">
                       <string>速度：0.5m/s</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLabel" name="label">
+                    <widget class="QLabel" name="label_steer_angle">
                      <property name="text">
                       <string>转向：0度</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLabel" name="label_6">
+                    <widget class="QLabel" name="label_bat_soc">
                      <property name="text">
                       <string>电量：80%</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLabel" name="label_7">
+                    <widget class="QLabel" name="label_water_level">
                      <property name="text">
                       <string>水位：60%</string>
                      </property>
@@ -1220,21 +1220,21 @@ p, li { white-space: pre-wrap; }
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_2">
+             <widget class="QLineEdit" name="lineEdit_ip_addr">
               <property name="text">
                <string>192.168.1.5</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_4">
+             <widget class="QPushButton" name="pushButton_tcp_connect">
               <property name="text">
                <string>连接</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_23">
+             <widget class="QPushButton" name="pushButton_tcp_disconnect">
               <property name="text">
                <string>断开</string>
               </property>

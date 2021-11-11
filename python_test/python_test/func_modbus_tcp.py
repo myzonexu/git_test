@@ -1,0 +1,211 @@
+
+import modbus_tk
+import modbus_tk.defines as cst
+import modbus_tk.modbus_tcp as modbus_tcp
+import time
+
+#定义通讯协议中的参数项
+class SpnData:
+    #data = 0
+    #value = 0
+    def __init__(self, name, addr,length,rate,offset,value = 0):
+        self.name = name
+        self.addr = addr
+        self.length = length
+        self.rate = rate
+        self.offset = offset
+        self.value = value
+        #print("name="+self.name)
+        return
+
+    def send(self):
+        #self.data_send = (data_value - self.offset) / self.rate
+        data_send = (self.value - self.offset) / self.rate
+        return data_send
+    def recv(self,data_recv):
+        #self.data_value = self.data_recv * self.rate + self.offset
+        self.value = data_recv * self.rate + self.offset
+        #return data_value
+
+
+#读数据
+def modbus_read(master,spn_data,slave_id = 1):
+    spn_data.recv(master.execute(slave_id, cst.READ_HOLDING_REGISTERS, spn_data.addr, spn_data.length,data_format=">h")[0])
+    print("读取",spn_data.name,"值：",spn_data.value)
+    pass
+
+#写数据
+def modbus_write(master,spn_data,slave_id = 1):
+    master.execute(slave_id, cst.WRITE_MULTIPLE_REGISTERS, spn_data.addr,output_value=[int(spn_data.send())])
+    #spn_data.recv(master.execute(slave_id, cst.READ_HOLDING_REGISTERS, spn_data.addr, spn_data.length,data_format=">h")[0])
+    print("写入",spn_data.name,"值：",spn_data.value)
+    pass
+
+#变量定义
+host="192.168.1.5"
+slave_id=1
+steer_angle_set_manual=10
+robo_speed_set_manual_forward=50
+robo_speed_set_manual_backward=-50
+
+#机器人参数定义
+heartbeat    = SpnData(name = "heartbeat",addr = 0x1000,length = 1,rate = 1,offset = 0)
+robo_state   = SpnData(name = "robo_state",addr = 0x1001,length = 1,rate = 1,offset = 0)
+robo_id      = SpnData(name = "robo_id",addr = 0x1002,length = 1,rate = 1,offset = 0)
+soft_version = SpnData(name = "soft_version",addr = 0x1003,length = 1,rate = 1,offset = 0)
+robo_speed   = SpnData(name = "robo_speed",addr = 0x1004,length = 1,rate = 1,offset = 0)
+steer_angle  = SpnData(name = "steer_angle",addr = 0x1005,length = 1,rate = 0.0573,offset = 0)
+bat_voltage  = SpnData(name = "bat_voltage",addr = 0x1006,length = 1,rate = 0.1,offset = 0)
+bat_soc      = SpnData(name = "bat_soc",addr = 0x1007,length = 1,rate = 1,offset = 0)
+bat_soh      = SpnData(name = "bat_soh",addr = 0x1008,length = 1,rate = 1,offset = 0)
+water_level  = SpnData(name = "water_level",addr = 0x1009,length = 1,rate = 1,offset = 0)
+distance_mark= SpnData(name = "distance_mark",addr = 0x1010,length = 1,rate = 1,offset = 0)
+distance_last= SpnData(name = "distance_last",addr = 0x1011,length = 1,rate = 1,offset = 0)
+mileage_hi   = SpnData(name = "mileage_hi",addr = 0x1012,length = 1,rate = 1,offset = 0)
+mileage_lo   = SpnData(name = "mileage_lo",addr = 0x1013,length = 1,rate = 1,offset = 0)
+chassis_state= SpnData(name = "chassis_state",addr = 0x1014,length = 1,rate = 1,offset = 0)
+arm_state    = SpnData(name = "arm_state",addr = 0x1015,length = 1,rate = 1,offset = 0)
+'''
+robo_speed   = SpnData(name = "robo_speed",addr = 0x1016,length = 1,rate = 1,offset = 0)
+robo_speed   = SpnData(name = "robo_speed",addr = 0x1017,length = 1,rate = 1,offset = 0)
+robo_speed   = SpnData(name = "robo_speed",addr = 0x1018,length = 1,rate = 1,offset = 0)
+robo_speed   = SpnData(name = "robo_speed",addr = 0x1019,length = 1,rate = 1,offset = 0)
+'''
+ctrl_mode    = SpnData(name = "ctrl_mode",addr = 0x2000,length = 1,rate = 1,offset = 0)
+start_clean  = SpnData(name = "start_clean",addr = 0x2001,length = 1,rate = 1,offset = 0)
+drive_ctrl   = SpnData(name = "drive_ctrl",addr = 0x2002,length = 1,rate = 1,offset = 0)
+work_ctrl    = SpnData(name = "work_ctrl",addr = 0x2003,length = 1,rate = 1,offset = 0)
+arm_ctrl     = SpnData(name = "arm_ctrl",addr = 0x2004,length = 1,rate = 1,offset = 0)
+chassis_set  = SpnData(name = "chassis_set",addr = 0x2005,length = 1,rate = 1,offset = 0)
+time_plan    = SpnData(name = "time_plan",addr = 0x2006,length = 1,rate = 1,offset = 0)
+'''
+robo_speed   = SpnData(name = "robo_speed",addr = 0x2007,length = 1,rate = 1,offset = 0)
+robo_speed   = SpnData(name = "robo_speed",addr = 0x2008,length = 1,rate = 1,offset = 0)
+robo_speed   = SpnData(name = "robo_speed",addr = 0x2009,length = 1,rate = 1,offset = 0)
+robo_speed   = SpnData(name = "robo_speed",addr = 0x2010,length = 1,rate = 1,offset = 0)
+heartbeat    = SpnData(name = "robo_speed",addr = 0x2011,length = 1,rate = 1,offset = 0)
+heartbeat    = SpnData(name = "robo_speed",addr = 0x2012,length = 1,rate = 1,offset = 0)
+heartbeat    = SpnData(name = "robo_speed",addr = 0x2013,length = 1,rate = 1,offset = 0)
+heartbeat    = SpnData(name = "robo_speed",addr = 0x2014,length = 1,rate = 1,offset = 0)
+'''
+steer_angle_set= SpnData(name = "steer_angle_set",addr = 0x2015,length = 1,rate = 0.0573,offset = 0)
+robo_speed_set= SpnData(name = "robo_speed_set",addr = 0x2016,length = 1,rate = 1,offset = 0)
+'''
+robo_speed   = SpnData(name = "robo_speed",addr = 0x2017,length = 1,rate = 1,offset = 0)
+robo_speed   = SpnData(name = "robo_speed",addr = 0x2018,length = 1,rate = 1,offset = 0)
+robo_speed   = SpnData(name = "robo_speed",addr = 0x2019,length = 1,rate = 1,offset = 0)
+'''
+
+
+# 连接MODBUS TCP从机
+#master=modbus_tcp.TcpMaster(host)
+#连接本机-测试用
+master=modbus_tcp.TcpMaster()
+
+'''
+while 1:
+    modbus_read(master,robo_speed)
+    time.sleep(5)
+    robo_speed.value = robo_speed_set_manual
+    modbus_write(master,robo_speed)
+    time.sleep(5)
+
+#master.close()
+
+'''
+
+
+
+
+
+
+#######################################################################################################
+'''
+logger = modbus_tk.utils.create_logger("console")
+if __name__ == "__main__":
+    try:
+        # 连接MODBUS TCP从机
+        master = modbus_tcp.TcpMaster(host="192.168.2.114")
+        master.set_timeout(5.0)
+        logger.info("connected")
+        #execute(slave, function_code, starting_address, quantity_of_x=0, output_value=0, data_format="", expected_length=-1, write_starting_address_FC23=0)
+        # 读保持寄存器
+        while 1:
+            speed = master.execute(SLAVE_ID, cst.READ_HOLDING_REGISTERS, robo_speed.addr, robo_speed.length,data_format=">h")
+            #speed = master.execute(SLAVE_ID, cst.READ_HOLDING_REGISTERS, robo_speed.addr, robo_speed.length)
+            #logger.info(master.execute(SLAVE_ID, cst.WRITE_MULTIPLE_REGISTERS, robo_speed.addr,output_value=[-100,21,22,23]))
+            #logger.info(master.execute(1, cst.WRITE_MULTIPLE_REGISTERS, 0, output_value=[20,21,22,23]))
+            #master.execute(1, cst.WRITE_MULTIPLE_REGISTERS, 0, output_value=[20,21,22,23])
+
+            print((speed[0]))
+            #print(type(speed))
+            time.sleep(1)
+        
+    except modbus_tk.modbus.ModbusError as e:
+        logger.error("%s- Code=%d" % (e, e.get_exception_code()))   
+        
+
+'''
+
+
+'''
+logger = modbus_tk.utils.create_logger("console")
+
+if __name__ == "__main__":
+    try:
+        # 连接MODBUS TCP从机
+        master = modbus_tcp.TcpMaster(host="192.168.2.114")
+        master.set_timeout(5.0)
+        logger.info("connected")
+        #execute(slave, function_code, starting_address, quantity_of_x=0, output_value=0, data_format="", expected_length=-1, write_starting_address_FC23=0)
+        # 读保持寄存器
+        while 1:
+            demo1 = master.execute(1, cst.READ_HOLDING_REGISTERS, 0, 9)
+            print(demo1)
+            time.sleep(1)
+        
+        # 读输入寄存器
+        logger.info(master.execute(3, cst.READ_INPUT_REGISTERS, 0, 9, output_value=1))
+        # 读线圈寄存器
+        logger.info(master.execute(2, cst.READ_COILS, 0, 8))
+        logger.info(master.execute(2, cst.WRITE_SINGLE_COIL, 1, output_value=2))
+        
+        # 读离散输入寄存器
+        logger.info(master.execute(4, cst.READ_DISCRETE_INPUTS, 0, 8))
+        # 单个读写寄存器操作
+        # 写寄存器地址为0的保持寄存器
+        logger.info(master.execute(1, cst.WRITE_SINGLE_REGISTER, 0, output_value=20))
+        logger.info(master.execute(1, cst.READ_HOLDING_REGISTERS, 0, 8))
+        # 写寄存器地址为0的线圈寄存器，写入内容为0（位操作）
+        logger.info(master.execute(2, cst.WRITE_SINGLE_COIL, 0, output_value=2))
+        logger.info(master.execute(2, cst.READ_COILS, 0, 1))
+        # # 多个寄存器读写操作
+        # # 写寄存器起始地址为0的保持寄存器，操作寄存器个数为4
+        logger.info(master.execute(1, cst.WRITE_MULTIPLE_REGISTERS, 0, output_value=[20,21,22,23]))
+        logger.info(master.execute(1, cst.READ_HOLDING_REGISTERS, 0, 4))
+        # # 写寄存器起始地址为0的线圈寄存器
+        logger.info(master.execute(2, cst.WRITE_MULTIPLE_COILS, 0, output_value=[0,0,0,1]))
+        logger.info(master.execute(2, cst.READ_COILS, 0, 4))
+        
+    except modbus_tk.modbus.ModbusError as e:
+        logger.error("%s- Code=%d" % (e, e.get_exception_code()))
+
+'''
+
+'''
+class SpnData(Spn):
+    def __init__(self, value):
+        super().__init__()
+        self.value = value
+
+    def send(self,data_value):
+        #self.data_send = (data_value - self.offset) / self.rate
+        data_send = (data_value - self.offset) / self.rate
+        return data_send
+    def recv(self,data_recv):
+        #self.data_value = self.data_recv * self.rate + self.offset
+        data_value = data_recv * self.rate + self.offset
+        return data_value
+    #def read(self,data_value)
+        #pass
+'''
