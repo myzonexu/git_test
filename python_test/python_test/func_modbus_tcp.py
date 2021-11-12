@@ -1,4 +1,3 @@
-
 import modbus_tk
 import modbus_tk.defines as cst
 import modbus_tk.modbus_tcp as modbus_tcp
@@ -19,14 +18,10 @@ class SpnData:
         return
 
     def send(self):
-        #self.data_send = (data_value - self.offset) / self.rate
         data_send = (self.value - self.offset) / self.rate
         return data_send
     def recv(self,data_recv):
-        #self.data_value = self.data_recv * self.rate + self.offset
         self.value = data_recv * self.rate + self.offset
-        #return data_value
-
 
 #读数据
 def modbus_read(master,spn_data,slave_id = 1):
@@ -37,7 +32,6 @@ def modbus_read(master,spn_data,slave_id = 1):
 #写数据
 def modbus_write(master,spn_data,slave_id = 1):
     master.execute(slave_id, cst.WRITE_MULTIPLE_REGISTERS, spn_data.addr,output_value=[int(spn_data.send())])
-    #spn_data.recv(master.execute(slave_id, cst.READ_HOLDING_REGISTERS, spn_data.addr, spn_data.length,data_format=">h")[0])
     print("写入",spn_data.name,"值：",spn_data.value)
     pass
 
@@ -47,6 +41,8 @@ slave_id=1
 steer_angle_set_manual=10
 robo_speed_set_manual_forward=50
 robo_speed_set_manual_backward=-50
+robo_steer_angle_set_manual_left=15
+robo_steer_angle_set_manual_right=-15
 
 #机器人参数定义
 heartbeat    = SpnData(name = "heartbeat",addr = 0x1000,length = 1,rate = 1,offset = 0)
@@ -115,97 +111,3 @@ while 1:
 '''
 
 
-
-
-
-
-#######################################################################################################
-'''
-logger = modbus_tk.utils.create_logger("console")
-if __name__ == "__main__":
-    try:
-        # 连接MODBUS TCP从机
-        master = modbus_tcp.TcpMaster(host="192.168.2.114")
-        master.set_timeout(5.0)
-        logger.info("connected")
-        #execute(slave, function_code, starting_address, quantity_of_x=0, output_value=0, data_format="", expected_length=-1, write_starting_address_FC23=0)
-        # 读保持寄存器
-        while 1:
-            speed = master.execute(SLAVE_ID, cst.READ_HOLDING_REGISTERS, robo_speed.addr, robo_speed.length,data_format=">h")
-            #speed = master.execute(SLAVE_ID, cst.READ_HOLDING_REGISTERS, robo_speed.addr, robo_speed.length)
-            #logger.info(master.execute(SLAVE_ID, cst.WRITE_MULTIPLE_REGISTERS, robo_speed.addr,output_value=[-100,21,22,23]))
-            #logger.info(master.execute(1, cst.WRITE_MULTIPLE_REGISTERS, 0, output_value=[20,21,22,23]))
-            #master.execute(1, cst.WRITE_MULTIPLE_REGISTERS, 0, output_value=[20,21,22,23])
-
-            print((speed[0]))
-            #print(type(speed))
-            time.sleep(1)
-        
-    except modbus_tk.modbus.ModbusError as e:
-        logger.error("%s- Code=%d" % (e, e.get_exception_code()))   
-        
-
-'''
-
-
-'''
-logger = modbus_tk.utils.create_logger("console")
-
-if __name__ == "__main__":
-    try:
-        # 连接MODBUS TCP从机
-        master = modbus_tcp.TcpMaster(host="192.168.2.114")
-        master.set_timeout(5.0)
-        logger.info("connected")
-        #execute(slave, function_code, starting_address, quantity_of_x=0, output_value=0, data_format="", expected_length=-1, write_starting_address_FC23=0)
-        # 读保持寄存器
-        while 1:
-            demo1 = master.execute(1, cst.READ_HOLDING_REGISTERS, 0, 9)
-            print(demo1)
-            time.sleep(1)
-        
-        # 读输入寄存器
-        logger.info(master.execute(3, cst.READ_INPUT_REGISTERS, 0, 9, output_value=1))
-        # 读线圈寄存器
-        logger.info(master.execute(2, cst.READ_COILS, 0, 8))
-        logger.info(master.execute(2, cst.WRITE_SINGLE_COIL, 1, output_value=2))
-        
-        # 读离散输入寄存器
-        logger.info(master.execute(4, cst.READ_DISCRETE_INPUTS, 0, 8))
-        # 单个读写寄存器操作
-        # 写寄存器地址为0的保持寄存器
-        logger.info(master.execute(1, cst.WRITE_SINGLE_REGISTER, 0, output_value=20))
-        logger.info(master.execute(1, cst.READ_HOLDING_REGISTERS, 0, 8))
-        # 写寄存器地址为0的线圈寄存器，写入内容为0（位操作）
-        logger.info(master.execute(2, cst.WRITE_SINGLE_COIL, 0, output_value=2))
-        logger.info(master.execute(2, cst.READ_COILS, 0, 1))
-        # # 多个寄存器读写操作
-        # # 写寄存器起始地址为0的保持寄存器，操作寄存器个数为4
-        logger.info(master.execute(1, cst.WRITE_MULTIPLE_REGISTERS, 0, output_value=[20,21,22,23]))
-        logger.info(master.execute(1, cst.READ_HOLDING_REGISTERS, 0, 4))
-        # # 写寄存器起始地址为0的线圈寄存器
-        logger.info(master.execute(2, cst.WRITE_MULTIPLE_COILS, 0, output_value=[0,0,0,1]))
-        logger.info(master.execute(2, cst.READ_COILS, 0, 4))
-        
-    except modbus_tk.modbus.ModbusError as e:
-        logger.error("%s- Code=%d" % (e, e.get_exception_code()))
-
-'''
-
-'''
-class SpnData(Spn):
-    def __init__(self, value):
-        super().__init__()
-        self.value = value
-
-    def send(self,data_value):
-        #self.data_send = (data_value - self.offset) / self.rate
-        data_send = (data_value - self.offset) / self.rate
-        return data_send
-    def recv(self,data_recv):
-        #self.data_value = self.data_recv * self.rate + self.offset
-        data_value = data_recv * self.rate + self.offset
-        return data_value
-    #def read(self,data_value)
-        #pass
-'''

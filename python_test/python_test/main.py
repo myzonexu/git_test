@@ -7,7 +7,7 @@ from PyQt5.Qt import *
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtCore import QTimer
 
-# ui_main是.ui文件生成的.py文件名
+# 导入ui文件，ui_main是.ui文件生成的.py文件名
 from ui_main import Ui_mainWindow
 from func_main import *
 
