@@ -47,8 +47,12 @@ def do_push_button(window):
     window.pushButton_autorun_charge.clicked.connect(do_btn_autorun_charge)
     window.pushButton_autorun_add_water.clicked.connect(do_btn_autorun_add_water)
 
-    window.pushButton_drive_forward.clicked.connect(do_btn_drive_forward)
-    window.pushButton_drive_backward.clicked.connect(do_btn_drive_backward)
+    #window.pushButton_drive_forward.clicked.connect(do_btn_drive_forward)
+    window.pushButton_drive_forward.pressed.connect(do_btn_drive_forward)
+    window.pushButton_drive_forward.released.connect(do_btn_drive_forward_straight)
+    #window.pushButton_drive_backward.clicked.connect(do_btn_drive_backward)
+    window.pushButton_drive_backward.pressed.connect(do_btn_drive_backward)
+    window.pushButton_drive_backward.released.connect(do_btn_drive_backward_straight)
     window.pushButton_drive_pause.clicked.connect(do_btn_drive_pause)
     window.pushButton_turn_left.clicked.connect(do_btn_turn_left)
     window.pushButton_turn_right.clicked.connect(do_btn_turn_right)
@@ -64,7 +68,34 @@ def do_push_button(window):
     window.pushButton_tcp_connect.clicked.connect(lambda:do_btn_tcp_connect(window,master))
     window.pushButton_tcp_disconnect.clicked.connect(lambda:do_btn_tcp_disconnect(window))
 
+    window.verticalScrollBar_robo_speed.valueChanged.connect(do_scroll_robo_speed)
+    window.horizontalScrollBar_steer_angle.valueChanged.connect(do_scroll_steer_angle)
+
     return
+
+def do_scroll_robo_speed(window):
+    #控制模式-手动
+    ctrl_mode.value = 1
+    modbus_write(master,ctrl_mode)
+    #手动模式-取消暂停
+    drive_ctrl.value = 0
+    modbus_write(master,drive_ctrl)
+    #手动模式下速度输入
+    robo_speed_set.value = float(window.verticalScrollBar_robo_speed.valueChanged())
+    modbus_write(master,robo_speed_set)
+    return
+
+def do_scroll_steer_angle(window):
+    #print(window.horizontalScrollBar_steer_angle.sliderposition)
+    #控制模式-手动
+    ctrl_mode.value = 1
+    modbus_write(master,ctrl_mode)
+    #手动模式下转角输入
+    #steer_angle_set.value = float(window.horizontalScrollBar_steer_angle.valueChanged())
+    modbus_write(master,steer_angle_set)
+    return
+
+
 
 #自动任务处理
 def do_btn_autorun_start(window):
@@ -114,9 +145,25 @@ def do_btn_drive_forward():
     #控制模式-手动
     ctrl_mode.value = 1
     modbus_write(master,ctrl_mode)
-    #手动模式-前进
-    drive_ctrl.value = 1
+    #手动模式-取消暂停
+    drive_ctrl.value = 0
     modbus_write(master,drive_ctrl)
+    #手动模式下速度输入
+    robo_speed_set.value = robo_speed_set_manual_forward
+    modbus_write(master,robo_speed_set)
+    return
+
+def do_btn_drive_forward_straight():
+    print("前进")
+    #控制模式-手动
+    ctrl_mode.value = 1
+    modbus_write(master,ctrl_mode)
+    #手动模式-取消暂停
+    drive_ctrl.value = 0
+    modbus_write(master,drive_ctrl)
+    #手动模式下转角输入0
+    steer_angle_set.value = 0
+    modbus_write(master,steer_angle_set)
     #手动模式下速度输入
     robo_speed_set.value = robo_speed_set_manual_forward
     modbus_write(master,robo_speed_set)
@@ -127,9 +174,25 @@ def do_btn_drive_backward():
     #控制模式-手动
     ctrl_mode.value = 1
     modbus_write(master,ctrl_mode)
-    #手动模式-后退
-    drive_ctrl.value = 2
+    #手动模式-取消暂停
+    drive_ctrl.value = 0
     modbus_write(master,drive_ctrl)
+    #手动模式下速度输入
+    robo_speed_set.value = robo_speed_set_manual_backward
+    modbus_write(master,robo_speed_set)
+    return
+
+def do_btn_drive_backward_straight():
+    print("后退")
+    #控制模式-手动
+    ctrl_mode.value = 1
+    modbus_write(master,ctrl_mode)
+    #手动模式-取消暂停
+    drive_ctrl.value = 0
+    modbus_write(master,drive_ctrl)
+    #手动模式下转角输入0
+    steer_angle_set.value = 0
+    modbus_write(master,steer_angle_set)
     #手动模式下速度输入
     robo_speed_set.value = robo_speed_set_manual_backward
     modbus_write(master,robo_speed_set)
@@ -141,8 +204,10 @@ def do_btn_drive_pause():
     ctrl_mode.value = 1
     modbus_write(master,ctrl_mode)
     #手动模式-暂停
-    drive_ctrl.value = 3
-    modbus_write(master,drive_ctrl)
+    #drive_ctrl.value = 3
+    #modbus_write(master,drive_ctrl)
+    robo_speed_set.value = 0
+    modbus_write(master,robo_speed_set)
     return
 
 def do_btn_turn_left():
