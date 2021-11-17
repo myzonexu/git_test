@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1024</width>
-    <height>768</height>
+    <height>700</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,7 +19,7 @@
   <property name="minimumSize">
    <size>
     <width>1024</width>
-    <height>768</height>
+    <height>700</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -29,10 +29,16 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="minimumSize">
        <size>
         <width>1000</width>
-        <height>700</height>
+        <height>650</height>
        </size>
       </property>
       <property name="tabShape">
@@ -57,7 +63,7 @@
           <item>
            <widget class="QGroupBox" name="groupBox">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -65,7 +71,7 @@
             <property name="minimumSize">
              <size>
               <width>500</width>
-              <height>300</height>
+              <height>200</height>
              </size>
             </property>
             <property name="title">
@@ -97,7 +103,7 @@
           <item>
            <widget class="QGroupBox" name="groupBox_10">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -105,7 +111,7 @@
             <property name="minimumSize">
              <size>
               <width>400</width>
-              <height>300</height>
+              <height>200</height>
              </size>
             </property>
             <property name="title">
@@ -120,44 +126,6 @@
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <widget class="QScrollBar" name="horizontalScrollBar_steer_angle">
-                <property name="geometry">
-                 <rect>
-                  <x>140</x>
-                  <y>250</y>
-                  <width>160</width>
-                  <height>16</height>
-                 </rect>
-                </property>
-                <property name="minimum">
-                 <number>-30</number>
-                </property>
-                <property name="maximum">
-                 <number>30</number>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-               <widget class="QScrollBar" name="verticalScrollBar_robo_speed">
-                <property name="geometry">
-                 <rect>
-                  <x>410</x>
-                  <y>50</y>
-                  <width>16</width>
-                  <height>160</height>
-                 </rect>
-                </property>
-                <property name="minimum">
-                 <number>-300</number>
-                </property>
-                <property name="maximum">
-                 <number>300</number>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-               </widget>
               </widget>
              </item>
             </layout>
@@ -176,7 +144,7 @@
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>10</height>
+            <height>5</height>
            </size>
           </property>
          </spacer>
@@ -200,7 +168,7 @@
             <property name="minimumSize">
              <size>
               <width>450</width>
-              <height>350</height>
+              <height>300</height>
              </size>
             </property>
             <property name="title">
@@ -404,7 +372,7 @@
                       <property name="minimumSize">
                        <size>
                         <width>40</width>
-                        <height>40</height>
+                        <height>30</height>
                        </size>
                       </property>
                       <property name="maximumSize">
@@ -429,7 +397,7 @@
                       <property name="minimumSize">
                        <size>
                         <width>40</width>
-                        <height>40</height>
+                        <height>30</height>
                        </size>
                       </property>
                       <property name="maximumSize">
@@ -454,7 +422,7 @@
                       <property name="minimumSize">
                        <size>
                         <width>40</width>
-                        <height>40</height>
+                        <height>30</height>
                        </size>
                       </property>
                       <property name="maximumSize">
@@ -492,7 +460,7 @@
                       <property name="minimumSize">
                        <size>
                         <width>40</width>
-                        <height>40</height>
+                        <height>30</height>
                        </size>
                       </property>
                       <property name="maximumSize">
@@ -517,7 +485,7 @@
                       <property name="minimumSize">
                        <size>
                         <width>40</width>
-                        <height>40</height>
+                        <height>30</height>
                        </size>
                       </property>
                       <property name="maximumSize">
@@ -603,7 +571,10 @@
                        </size>
                       </property>
                       <property name="text">
-                       <string>清扫</string>
+                       <string>开滚刷</string>
+                      </property>
+                      <property name="checkable">
+                       <bool>true</bool>
                       </property>
                      </widget>
                     </item>
@@ -769,7 +740,7 @@
             <property name="minimumSize">
              <size>
               <width>250</width>
-              <height>350</height>
+              <height>300</height>
              </size>
             </property>
             <property name="title">
@@ -829,7 +800,7 @@ p, li { white-space: pre-wrap; }
             <property name="minimumSize">
              <size>
               <width>250</width>
-              <height>350</height>
+              <height>300</height>
              </size>
             </property>
             <property name="title">

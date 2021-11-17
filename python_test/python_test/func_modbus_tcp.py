@@ -1,6 +1,8 @@
 import modbus_tk
 import modbus_tk.defines as cst
+#from modbus_tk.modbus_tcp import TcpMaster
 import modbus_tk.modbus_tcp as modbus_tcp
+
 import time
 
 #定义通讯协议中的参数项
@@ -26,7 +28,7 @@ class SpnData:
 #读数据
 def modbus_read(master,spn_data,slave_id = 1):
     spn_data.recv(master.execute(slave_id, cst.READ_HOLDING_REGISTERS, spn_data.addr, spn_data.length,data_format=">h")[0])
-    print("读取",spn_data.name,"值：",spn_data.value)
+    #print("读取",spn_data.name,"值：",spn_data.value)
     pass
 
 #写数据
@@ -34,6 +36,32 @@ def modbus_write(master,spn_data,slave_id = 1):
     master.execute(slave_id, cst.WRITE_MULTIPLE_REGISTERS, spn_data.addr,output_value=[int(spn_data.send())])
     print("写入",spn_data.name,"值：",spn_data.value)
     pass
+
+class SpnTcpMaster(modbus_tk.modbus_tcp.TcpMaster):
+    '''
+    #def __init__(self,host="127.0.0.1", port=502, timeout_in_sec=5.0):
+    def __init__(self):
+        #super().__init__(self,host="127.0.0.1", port=502, timeout_in_sec=5.0)
+        super().__init__()
+    '''
+    def read(self,spn_data,slave_id = 1):
+        if spn_data.length==1:
+            _data_format=">h"            
+        elif spn_data.length==2:
+            _data_format=">i"
+        else:
+            pass
+        spn_data.recv(self.execute(slave_id, cst.READ_HOLDING_REGISTERS, spn_data.addr, spn_data.length,data_format=_data_format)[0])
+        print("读取",spn_data.name,"值：",spn_data.value)
+        return spn_data.value
+
+    def write(self,spn_data,slave_id = 1):
+        self.execute(slave_id, cst.WRITE_MULTIPLE_REGISTERS, spn_data.addr,output_value=[int(spn_data.send())])
+        print("写入",spn_data.name,"值：",spn_data.value)
+
+    
+
+
 
 #变量定义
 host="192.168.1.5"
@@ -93,12 +121,15 @@ robo_speed   = SpnData(name = "robo_speed",addr = 2019,length = 1,rate = 1,offse
 '''
 
 
-
+spn_master=SpnTcpMaster()
 #连接本机-测试用
-#master=modbus_tcp.TcpMaster()
+master=modbus_tcp.TcpMaster()
 # 连接MODBUS TCP从机
-master=modbus_tcp.TcpMaster(host)
+#master=modbus_tcp.TcpMaster(host)
 master.set_timeout(10)
+is_master_open=1
+
+
 
 '''
 while 1:

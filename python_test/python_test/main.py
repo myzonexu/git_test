@@ -3,7 +3,8 @@
 import sys
 import time
 
-from PyQt5.Qt import *
+#from PyQt5.Qt import *
+from PyQt5.Qt import QMainWindow,QApplication
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtCore import QTimer
 

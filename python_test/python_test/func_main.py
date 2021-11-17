@@ -2,13 +2,11 @@ import time
 from func_modbus_tcp import *
 from PyQt5.QtCore import QTimer
 
-class FuncMain:
-    def __init__(self):
-        print("初始化主逻辑")
-    def func_main(self):
-        print("运行主程序功能")
 
 def do_main_ui(window):
+    #window.pushButton_work_clean.setCheckable(True)
+    #window.pushButton_work_clean.setAutoExclusive(True)
+
     #设置快捷键
     ui_set_shortcut(window)
     #按钮响应
@@ -18,6 +16,10 @@ def do_main_ui(window):
     window.timer = QTimer(window)  # 初始化一个定时器
     window.timer.timeout.connect(lambda:do_label(window))  # 每次计时到时间时发出信号
     window.timer.start(1000)  # 设置计时间隔并启动；单位毫秒
+
+    window.timer2 = QTimer(window)  # 初始化一个定时器
+    window.timer2.timeout.connect(lambda:print("3s over"))  # 每次计时到时间时发出信号
+    window.timer2.start(3000)
 
     return
 
@@ -63,15 +65,31 @@ def do_push_button(window):
     window.pushButton_arm_position_wall_3.clicked.connect(do_btn_arm_position_wall_3)
     window.pushButton_arm_position_wall_4.clicked.connect(do_btn_arm_position_wall_4)
     window.pushButton_arm_position_ground_1.clicked.connect(do_btn_arm_position_ground_1)
-    window.pushButton_work_clean.clicked.connect(do_btn_work_clean)
+    window.pushButton_work_clean.clicked.connect(lambda:do_btn_work_clean(window))
 
     window.pushButton_tcp_connect.clicked.connect(lambda:do_btn_tcp_connect(window,master))
-    window.pushButton_tcp_disconnect.clicked.connect(lambda:do_btn_tcp_disconnect(window))
+    window.pushButton_tcp_disconnect.clicked.connect(lambda:do_btn_tcp_disconnect(window,master))
 
-    window.verticalScrollBar_robo_speed.valueChanged.connect(do_scroll_robo_speed)
-    window.horizontalScrollBar_steer_angle.valueChanged.connect(do_scroll_steer_angle)
+    #window.verticalScrollBar_robo_speed.valueChanged.connect(lambda:print(window.verticalScrollBar_robo_speed.value()))
+    #window.verticalScrollBar_robo_speed.valueChanged.connect(lambda:do_scroll_robo_speed(window))
+    #window.horizontalScrollBar_steer_angle.valueChanged.connect(lambda:do_scroll_steer_angle(window))
 
     return
+
+#带切换功能按键响应
+def do_toggle_widget(widget,up_text,up_func,down_text,down_func):
+#def do_toggle_widget(widget,up_text,down_text):
+    if widget.isChecked()==True :
+        up_func()
+        widget.setText(down_text)
+        pass
+    elif widget.isChecked()==False :
+        down_func()
+        widget.setText(up_text)
+        pass
+    else :
+        pass
+    
 
 def do_scroll_robo_speed(window):
     #控制模式-手动
@@ -81,17 +99,17 @@ def do_scroll_robo_speed(window):
     drive_ctrl.value = 0
     modbus_write(master,drive_ctrl)
     #手动模式下速度输入
-    robo_speed_set.value = float(window.verticalScrollBar_robo_speed.valueChanged())
+    robo_speed_set.value = window.verticalScrollBar_robo_speed.value()
     modbus_write(master,robo_speed_set)
+    #print(window.verticalScrollBar_robo_speed.value())
     return
 
 def do_scroll_steer_angle(window):
-    #print(window.horizontalScrollBar_steer_angle.sliderposition)
     #控制模式-手动
     ctrl_mode.value = 1
     modbus_write(master,ctrl_mode)
     #手动模式下转角输入
-    #steer_angle_set.value = float(window.horizontalScrollBar_steer_angle.valueChanged())
+    steer_angle_set.value = window.horizontalScrollBar_steer_angle.value()
     modbus_write(master,steer_angle_set)
     return
 
@@ -167,6 +185,7 @@ def do_btn_drive_forward_straight():
     #手动模式下速度输入
     robo_speed_set.value = robo_speed_set_manual_forward
     modbus_write(master,robo_speed_set)
+    
     return
 
 def do_btn_drive_backward():
@@ -297,48 +316,64 @@ def do_btn_arm_position_ground_1():
     modbus_write(master,arm_ctrl)
     return
 
-#控制水泵、刷子
-def do_btn_work_clean():
-    
+#开关滚刷控制功能
+def do_btn_work_clean_start():
     #控制模式-手动
     ctrl_mode.value = 1
     modbus_write(master,ctrl_mode)
-    #开关
-    if (work_ctrl.value == 0):
-        work_ctrl.value = 1 
-        print("开水泵、刷子")
-    elif (work_ctrl.value == 1):
-        work_ctrl.value = 0
-        print("关水泵、刷子")
-    else:
-        brake
+    work_ctrl.value = 1 
+    print("开水泵、刷子")
     modbus_write(master,work_ctrl)
+    
+def do_btn_work_clean_stop():
+    #控制模式-手动
+    ctrl_mode.value = 1
+    modbus_write(master,ctrl_mode)
+    work_ctrl.value = 0
+    print("关水泵、刷子")
+    modbus_write(master,work_ctrl)
+
+#控制水泵、刷子
+def do_btn_work_clean(window):
+    #带功能切换按键
+    do_toggle_widget(window.pushButton_work_clean,"开滚刷",do_btn_work_clean_start,"关滚刷",do_btn_work_clean_stop)
+
     return
+
 
 
 #网络设置-未实现
 def do_btn_tcp_connect(window,master):
+    master.close()
+    master=modbus_tcp.TcpMaster(host=window.lineEdit_ip_addr.text())
+    master.open()
+    is_master_open=1
     print("连接网络"+window.lineEdit_ip_addr.text())
-    master=modbus_tcp.TcpMaster(window.lineEdit_ip_addr.text())
+    print(is_master_open)
     return 
 
-def do_btn_tcp_disconnect(window):
-    print("断开网络"+window.lineEdit_ip_addr.text())
+def do_btn_tcp_disconnect(window,master):
     master.close()
+    print("断开网络"+window.lineEdit_ip_addr.text())
+    is_master_open=0
     return
 
 #标签刷新###############################################################################
 def do_label(window):
-    modbus_read(master,heartbeat)
-    window.label_heartbeat.setText("心跳："+str(heartbeat.value))
-    modbus_read(master,robo_speed)
-    window.label_robo_speed.setText("速度："+str(robo_speed.value)+"mm/s")
-    modbus_read(master,steer_angle)
-    window.label_steer_angle.setText("转向："+"{:.1f}".format(steer_angle.value)+"度")
-    modbus_read(master,bat_soc)
-    window.label_bat_soc.setText("电量："+str(bat_soc.value)+"%")
-    modbus_read(master,water_level)
-    window.label_water_level.setText("水位："+str(water_level.value)+"%")
+    if is_master_open==1:
+    #if 1:
+        modbus_read(master,heartbeat)
+        window.label_heartbeat.setText("心跳："+str(heartbeat.value))
+        modbus_read(master,robo_speed)
+        window.label_robo_speed.setText("速度："+str(robo_speed.value)+"mm/s")
+        modbus_read(master,steer_angle)
+        window.label_steer_angle.setText("转向："+"{:.1f}".format(steer_angle.value)+"度")
+        modbus_read(master,bat_soc)
+        window.label_bat_soc.setText("电量："+str(bat_soc.value)+"%")
+        modbus_read(master,water_level)
+        window.label_water_level.setText("水位："+str(water_level.value)+"%")
+    else:
+        pass
     
     return
 
