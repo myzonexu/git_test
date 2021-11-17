@@ -79,11 +79,11 @@ def do_push_button(window):
 #带切换功能按键响应
 def do_toggle_widget(widget,up_text,up_func,down_text,down_func):
 #def do_toggle_widget(widget,up_text,down_text):
-    if widget.isChecked()==True :
+    if widget.isChecked() == True :
         up_func()
         widget.setText(down_text)
         pass
-    elif widget.isChecked()==False :
+    elif widget.isChecked() == False :
         down_func()
         widget.setText(up_text)
         pass
@@ -345,33 +345,33 @@ def do_btn_work_clean(window):
 #网络设置-未实现
 def do_btn_tcp_connect(window,master):
     master.close()
-    master=modbus_tcp.TcpMaster(host=window.lineEdit_ip_addr.text())
+    master = modbus_tcp.TcpMaster(host=window.lineEdit_ip_addr.text())
     master.open()
-    is_master_open=1
-    print("连接网络"+window.lineEdit_ip_addr.text())
+    is_master_open = 1
+    print("连接网络" + window.lineEdit_ip_addr.text())
     print(is_master_open)
     return 
 
 def do_btn_tcp_disconnect(window,master):
     master.close()
-    print("断开网络"+window.lineEdit_ip_addr.text())
-    is_master_open=0
+    print("断开网络" + window.lineEdit_ip_addr.text())
+    is_master_open = 0
     return
 
 #标签刷新###############################################################################
 def do_label(window):
-    if is_master_open==1:
+    if is_master_open == 1:
     #if 1:
         modbus_read(master,heartbeat)
-        window.label_heartbeat.setText("心跳："+str(heartbeat.value))
+        window.label_heartbeat.setText("心跳：" + str(heartbeat.value))
         modbus_read(master,robo_speed)
-        window.label_robo_speed.setText("速度："+str(robo_speed.value)+"mm/s")
+        window.label_robo_speed.setText("速度：" + str(robo_speed.value) + "mm/s")
         modbus_read(master,steer_angle)
-        window.label_steer_angle.setText("转向："+"{:.1f}".format(steer_angle.value)+"度")
+        window.label_steer_angle.setText("转向：" + "{:.1f}".format(steer_angle.value) + "度")
         modbus_read(master,bat_soc)
-        window.label_bat_soc.setText("电量："+str(bat_soc.value)+"%")
+        window.label_bat_soc.setText("电量：" + str(bat_soc.value) + "%")
         modbus_read(master,water_level)
-        window.label_water_level.setText("水位："+str(water_level.value)+"%")
+        window.label_water_level.setText("水位：" + str(water_level.value) + "%")
     else:
         pass
     
