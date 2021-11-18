@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>fcd11efd-015e-4a6f-982b-961e90ca22db</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>python_test.py</StartupFile>
+    <StartupFile>main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,10 +22,23 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="example.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="func_main.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="func_modbus_tcp.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="main.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="python_test.py" />
+    <Compile Include="test_main.py" />
+    <Compile Include="ui_main.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ui_main.ui" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
