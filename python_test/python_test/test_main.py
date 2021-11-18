@@ -1,31 +1,23 @@
-
-'''
-import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtWebEngineWidgets import *
-from robctrl import *
-
-
-class MyWindow(QMainWindow, Ui_MainWindow):
-    def __init__(self, parent=None):
-        super(MyWindow, self).__init__(parent)
-        self.setupUi(self)
+class class_test1:
+    def __init__(self,a,b):
+        self.var1=a
+        self.var2=b
+    def sum(self):
+        return self.var1+self.var2
+    def plus(self):
+        self.var1=self.var2+1
 
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    myWin = MyWindow()
-    myWin.show()
-    sys.exit(app.exec_())
-'''
+def func_test1(test,aa,bb):
+    test.var1=aa
+    test.var2=bb
+    test.sum()
+    test.plus()
+def func_test2(test):
+    test=class_test1(10,20)
 
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-
-# 导入 socket、sys 模块
-import socket
-import sys
-
+class_test1=class_test1(1,2)
+func_test2(class_test1)
+#func_test1(class_test1,3,4)
+print(class_test1.var1,class_test1.var2)
+        

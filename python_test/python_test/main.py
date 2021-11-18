@@ -11,19 +11,21 @@ from PyQt5.QtCore import QTimer
 from ui_main import Ui_mainWindow
 from func_main import *
 
+
 class Window(QMainWindow, Ui_mainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
  
     def slot1(self):
-        print('信号处理')
+        #print('信号处理')
+        pass
  
     def func_list(self):
         self.func()
   
     def func(self):
-        print('函数1')    
+        #print('窗口函数')    
         pass
  
  
@@ -32,6 +34,6 @@ if __name__ == '__main__':
     window = Window()
     window.func_list()
     window.show()
-    do_main_ui(window)
+    do_main_ui(window,master_robo)
     sys.exit(app.exec_())
-
+    

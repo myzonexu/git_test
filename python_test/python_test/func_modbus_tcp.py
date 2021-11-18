@@ -27,37 +27,89 @@ class SpnData:
 
 #读数据
 def modbus_read(master,spn_data,slave_id=1):
+    
     spn_data.recv(master.execute(slave_id, cst.READ_HOLDING_REGISTERS, spn_data.addr, spn_data.length,data_format=">h")[0])
     #print("读取",spn_data.name,"值：",spn_data.value)
-    pass
+
 
 #写数据
 def modbus_write(master,spn_data,slave_id=1):
     master.execute(slave_id, cst.WRITE_MULTIPLE_REGISTERS, spn_data.addr,output_value=[int(spn_data.send())])
     print("写入",spn_data.name,"值：",spn_data.value)
-    pass
+
 
 class SpnTcpMaster(modbus_tk.modbus_tcp.TcpMaster):
-    '''
-    #def __init__(self,host="127.0.0.1", port=502, timeout_in_sec=5.0):
-    def __init__(self):
-        #super().__init__(self,host="127.0.0.1", port=502, timeout_in_sec=5.0)
-        super().__init__()
-    '''
+    _is_reconnect=False
+
+    #def open(self):
+    #    try:
+    #        """open the communication with the slave"""
+    #        if not self._is_opened:
+    #            self._do_open()
+    #            self._is_opened = True
+    #            self._is_reconnect=False
+    #    except modbus_tk.modbus_tcp.socket.error as e:
+    #        self._is_opened=False
+    #        self._is_reconnect=True
+    #        print("连接网络: ",self._host," 失败，错误：",str(e))
+    #    else:
+    #        pass
+    #    finally:
+    #        pass
+
+    def is_opened(self):
+        return self._is_opened
+    def is_reconnect(self):
+        return self._is_reconnect
+    def no_reconnect(self):
+        self._is_reconnect=False
+    def get_host(self):
+        return self._host
+    def set_host(self,host):
+        self._host=host
     def read(self,spn_data,slave_id=1):
-        if spn_data.length == 1:
-            _data_format = ">h"            
-        elif spn_data.length == 2:
-            _data_format = ">i"
+        try:
+            if spn_data.length == 1:
+                _data_format = ">h"            
+            elif spn_data.length == 2:
+                _data_format = ">i"
+            else:
+                pass
+            spn_data.recv(self.execute(slave_id, cst.READ_HOLDING_REGISTERS, spn_data.addr, spn_data.length,data_format=_data_format)[0])
+            #print("读取",spn_data.name,"值：",spn_data.value)
+            return spn_data.value
+        except modbus_tk.modbus.ModbusError as exc:
+            self._is_opened=False
+            self._is_reconnect=True
+            print("%s- Code=%d", exc, exc.get_exception_code())
+        except modbus_tk.modbus_tcp.socket.error as e:
+            self._is_opened=False
+            self._is_reconnect=True
+            print("连接网络: ",self._host," 失败，错误：",str(e))
         else:
             pass
-        spn_data.recv(self.execute(slave_id, cst.READ_HOLDING_REGISTERS, spn_data.addr, spn_data.length,data_format=_data_format)[0])
-        print("读取",spn_data.name,"值：",spn_data.value)
-        return spn_data.value
+        finally:
+            pass
 
-    def write(self,spn_data,slave_id=1):
-        self.execute(slave_id, cst.WRITE_MULTIPLE_REGISTERS, spn_data.addr,output_value=[int(spn_data.send())])
-        print("写入",spn_data.name,"值：",spn_data.value)
+
+    def write(self,spn_data,value,slave_id=1):
+        try:
+            spn_data.value=value
+            self.execute(slave_id, cst.WRITE_MULTIPLE_REGISTERS, spn_data.addr,output_value=[int(spn_data.send())])
+            print("写入",spn_data.name,"值：",spn_data.value)
+        except modbus_tk.modbus.ModbusError as exc:
+            self._is_opened=False
+            self.is_reconnect=True
+            print("%s- Code=%d", exc, exc.get_exception_code())
+        except modbus_tk.modbus_tcp.socket.error as e:
+            self._is_opened=False
+            self.is_reconnect=True
+            print("连接网络: ",self._host," 失败，错误：",str(e))
+        else:
+            pass
+        finally:
+            pass
+
 
 
 #机器人参数定义
@@ -108,21 +160,22 @@ robo_speed_set = SpnData(name = "robo_speed_set",addr = 2016,length = 1,rate = 1
 #robo_speed   = SpnData(name = "robo_speed",addr = 2019,length = 1,rate = 1,offset = 0)
 
 #变量定义
-host = "192.168.1.5"
-slave_id = 1
+#slave_id = 1
+#host=""
+#master = modbus_tcp.TcpMaster()
+#master.set_timeout(5)
+#modbus_connect_ok=False
 steer_angle_set_manual = 10
 robo_speed_set_manual_forward = 50
 robo_speed_set_manual_backward = -50
 robo_steer_angle_set_manual_left = 15
 robo_steer_angle_set_manual_right = -15
+MODBUS_TIMEOUT=5
 
-spn_master = SpnTcpMaster()
-#连接本机-测试用
-master = modbus_tcp.TcpMaster()
-# 连接MODBUS TCP从机
-#master=modbus_tcp.TcpMaster(host)
-master.set_timeout(10)
-is_master_open = 1
+master_robo = SpnTcpMaster()
+
+
+
 
 
 
