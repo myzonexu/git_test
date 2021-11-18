@@ -11,6 +11,7 @@
     <OutputPath>.</OutputPath>
     <Name>python_test</Name>
     <RootNamespace>python_test</RootNamespace>
+    <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
