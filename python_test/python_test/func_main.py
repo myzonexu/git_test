@@ -78,9 +78,19 @@ def do_push_button(window,master):
     window.spinBox_steer_angle.valueChanged.connect(lambda:do_spinBox_steer_angle(window,master))
     window.pushButton_steer_angle_zero.clicked.connect(lambda:do_btn_steer_angle_zero(window,master))
     window.pushButton_chassis_power_restart.clicked.connect(lambda:do_btn_chassis_power_restart(window,master))
+    window.pushButton_drive_track_forward.clicked.connect(lambda:do_btn_drive_track_forward(window,master))
+    window.pushButton_drive_track_backward.clicked.connect(lambda:do_btn_drive_track_backward(window,master))
 
     return
 
+#沿轨道前进
+def do_btn_drive_track_forward(window,master):
+    master.write(ctrl_mode,1)
+    master.write(drive_ctrl,1)
+#沿轨道后退
+def do_btn_drive_track_backward(window,master):
+    master.write(ctrl_mode,1)
+    master.write(drive_ctrl,2)
 #底盘重新上电
 def do_btn_chassis_power_restart(window,master):
     master.write(chassis_set,7)
@@ -101,8 +111,7 @@ def do_spinBox_robo_speed(window,master):
 def do_btn_robo_speed_zero(window,master):
     window.spinBox_robo_speed.setValue(0)
     master.write(ctrl_mode,1)
-    #手动模式-暂停
-    master.write(drive_ctrl,1)
+    master.write(drive_ctrl,0)
     #手动模式下速度输入
     master.write(robo_speed_set,0)
 
@@ -117,8 +126,7 @@ def do_spinBox_steer_angle(window,master):
 def do_btn_steer_angle_zero(window,master):
     window.spinBox_steer_angle.setValue(0)
     master.write(ctrl_mode,1)
-    #手动模式-暂停
-    master.write(drive_ctrl,1)
+    master.write(drive_ctrl,0)
     #手动模式下转角输入
     master.write(steer_angle_set,0)
 
