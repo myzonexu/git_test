@@ -7,13 +7,13 @@ from PyQt5.QtCore import QTimer
 def do_main_ui(window,master):
 
     #设置快捷键
-    ui_set_shortcut(window)
+    #ui_set_shortcut(window)
     #按钮响应
     do_push_button(window,master)
    
     #定时刷新界面文字
     window.timer = QTimer(window)  # 初始化一个定时器
-    window.timer.timeout.connect(lambda:do_label(window,master))  # 每次计时到时间时发出信号
+    window.timer.timeout.connect(lambda:do_label_refresh(window,master))  # 每次计时到时间时发出信号
     window.timer.start(1000)  # 设置计时间隔并启动；单位毫秒
 
     #定时自动掉线重连网络
@@ -21,6 +21,10 @@ def do_main_ui(window,master):
     window.timer2.timeout.connect(lambda:do_reconnect_modbus(window,master))  # 每次计时到时间时发出信号
     window.timer2.start(5000)
 
+    #定时刷新界面
+    window.timer3 = QTimer(window)  # 初始化一个定时器
+    window.timer3.timeout.connect(lambda:do_ui_refresh(window,master))  # 每次计时到时间时发出信号
+    window.timer3.start(1000)  # 设置计时间隔并启动；单位毫秒
     return
 ###################################################################################################
 
@@ -49,14 +53,13 @@ def do_push_button(window,master):
     window.pushButton_autorun_charge.clicked.connect(lambda:do_btn_autorun_charge(master))
     window.pushButton_autorun_add_water.clicked.connect(lambda:do_btn_autorun_add_water(master))
 
-    window.pushButton_drive_forward.pressed.connect(lambda:do_btn_drive_forward(master))
-    window.pushButton_drive_forward.released.connect(lambda:do_btn_drive_forward_straight(master))
-    #window.pushButton_drive_backward.clicked.connect(lambda:do_btn_drive_backward(master))
-    window.pushButton_drive_backward.pressed.connect(lambda:do_btn_drive_backward(master))
-    window.pushButton_drive_backward.released.connect(lambda:do_btn_drive_backward_straight(master))
-    window.pushButton_drive_pause.clicked.connect(lambda:do_btn_drive_pause(master))
-    window.pushButton_turn_left.clicked.connect(lambda:do_btn_turn_left(master))
-    window.pushButton_turn_right.clicked.connect(lambda:do_btn_turn_right(master))
+    #window.pushButton_drive_forward.pressed.connect(lambda:do_btn_drive_forward(master))
+    #window.pushButton_drive_forward.released.connect(lambda:do_btn_drive_forward_straight(master))
+    #window.pushButton_drive_backward.pressed.connect(lambda:do_btn_drive_backward(master))
+    #window.pushButton_drive_backward.released.connect(lambda:do_btn_drive_backward_straight(master))
+    #window.pushButton_drive_pause.clicked.connect(lambda:do_btn_drive_pause(master))
+    #window.pushButton_turn_left.clicked.connect(lambda:do_btn_turn_left(master))
+    #window.pushButton_turn_right.clicked.connect(lambda:do_btn_turn_right(master))
 
     window.pushButton_arm_position_origin.clicked.connect(lambda:do_btn_arm_position_origin(master))
     window.pushButton_arm_position_wall_1.clicked.connect(lambda:do_btn_arm_position_wall_1(master))
@@ -64,55 +67,73 @@ def do_push_button(window,master):
     window.pushButton_arm_position_wall_3.clicked.connect(lambda:do_btn_arm_position_wall_3(master))
     window.pushButton_arm_position_wall_4.clicked.connect(lambda:do_btn_arm_position_wall_4(master))
     window.pushButton_arm_position_ground_1.clicked.connect(lambda:do_btn_arm_position_ground_1(master))
-    window.pushButton_work_clean.clicked.connect(lambda:do_btn_work_clean(window))
+    window.pushButton_work_clean.clicked.connect(lambda:do_btn_work_clean(window,master))
+    window.pushButton_arm_power_restart.clicked.connect(lambda:do_btn_arm_power_restart(window,master))
 
     window.pushButton_tcp_connect.clicked.connect(lambda:do_btn_tcp_connect(window,master))
     window.pushButton_tcp_disconnect.clicked.connect(lambda:do_btn_tcp_disconnect(window,master))
 
-    #window.verticalScrollBar_robo_speed.valueChanged.connect(lambda:print(window.verticalScrollBar_robo_speed.value()))
-    #window.verticalScrollBar_robo_speed.valueChanged.connect(lambda:do_scroll_robo_speed(window))
-    #window.horizontalScrollBar_steer_angle.valueChanged.connect(lambda:do_scroll_steer_angle(window))
+    window.spinBox_robo_speed.valueChanged.connect(lambda:do_spinBox_robo_speed(window,master))
+    window.pushButton_robo_speed_zero.clicked.connect(lambda:do_btn_robo_speed_zero(window,master))
+    window.spinBox_steer_angle.valueChanged.connect(lambda:do_spinBox_steer_angle(window,master))
+    window.pushButton_steer_angle_zero.clicked.connect(lambda:do_btn_steer_angle_zero(window,master))
+    window.pushButton_chassis_power_restart.clicked.connect(lambda:do_btn_chassis_power_restart(window,master))
 
     return
 
+#底盘重新上电
+def do_btn_chassis_power_restart(window,master):
+    master.write(chassis_set,7)
+#机械臂重新上电
+def do_btn_arm_power_restart(window,master):
+    master.write(chassis_set,6)
+
+#手动控制速度
+def do_spinBox_robo_speed(window,master):
+    #控制模式-手动
+    master.write(ctrl_mode,1)
+    #手动模式-取消暂停
+    master.write(drive_ctrl,0)
+    #手动模式下速度输入
+    master.write(robo_speed_set,window.spinBox_robo_speed.value())
+
+#手动控制暂停
+def do_btn_robo_speed_zero(window,master):
+    window.spinBox_robo_speed.setValue(0)
+    master.write(ctrl_mode,1)
+    #手动模式-暂停
+    master.write(drive_ctrl,1)
+    #手动模式下速度输入
+    master.write(robo_speed_set,0)
+
+#手动控制转角
+def do_spinBox_steer_angle(window,master):
+    #控制模式-手动
+    master.write(ctrl_mode,1)
+    #手动模式下转角输入
+    master.write(steer_angle_set,window.spinBox_steer_angle.value())
+
+#手动控制转向回正
+def do_btn_steer_angle_zero(window,master):
+    window.spinBox_steer_angle.setValue(0)
+    master.write(ctrl_mode,1)
+    #手动模式-暂停
+    master.write(drive_ctrl,1)
+    #手动模式下转角输入
+    master.write(steer_angle_set,0)
+
 #带切换功能按键响应
-def do_toggle_widget(widget,up_text,up_func,down_text,down_func):
-#def do_toggle_widget(widget,up_text,down_text):
+def do_toggle_widget(widget,up_text,up_func,down_text,down_func,master,window):
     if widget.isChecked() == True :
-        up_func()
+        up_func(master,window)
         widget.setText(down_text)
         pass
     elif widget.isChecked() == False :
-        down_func()
+        down_func(master,window)
         widget.setText(up_text)
         pass
     else :
         pass
-    
-'''
-def do_scroll_robo_speed(window):
-    #控制模式-手动
-    ctrl_mode.value = 1
-    modbus_write(master,ctrl_mode)
-    #手动模式-取消暂停
-    drive_ctrl.value = 0
-    modbus_write(master,drive_ctrl)
-    #手动模式下速度输入
-    robo_speed_set.value = window.verticalScrollBar_robo_speed.value()
-    modbus_write(master,robo_speed_set)
-    #print(window.verticalScrollBar_robo_speed.value())
-    return
-
-def do_scroll_steer_angle(window):
-    #控制模式-手动
-    ctrl_mode.value = 1
-    modbus_write(master,ctrl_mode)
-    #手动模式下转角输入
-    steer_angle_set.value = window.horizontalScrollBar_steer_angle.value()
-    modbus_write(master,steer_angle_set)
-    return
-'''
-
 
 #自动任务处理
 def do_btn_autorun_start(master):
@@ -156,186 +177,59 @@ def do_btn_autorun_add_water(master):
         pass
 
 
-#手动控制处理
-def do_btn_drive_forward(master):
-    if master.is_opened():
-        print("前进")
-        #控制模式-手动
-        master.write(ctrl_mode,1)
-        #手动模式-取消暂停
-        master.write(drive_ctrl,0)
-        #手动模式下速度输入
-        master.write(robo_speed_set,robo_speed_set_manual_forward)
-    else:
-        pass
-
-def do_btn_drive_forward_straight(master):
-    if master.is_opened():
-        print("前进")
-        #控制模式-手动
-        master.write(ctrl_mode,1)
-        #手动模式-取消暂停
-        master.write(drive_ctrl,0)
-        #手动模式下转角输入0
-        master.write(steer_angle_set,0)
-        #手动模式下速度输入
-        master.write(robo_speed_set,robo_speed_set_manual_forward)
-    else:
-        pass
-
-def do_btn_drive_backward(master):
-    print("后退")
-    #控制模式-手动
-    ctrl_mode.value = 1
-    modbus_write(master,ctrl_mode)
-    #手动模式-取消暂停
-    drive_ctrl.value = 0
-    modbus_write(master,drive_ctrl)
-    #手动模式下速度输入
-    robo_speed_set.value = robo_speed_set_manual_backward
-    modbus_write(master,robo_speed_set)
-    return
-
-def do_btn_drive_backward_straight(master):
-    print("后退")
-    #控制模式-手动
-    ctrl_mode.value = 1
-    modbus_write(master,ctrl_mode)
-    #手动模式-取消暂停
-    drive_ctrl.value = 0
-    modbus_write(master,drive_ctrl)
-    #手动模式下转角输入0
-    steer_angle_set.value = 0
-    modbus_write(master,steer_angle_set)
-    #手动模式下速度输入
-    robo_speed_set.value = robo_speed_set_manual_backward
-    modbus_write(master,robo_speed_set)
-    return
-
-def do_btn_drive_pause(master):
-    print("暂停行驶")
-    #控制模式-手动
-    ctrl_mode.value = 1
-    modbus_write(master,ctrl_mode)
-    #手动模式-暂停
-    #drive_ctrl.value = 3
-    #modbus_write(master,drive_ctrl)
-    robo_speed_set.value = 0
-    modbus_write(master,robo_speed_set)
-    return
-
-def do_btn_turn_left(master):
-    print("左转")
-    #控制模式-手动
-    ctrl_mode.value = 1
-    modbus_write(master,ctrl_mode)
-    #手动模式下转角输入
-    steer_angle_set.value = robo_steer_angle_set_manual_left
-    modbus_write(master,steer_angle_set)
-    return
-
-def do_btn_turn_right(master):
-    print("右转")
-    #控制模式-手动
-    ctrl_mode.value = 1
-    modbus_write(master,ctrl_mode)
-    #手动模式下转角输入
-    steer_angle_set.value = robo_steer_angle_set_manual_right
-    modbus_write(master,steer_angle_set)
-    return
-
 #机械臂控制处理
 #定位初始位置
 def do_btn_arm_position_origin(master):
     print("定位初始位置")
-    #控制模式-手动
-    ctrl_mode.value = 1
-    modbus_write(master,ctrl_mode)
-    #定位初始位置
-    arm_ctrl.value = 0
-    modbus_write(master,arm_ctrl)
-    return
+    master.write(ctrl_mode,1)
+    master.write(arm_ctrl,0)
 
 #定位侧壁-1
 def do_btn_arm_position_wall_1(master):
     print("定位侧壁-1")
     #控制模式-手动
-    ctrl_mode.value = 1
-    modbus_write(master,ctrl_mode)
-    #定位侧壁-1
-    arm_ctrl.value = 1
-    modbus_write(master,arm_ctrl)
-    return
+    master.write(ctrl_mode,1)
+    master.write(arm_ctrl,1)
 
 #定位侧壁-2
 def do_btn_arm_position_wall_2(master):
     print("定位侧壁-2")
-    #控制模式-手动
-    ctrl_mode.value = 1
-    modbus_write(master,ctrl_mode)
-    #定位侧壁-2
-    arm_ctrl.value = 2
-    modbus_write(master,arm_ctrl)
-    return
+    master.write(ctrl_mode,1)
+    master.write(arm_ctrl,2)
 
 #定位侧壁-3
 def do_btn_arm_position_wall_3(master):
     print("定位侧壁-3")
-    #控制模式-手动
-    ctrl_mode.value = 1
-    modbus_write(master,ctrl_mode)
-    #定位侧壁-3
-    arm_ctrl.value = 3
-    modbus_write(master,arm_ctrl)
-    return
+    master.write(ctrl_mode,1)
+    master.write(arm_ctrl,3)
 
 #定位侧壁-4
 def do_btn_arm_position_wall_4(master):
     print("定位侧壁-4")
-    #控制模式-手动
-    ctrl_mode.value = 1
-    modbus_write(master,ctrl_mode)
-    #定位侧壁-4
-    arm_ctrl.value = 4
-    modbus_write(master,arm_ctrl)
-    return
+    master.write(ctrl_mode,1)
+    master.write(arm_ctrl,4)
 
 #定位地面-1
 def do_btn_arm_position_ground_1(master):
     print("定位地面-1")
-    #控制模式-手动
-    ctrl_mode.value = 1
-    modbus_write(master,ctrl_mode)
-    #定位地面-1
-    arm_ctrl.value = 5
-    modbus_write(master,arm_ctrl)
-    return
+    master.write(ctrl_mode,1)
+    master.write(arm_ctrl,5)
 
 #开关滚刷控制功能
-def do_btn_work_clean_start(master):
-    #控制模式-手动
-    ctrl_mode.value = 1
-    modbus_write(master,ctrl_mode)
-    work_ctrl.value = 1 
+def do_btn_work_clean_start(master,window):
     print("开水泵、刷子")
-    modbus_write(master,work_ctrl)
+    master.write(ctrl_mode,1)
+    master.write(work_ctrl,1)
     
-def do_btn_work_clean_stop(master):
-    #控制模式-手动
-    ctrl_mode.value = 1
-    modbus_write(master,ctrl_mode)
-    work_ctrl.value = 0
+def do_btn_work_clean_stop(master,window):
     print("关水泵、刷子")
-    modbus_write(master,work_ctrl)
+    master.write(ctrl_mode,1)
+    master.write(work_ctrl,0)
 
 #控制水泵、刷子
-def do_btn_work_clean(window):
+def do_btn_work_clean(window,master):
     #带功能切换按键
-    do_toggle_widget(window.pushButton_work_clean,"开滚刷",do_btn_work_clean_start,"关滚刷",do_btn_work_clean_stop)
-
-    return
-
-
+    do_toggle_widget(window.pushButton_work_clean,"开滚刷",do_btn_work_clean_start,"关滚刷",do_btn_work_clean_stop,master,window)
 
 #连接网络
 def do_btn_tcp_connect(window,master):
@@ -346,6 +240,7 @@ def do_btn_tcp_connect(window,master):
         master.open()
         master.no_reconnect()
         connect_info = "连接网络: " + host + " 成功"
+        window.label_robo_info.setText("机器人编号："+str(master.read(robo_id))+"    程序版本："+str(master.read(soft_version)))
     except modbus_tk.modbus.ModbusError as exc:
         print("%s- Code=%d", exc, exc.get_exception_code())
     except modbus_tk.modbus_tcp.socket.error as e:
@@ -363,6 +258,7 @@ def do_btn_tcp_disconnect(window,master):
         master.close()
         master.no_reconnect()
         connect_info = "网络已断开"
+        window.label_robo_info.setText("")
     except modbus_tk.modbus.ModbusError as exc:
         print("%s- Code=%d", exc, exc.get_exception_code())
     except modbus_tk.modbus_tcp.socket.error as e:
@@ -380,8 +276,20 @@ def do_reconnect_modbus(window,master):
     else:
         pass
 
+#刷新界面
+def do_ui_refresh(window,master):
+    do_widget_set_enbaled(window,master)
+    #do_label_refresh(window,master)
+
+#设置控件可用
+def do_widget_set_enbaled(window,master):
+    if master.is_opened() and master.is_reconnect()==False :
+        window.tabWidget_robo_ctrl.setEnabled(True)
+    else:
+        window.tabWidget_robo_ctrl.setEnabled(False)
+
 #标签刷新###############################################################################
-def do_label(window,master):    
+def do_label_refresh(window,master):    
     if master.is_opened():
         window.label_heartbeat.setText("心跳：" + str(master.read(heartbeat)))
         window.label_robo_speed.setText("速度：" + str(master.read(robo_speed)) + "mm/s")

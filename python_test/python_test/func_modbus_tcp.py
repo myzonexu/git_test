@@ -1,6 +1,5 @@
 import modbus_tk
 import modbus_tk.defines as cst
-#from modbus_tk.modbus_tcp import TcpMaster
 import modbus_tk.modbus_tcp as modbus_tcp
 
 import time
@@ -37,7 +36,7 @@ def modbus_write(master,spn_data,slave_id=1):
     master.execute(slave_id, cst.WRITE_MULTIPLE_REGISTERS, spn_data.addr,output_value=[int(spn_data.send())])
     print("写入",spn_data.name,"值：",spn_data.value)
 
-
+#定义SpnTcpMaster类，TcpMaster增加方法
 class SpnTcpMaster(modbus_tk.modbus_tcp.TcpMaster):
     _is_reconnect=False
 
@@ -111,6 +110,16 @@ class SpnTcpMaster(modbus_tk.modbus_tcp.TcpMaster):
             pass
 
 
+#常量定义
+MODBUS_TIMEOUT=5
+steer_angle_set_manual = 10
+robo_speed_set_manual_forward = 50
+robo_speed_set_manual_backward = -50
+robo_steer_angle_set_manual_left = 15
+robo_steer_angle_set_manual_right = -15
+
+#变量定义
+master_robo = SpnTcpMaster()
 
 #机器人参数定义
 heartbeat = SpnData(name = "heartbeat",addr = 1000,length = 1,rate = 1,offset = 0)
@@ -159,20 +168,7 @@ robo_speed_set = SpnData(name = "robo_speed_set",addr = 2016,length = 1,rate = 1
 #robo_speed   = SpnData(name = "robo_speed",addr = 2018,length = 1,rate = 1,offset = 0)
 #robo_speed   = SpnData(name = "robo_speed",addr = 2019,length = 1,rate = 1,offset = 0)
 
-#变量定义
-#slave_id = 1
-#host=""
-#master = modbus_tcp.TcpMaster()
-#master.set_timeout(5)
-#modbus_connect_ok=False
-steer_angle_set_manual = 10
-robo_speed_set_manual_forward = 50
-robo_speed_set_manual_backward = -50
-robo_steer_angle_set_manual_left = 15
-robo_steer_angle_set_manual_right = -15
-MODBUS_TIMEOUT=5
 
-master_robo = SpnTcpMaster()
 
 
 
