@@ -7,6 +7,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
 
+import cv2
+
 ###################################################################################################
 def do_main_ui(window,master):
 
@@ -30,6 +32,10 @@ def do_main_ui(window,master):
     window.timer3 = QTimer(window)  # 初始化一个定时器
     window.timer3.timeout.connect(lambda:do_ui_refresh(window,master))  # 每次计时到时间时发出信号
     window.timer3.start(1000)  # 设置计时间隔并启动；单位毫秒
+
+    window.timer_camera = QTimer(window)
+    window.timer_camera.timeout.connect(lambda:do_show_camera(window,master))  # 每次计时到时间时发出信号
+    window.timer_camera.start(30)  # 设置计时间隔并启动；单位毫秒  
     return
 ###################################################################################################
 
@@ -329,4 +335,42 @@ def set_monitor_browser(window,url):
     browser=QWebEngineView()
     browser.load(QUrl(url))
     window.scrollArea_monitor_browser.setWidget(browser)
+
+#opencv读取监控rtsp
+#海康的rtsp协议格式如下：
+#rtsp://[username]:[passwd]@[ip]:[port]/[codec]/[channel]/[subtype]/av_stream
+#主码流：
+#rtsp://admin:12345@192.168.1.64:554/h264/ch1/main/av_stream
+#rtsp://admin:12345@192.168.1.64:554/MPEG-4/ch1/main/av_stream
+#子码流：
+#rtsp://admin:12345@192.168.1.64/mpeg4/ch1/sub/av_stream
+#rtsp://admin:12345@192.168.1.64/h264/ch1/sub/av_stream
+def show_camera(window):
+    try:
+        url = "rtsp://admin:passwd@192.168.1.64/Streaming/Channels/1"
+        cap=cv2.VideoCapture(url)
+        #设置显示分辨率和FPS ,不设置的话会非常卡
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH,480)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT,360)
+        cap.set (cv2.CAP_PROP_FPS,20)
+        if cap.isOpened():
+            ret,frame=cap.read()
+            #水平翻转,很有必要
+            frame=cv2.flip(frame,1)
+            #opencv 默认图像格式是rgb qimage要使用BRG,这里进行格式转换,不用这个的话,图像就变色了,困扰了半天,翻了一堆资料
+            frame=cv2.cvtColor(frame,cv2.COLOR_RGB2BGR)
+            #mat-->qimage
+            img=QImage(frame.data,frame.shape[1],frame.shape[0],QImage.Format_RGB888)
+            #ex.SetPic(a)
+            window.label_monitor.setPixmap(QPixmap.fromImage(img))
+        else:
+        
+            pass
+    except Exception as e:
+            print("启动摄像机失败，请检测网络连接或连接配置,异常：",e)
     
+def do_show_camera(window,master):
+    if master.is_opened() and master.is_reconnect()==False :
+        show_camera(window)
+    else:
+        pass
