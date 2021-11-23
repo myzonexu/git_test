@@ -2,6 +2,10 @@ import time
 from func_modbus_tcp import *
 from PyQt5.QtCore import QTimer
 
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtWebEngineWidgets import *
 
 ###################################################################################################
 def do_main_ui(window,master):
@@ -10,6 +14,7 @@ def do_main_ui(window,master):
     #ui_set_shortcut(window)
     #按钮响应
     do_push_button(window,master)
+    
    
     #定时刷新界面文字
     window.timer = QTimer(window)  # 初始化一个定时器
@@ -249,6 +254,11 @@ def do_btn_tcp_connect(window,master):
         master.no_reconnect()
         connect_info = "连接网络: " + host + " 成功"
         window.label_robo_info.setText("机器人编号："+str(master.read(robo_id))+"    程序版本："+str(master.read(soft_version)))
+
+        #监控
+        url='http://192.168.1.64'
+        #url='https://www.baidu.com'
+        set_monitor_browser(window,url)
     except modbus_tk.modbus.ModbusError as exc:
         print("%s- Code=%d", exc, exc.get_exception_code())
     except modbus_tk.modbus_tcp.socket.error as e:
@@ -314,4 +324,9 @@ def do_label_refresh(window,master):
         window.label_water_level.setText("水位：" + "--" + "%")
 
 
-
+#监控
+def set_monitor_browser(window,url):
+    browser=QWebEngineView()
+    browser.load(QUrl(url))
+    window.scrollArea_monitor_browser.setWidget(browser)
+    

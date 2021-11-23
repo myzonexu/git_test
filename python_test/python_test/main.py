@@ -8,11 +8,11 @@ from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtCore import QTimer
 
 # 导入ui文件，ui_main是.ui文件生成的.py文件名
-from ui_main import Ui_mainWindow
+from ui_main import Ui_MainWindow
 from func_main import *
 
 
-class Window(QMainWindow, Ui_mainWindow):
+class Window(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -26,6 +26,7 @@ class Window(QMainWindow, Ui_mainWindow):
   
     def func(self):
         #print('窗口函数')    
+               
         pass
  
  

@@ -36,6 +36,7 @@
     </Compile>
     <Compile Include="test_main.py" />
     <Compile Include="ui_main.py" />
+    <Compile Include="ui_test.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ui_main.ui" />
