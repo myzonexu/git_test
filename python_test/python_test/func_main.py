@@ -7,11 +7,13 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
 
+from PyQt5 import QtSvg
 import cv2
 
 ###################################################################################################
 def do_main_ui(window,master):
 
+    show_map(window)
     #设置快捷键
     #ui_set_shortcut(window)
     #按钮响应
@@ -347,7 +349,7 @@ def set_monitor_browser(window,url):
 #rtsp://admin:12345@192.168.1.64/h264/ch1/sub/av_stream
 def show_camera(window):
     try:
-        url = "rtsp://admin:passwd@192.168.1.64/Streaming/Channels/1"
+        url = "rtsp://admin:ylcx6666@192.168.1.64/Streaming/Channels/1"
         cap=cv2.VideoCapture(url)
         #设置显示分辨率和FPS ,不设置的话会非常卡
         cap.set(cv2.CAP_PROP_FRAME_WIDTH,480)
@@ -374,3 +376,11 @@ def do_show_camera(window,master):
         show_camera(window)
     else:
         pass
+
+#显示SVG地图
+def show_map(window):
+    svgWidget = QtSvg.QSvgWidget('map.svg')
+    render=svgWidget.renderer()
+    render.setViewBox(QRect(0,0,800,500))
+    #svgWidget.setGeometry(0,0,1112,793)
+    window.scrollArea_map.setWidget(svgWidget)
