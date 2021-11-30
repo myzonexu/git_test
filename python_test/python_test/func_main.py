@@ -8,11 +8,13 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
 
 from PyQt5 import QtSvg
-import cv2
+import threading
+from func_camera import *
 
 ###################################################################################################
-def do_main_ui(window,master):
-
+def do_main_ui(window,master,camera):
+    #window.scrollArea.resize(width,height)
+    
     show_map(window)
     #设置快捷键
     #ui_set_shortcut(window)
@@ -36,7 +38,7 @@ def do_main_ui(window,master):
     window.timer3.start(1000)  # 设置计时间隔并启动；单位毫秒
 
     window.timer_camera = QTimer(window)
-    window.timer_camera.timeout.connect(lambda:do_show_camera(window,master))  # 每次计时到时间时发出信号
+    window.timer_camera.timeout.connect(lambda:do_show_camera(window,master,camera))  # 每次计时到时间时发出信号
     window.timer_camera.start(30)  # 设置计时间隔并启动；单位毫秒  
     return
 ###################################################################################################
@@ -84,6 +86,7 @@ def do_push_button(window,master):
     window.pushButton_arm_power_restart.clicked.connect(lambda:do_btn_arm_power_restart(window,master))
 
     window.pushButton_tcp_connect.clicked.connect(lambda:do_btn_tcp_connect(window,master))
+    #window.pushButton_tcp_connect.clicked.connect(thread_modbus.start)
     window.pushButton_tcp_disconnect.clicked.connect(lambda:do_btn_tcp_disconnect(window,master))
 
     window.spinBox_robo_speed.valueChanged.connect(lambda:do_spinBox_robo_speed(window,master))
@@ -262,11 +265,9 @@ def do_btn_tcp_connect(window,master):
         master.no_reconnect()
         connect_info = "连接网络: " + host + " 成功"
         window.label_robo_info.setText("机器人编号："+str(master.read(robo_id))+"    程序版本："+str(master.read(soft_version)))
-
-        #监控
-        url='http://192.168.1.64'
-        #url='https://www.baidu.com'
-        set_monitor_browser(window,url)
+        #相机web页面
+        
+        set_camera_browser(camera,window.scrollArea_camera_browser)
     except modbus_tk.modbus.ModbusError as exc:
         print("%s- Code=%d", exc, exc.get_exception_code())
     except modbus_tk.modbus_tcp.socket.error as e:
@@ -305,7 +306,8 @@ def do_reconnect_modbus(window,master):
 #刷新界面
 def do_ui_refresh(window,master):
     do_widget_set_enbaled(window,master)
-    #do_label_refresh(window,master)
+    do_label_refresh(window,master)
+    show_map(window)
 
 #设置控件可用
 def do_widget_set_enbaled(window,master):
@@ -332,55 +334,20 @@ def do_label_refresh(window,master):
         window.label_water_level.setText("水位：" + "--" + "%")
 
 
-#监控
-def set_monitor_browser(window,url):
-    browser=QWebEngineView()
-    browser.load(QUrl(url))
-    window.scrollArea_monitor_browser.setWidget(browser)
-
-#opencv读取监控rtsp
-#海康的rtsp协议格式如下：
-#rtsp://[username]:[passwd]@[ip]:[port]/[codec]/[channel]/[subtype]/av_stream
-#主码流：
-#rtsp://admin:12345@192.168.1.64:554/h264/ch1/main/av_stream
-#rtsp://admin:12345@192.168.1.64:554/MPEG-4/ch1/main/av_stream
-#子码流：
-#rtsp://admin:12345@192.168.1.64/mpeg4/ch1/sub/av_stream
-#rtsp://admin:12345@192.168.1.64/h264/ch1/sub/av_stream
-def show_camera(window):
-    try:
-        url = "rtsp://admin:ylcx6666@192.168.1.64/Streaming/Channels/1"
-        cap=cv2.VideoCapture(url)
-        #设置显示分辨率和FPS ,不设置的话会非常卡
-        cap.set(cv2.CAP_PROP_FRAME_WIDTH,480)
-        cap.set(cv2.CAP_PROP_FRAME_HEIGHT,360)
-        cap.set (cv2.CAP_PROP_FPS,20)
-        if cap.isOpened():
-            ret,frame=cap.read()
-            #水平翻转,很有必要
-            frame=cv2.flip(frame,1)
-            #opencv 默认图像格式是rgb qimage要使用BRG,这里进行格式转换,不用这个的话,图像就变色了,困扰了半天,翻了一堆资料
-            frame=cv2.cvtColor(frame,cv2.COLOR_RGB2BGR)
-            #mat-->qimage
-            img=QImage(frame.data,frame.shape[1],frame.shape[0],QImage.Format_RGB888)
-            #ex.SetPic(a)
-            window.label_monitor.setPixmap(QPixmap.fromImage(img))
-        else:
-        
-            pass
-    except Exception as e:
-            print("启动摄像机失败，请检测网络连接或连接配置,异常：",e)
-    
-def do_show_camera(window,master):
-    if master.is_opened() and master.is_reconnect()==False :
-        show_camera(window)
-    else:
-        pass
-
 #显示SVG地图
+x=0
 def show_map(window):
     svgWidget = QtSvg.QSvgWidget('map.svg')
+    #print(svgWidget.sizeHint())
     render=svgWidget.renderer()
-    render.setViewBox(QRect(0,0,800,500))
-    #svgWidget.setGeometry(0,0,1112,793)
+    global x
+    #x=x+0.5
+    render.setViewBox(QRect(x,10,100,80))
+    #svgWidget.setGeometry(0,0,400,600)
     window.scrollArea_map.setWidget(svgWidget)
+
+
+
+#thread_modbus = threading.Thread(target=do_btn_tcp_connect,args=(window,master_robo,), name='thread_modbus')
+#thread_modbus.start()
+#thread_modbus.join()

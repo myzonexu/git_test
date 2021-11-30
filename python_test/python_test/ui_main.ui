@@ -63,15 +63,15 @@
           <item>
            <widget class="QGroupBox" name="groupBox">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
             <property name="minimumSize">
              <size>
-              <width>500</width>
-              <height>200</height>
+              <width>0</width>
+              <height>0</height>
              </size>
             </property>
             <property name="title">
@@ -80,6 +80,12 @@
             <layout class="QHBoxLayout" name="horizontalLayout_4">
              <item>
               <widget class="QScrollArea" name="scrollArea_map">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="styleSheet">
                 <string notr="true">background-color: rgb(255, 255, 255);</string>
                </property>
@@ -103,8 +109,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>480</width>
-                  <height>316</height>
+                  <width>305</width>
+                  <height>321</height>
                  </rect>
                 </property>
                </widget>
@@ -123,14 +129,14 @@
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>10</width>
+              <width>13</width>
               <height>20</height>
              </size>
             </property>
            </spacer>
           </item>
           <item>
-           <widget class="QGroupBox" name="groupBox_10">
+           <widget class="QScrollArea" name="scrollArea_camera">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
               <horstretch>0</horstretch>
@@ -139,25 +145,134 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>400</width>
-              <height>200</height>
+              <width>630</width>
+              <height>353</height>
              </size>
             </property>
-            <property name="title">
-             <string>监控</string>
+            <property name="baseSize">
+             <size>
+              <width>640</width>
+              <height>360</height>
+             </size>
             </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
-             <item>
-              <widget class="QLabel" name="label_monitor">
-               <property name="text">
-                <string>监控</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">padding:0px;
+</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Plain</enum>
+            </property>
+            <property name="lineWidth">
+             <number>0</number>
+            </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QAbstractScrollArea::AdjustToContents</enum>
+            </property>
+            <property name="widgetResizable">
+             <bool>true</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <widget class="QWidget" name="scrollAreaWidgetContents_3">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>630</width>
+               <height>353</height>
+              </rect>
+             </property>
+             <layout class="QGridLayout" name="gridLayout">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_camera">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="sizeIncrement">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="baseSize">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>9</pointsize>
+                 </font>
+                </property>
+                <property name="contextMenuPolicy">
+                 <enum>Qt::DefaultContextMenu</enum>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Plain</enum>
+                </property>
+                <property name="lineWidth">
+                 <number>0</number>
+                </property>
+                <property name="text">
+                 <string>监控</string>
+                </property>
+                <property name="scaledContents">
+                 <bool>false</bool>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+                <property name="indent">
+                 <number>0</number>
+                </property>
+                <property name="openExternalLinks">
+                 <bool>false</bool>
+                </property>
+                <property name="textInteractionFlags">
+                 <set>Qt::LinksAccessibleByMouse</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </widget>
           </item>
          </layout>
@@ -173,7 +288,7 @@
           <property name="sizeHint" stdset="0">
            <size>
             <width>20</width>
-            <height>10</height>
+            <height>5</height>
            </size>
           </property>
          </spacer>
@@ -1063,7 +1178,7 @@ p, li { white-space: pre-wrap; }
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_17">
         <item>
-         <widget class="QScrollArea" name="scrollArea_monitor_browser">
+         <widget class="QScrollArea" name="scrollArea_camera_browser">
           <property name="frameShape">
            <enum>QFrame::NoFrame</enum>
           </property>
@@ -1412,7 +1527,7 @@ p, li { white-space: pre-wrap; }
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>1000</width>
+                 <width>800</width>
                  <height>300</height>
                 </size>
                </property>
@@ -1667,12 +1782,12 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>202</x>
-     <y>127</y>
+     <x>219</x>
+     <y>486</y>
     </hint>
     <hint type="destinationlabel">
-     <x>173</x>
-     <y>172</y>
+     <x>112</x>
+     <y>522</y>
     </hint>
    </hints>
   </connection>
@@ -1683,12 +1798,12 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>314</x>
-     <y>127</y>
+     <x>219</x>
+     <y>486</y>
     </hint>
     <hint type="destinationlabel">
-     <x>349</x>
-     <y>162</y>
+     <x>306</x>
+     <y>545</y>
     </hint>
    </hints>
   </connection>
@@ -1699,12 +1814,12 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>360</x>
-     <y>127</y>
+     <x>306</x>
+     <y>545</y>
     </hint>
     <hint type="destinationlabel">
-     <x>283</x>
-     <y>134</y>
+     <x>219</x>
+     <y>486</y>
     </hint>
    </hints>
   </connection>
@@ -1715,12 +1830,12 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>329</x>
-     <y>198</y>
+     <x>306</x>
+     <y>545</y>
     </hint>
     <hint type="destinationlabel">
-     <x>138</x>
-     <y>177</y>
+     <x>112</x>
+     <y>522</y>
     </hint>
    </hints>
   </connection>
@@ -1731,12 +1846,12 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>181</x>
-     <y>177</y>
+     <x>112</x>
+     <y>522</y>
     </hint>
     <hint type="destinationlabel">
-     <x>174</x>
-     <y>129</y>
+     <x>219</x>
+     <y>486</y>
     </hint>
    </hints>
   </connection>
@@ -1747,12 +1862,12 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>156</x>
-     <y>179</y>
+     <x>112</x>
+     <y>522</y>
     </hint>
     <hint type="destinationlabel">
-     <x>338</x>
-     <y>179</y>
+     <x>306</x>
+     <y>545</y>
     </hint>
    </hints>
   </connection>
@@ -1763,12 +1878,12 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>203</x>
-     <y>230</y>
+     <x>219</x>
+     <y>562</y>
     </hint>
     <hint type="destinationlabel">
-     <x>150</x>
-     <y>273</y>
+     <x>106</x>
+     <y>598</y>
     </hint>
    </hints>
   </connection>
@@ -1779,12 +1894,12 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>298</x>
-     <y>232</y>
+     <x>219</x>
+     <y>562</y>
     </hint>
     <hint type="destinationlabel">
-     <x>357</x>
-     <y>256</y>
+     <x>306</x>
+     <y>621</y>
     </hint>
    </hints>
   </connection>
@@ -1795,12 +1910,12 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>182</x>
-     <y>279</y>
+     <x>106</x>
+     <y>598</y>
     </hint>
     <hint type="destinationlabel">
-     <x>215</x>
-     <y>232</y>
+     <x>219</x>
+     <y>562</y>
     </hint>
    </hints>
   </connection>
@@ -1811,12 +1926,12 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>162</x>
-     <y>264</y>
+     <x>106</x>
+     <y>598</y>
     </hint>
     <hint type="destinationlabel">
-     <x>359</x>
-     <y>282</y>
+     <x>306</x>
+     <y>621</y>
     </hint>
    </hints>
   </connection>
@@ -1827,12 +1942,12 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>343</x>
-     <y>266</y>
+     <x>306</x>
+     <y>621</y>
     </hint>
     <hint type="destinationlabel">
-     <x>268</x>
-     <y>232</y>
+     <x>219</x>
+     <y>562</y>
     </hint>
    </hints>
   </connection>
@@ -1843,12 +1958,12 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>361</x>
-     <y>293</y>
+     <x>306</x>
+     <y>621</y>
     </hint>
     <hint type="destinationlabel">
-     <x>157</x>
-     <y>268</y>
+     <x>106</x>
+     <y>598</y>
     </hint>
    </hints>
   </connection>

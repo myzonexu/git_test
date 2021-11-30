@@ -24,18 +24,6 @@ class SpnData:
     def recv(self,data_recv):
         self.value = data_recv * self.rate + self.offset
 
-#读数据
-def modbus_read(master,spn_data,slave_id=1):
-    
-    spn_data.recv(master.execute(slave_id, cst.READ_HOLDING_REGISTERS, spn_data.addr, spn_data.length,data_format=">h")[0])
-    #print("读取",spn_data.name,"值：",spn_data.value)
-
-
-#写数据
-def modbus_write(master,spn_data,slave_id=1):
-    master.execute(slave_id, cst.WRITE_MULTIPLE_REGISTERS, spn_data.addr,output_value=[int(spn_data.send())])
-    print("写入",spn_data.name,"值：",spn_data.value)
-
 #定义SpnTcpMaster类，TcpMaster增加方法
 class SpnTcpMaster(modbus_tk.modbus_tcp.TcpMaster):
     _is_reconnect=False
@@ -109,6 +97,19 @@ class SpnTcpMaster(modbus_tk.modbus_tcp.TcpMaster):
         finally:
             pass
 
+'''待清理代码
+#读数据
+def modbus_read(master,spn_data,slave_id=1):
+    
+    spn_data.recv(master.execute(slave_id, cst.READ_HOLDING_REGISTERS, spn_data.addr, spn_data.length,data_format=">h")[0])
+    #print("读取",spn_data.name,"值：",spn_data.value)
+
+
+#写数据
+def modbus_write(master,spn_data,slave_id=1):
+    master.execute(slave_id, cst.WRITE_MULTIPLE_REGISTERS, spn_data.addr,output_value=[int(spn_data.send())])
+    print("写入",spn_data.name,"值：",spn_data.value)
+'''
 
 #常量定义
 MODBUS_TIMEOUT=5

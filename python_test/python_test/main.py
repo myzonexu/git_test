@@ -35,6 +35,6 @@ if __name__ == '__main__':
     window = Window()
     window.func_list()
     window.show()
-    do_main_ui(window,master_robo)
+    do_main_ui(window,master_robo,camera)
     sys.exit(app.exec_())
     
