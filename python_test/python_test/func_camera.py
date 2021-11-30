@@ -2,6 +2,8 @@ import cv2
 from PyQt5.QtGui import QImage,QPixmap
 from PyQt5.QtCore import QUrl
 from PyQt5.QtWebEngineWidgets import *
+import threading
+
 
 #opencv读取监控rtsp
 #海康的rtsp协议格式如下：
@@ -114,6 +116,11 @@ class CameraRtsp():
                 pass
         else:
             print("未启动相机")
+        #关闭相机
+        def close(self):        
+            if self.cap.isOpened():
+                #断开
+                self.cap.release()
 
 
 #显示视频
@@ -124,7 +131,6 @@ def do_show_camera(window,master,camera):
     else:
         pass
 
-#关闭视频
 
 
 #相机web页面
@@ -136,8 +142,7 @@ def set_camera_browser(camera,show_area):
 
 #变量定义
 #海康相机rtsp地址username,passwd,ip
-camera = CameraRtsp(username="admin",passwd="ylcx6666",ip="192.168.1.64",pc_test=False)
-print(camera.url)
-
+camera_robo = CameraRtsp(username="admin",passwd="ylcx6666",ip="192.168.1.64",pc_test=False)
+#print(camera.url)
 
 

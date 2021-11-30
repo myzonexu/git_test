@@ -13,13 +13,12 @@ from func_camera import *
 
 ###################################################################################################
 def do_main_ui(window,master,camera):
-    #window.scrollArea.resize(width,height)
-    
+   
     show_map(window)
     #设置快捷键
     #ui_set_shortcut(window)
     #按钮响应
-    do_push_button(window,master)
+    do_push_button(window,master,camera)
     
    
     #定时刷新界面文字
@@ -62,7 +61,7 @@ def ui_set_shortcut(window):
     window.pushButton_arm_position_ground_1.setShortcut('5')
 
 #按钮响应####################################################################################
-def do_push_button(window,master):
+def do_push_button(window,master,camera):
     window.pushButton_autorun_start.clicked.connect(lambda:do_btn_autorun_start(master))
     window.pushButton_autorun_stop.clicked.connect(lambda:do_btn_autorun_stop(master))
     window.pushButton_autorun_charge.clicked.connect(lambda:do_btn_autorun_charge(master))
@@ -85,7 +84,7 @@ def do_push_button(window,master):
     window.pushButton_work_clean.clicked.connect(lambda:do_btn_work_clean(window,master))
     window.pushButton_arm_power_restart.clicked.connect(lambda:do_btn_arm_power_restart(window,master))
 
-    window.pushButton_tcp_connect.clicked.connect(lambda:do_btn_tcp_connect(window,master))
+    window.pushButton_tcp_connect.clicked.connect(lambda:do_btn_tcp_connect(window,master,camera))
     #window.pushButton_tcp_connect.clicked.connect(thread_modbus.start)
     window.pushButton_tcp_disconnect.clicked.connect(lambda:do_btn_tcp_disconnect(window,master))
 
@@ -256,7 +255,7 @@ def do_btn_work_clean(window,master):
     do_toggle_widget(window.pushButton_work_clean,"开滚刷",do_btn_work_clean_start,"关滚刷",do_btn_work_clean_stop,master,window)
 
 #连接网络
-def do_btn_tcp_connect(window,master):
+def do_btn_tcp_connect(window,master,camera):
     try:
         host = window.lineEdit_ip_addr.text()
         master.set_host(host)
