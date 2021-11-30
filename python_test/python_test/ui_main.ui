@@ -61,7 +61,7 @@
            <enum>QLayout::SetMinimumSize</enum>
           </property>
           <item>
-           <widget class="QGroupBox" name="groupBox">
+           <widget class="QGroupBox" name="groupBox_map">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
               <horstretch>0</horstretch>
@@ -109,7 +109,7 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>305</width>
+                  <width>458</width>
                   <height>321</height>
                  </rect>
                 </property>
@@ -145,7 +145,7 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>630</width>
+              <width>400</width>
               <height>353</height>
              </size>
             </property>
@@ -185,7 +185,7 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>630</width>
+               <width>477</width>
                <height>353</height>
               </rect>
              </property>

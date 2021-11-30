@@ -69,6 +69,7 @@ class CameraRtsp():
                 self.height_camera = frame.shape[0]
                 self.ratio_w_h = self.width_camera / self.height_camera
                 self._has_init = True
+                print("相机原始分辨率：",self.width_camera,self.height_camera)
             else:
                 self._has_init = False
                 print("初始化捕获视频失败")
@@ -94,7 +95,10 @@ class CameraRtsp():
             has_frame,frame = self.cap.read()
             if has_frame:
                 #获取父件高度
-                self.set_show_aera_from_height(show_label.parentWidget().parentWidget().height())
+                #self.set_show_aera_from_height(show_label.parentWidget().parentWidget().height())
+                self.set_show_width(show_label.parentWidget().parentWidget().width())
+                self.set_show_height(show_label.parentWidget().parentWidget().height())
+
                 #使用opencv缩放有可能出错，不用
                 #frame=cv2.resize(frame, (width,height))
 

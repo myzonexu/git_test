@@ -26,9 +26,23 @@ class Window(QMainWindow, Ui_MainWindow):
         self.func()
   
     def func(self):
-        #print('窗口函数')    
-               
-        pass
+        #print('窗口函数')
+        pass 
+
+    def resizeEvent(self, QResizeEvent):
+        #Window resize event.
+        super().resizeEvent(QResizeEvent)
+        if camera_robo.has_init():
+            width_old=self.scrollArea_camera.width()
+            height=self.scrollArea_camera.height()
+            width_new=height*camera_robo.ratio_w_h
+            width_offset=width_new-width_old
+            self.groupBox_map.resize(self.groupBox_map.width()-width_offset,self.groupBox_map.height())
+            self.scrollArea_camera.move(self.scrollArea_camera.x()-width_offset,self.scrollArea_camera.y())
+            self.scrollArea_camera.resize(width_new,height)
+        else:
+            pass
+        #print("窗口大小",self.width(),self.height())    
  
  
 if __name__ == '__main__':
