@@ -129,11 +129,13 @@ class CameraRtsp():
 
 #显示视频
 def do_show_camera(window,master,camera):
-    if master.is_opened() and master.is_reconnect() == False :
-    #if True :
-        camera.show_on_label(window.label_camera)
-    else:
-        pass
+    while 1:
+        if master.is_opened() and master.is_reconnect() == False and window.tabWidget_main.currentIndex()==0:
+        #if True :
+            camera.show_on_label(window.label_camera)
+
+        else:
+            pass
 
 
 
@@ -146,7 +148,7 @@ def set_camera_browser(camera,show_area):
 
 #变量定义
 #海康相机rtsp地址username,passwd,ip
-camera_robo = CameraRtsp(username="admin",passwd="ylcx6666",ip="192.168.1.64",pc_test=False)
+camera_robo = CameraRtsp(username="admin",passwd="ylcx6666",ip="192.168.1.64",pc_test=True)
 #print(camera.url)
 
 

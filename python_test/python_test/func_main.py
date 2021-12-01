@@ -20,25 +20,20 @@ def do_main_ui(window,master,camera):
     #按钮响应
     do_push_button(window,master,camera)
     
-   
-    #定时刷新界面文字
-    window.timer = QTimer(window)  # 初始化一个定时器
-    window.timer.timeout.connect(lambda:do_label_refresh(window,master))  # 每次计时到时间时发出信号
-    window.timer.start(1000)  # 设置计时间隔并启动；单位毫秒
-
     #定时自动掉线重连网络
     window.timer2 = QTimer(window)  # 初始化一个定时器
-    window.timer2.timeout.connect(lambda:do_reconnect_modbus(window,master))  # 每次计时到时间时发出信号
+    window.timer2.timeout.connect(lambda:do_reconnect_modbus(window,master,camera))  # 每次计时到时间时发出信号
     window.timer2.start(5000)
 
-    #定时刷新界面
+    #定时刷新界面改用线程，不再使用定时器
     window.timer3 = QTimer(window)  # 初始化一个定时器
     window.timer3.timeout.connect(lambda:do_ui_refresh(window,master))  # 每次计时到时间时发出信号
     window.timer3.start(1000)  # 设置计时间隔并启动；单位毫秒
-
-    window.timer_camera = QTimer(window)
-    window.timer_camera.timeout.connect(lambda:do_show_camera(window,master,camera))  # 每次计时到时间时发出信号
-    window.timer_camera.start(30)  # 设置计时间隔并启动；单位毫秒  
+    
+    #相机预览改用线程，不再使用定时器
+    #window.timer_camera = QTimer(window)
+    #window.timer_camera.timeout.connect(lambda:do_show_camera(window,master,camera))  # 每次计时到时间时发出信号
+    #window.timer_camera.start(40)  # 设置计时间隔并启动；单位毫秒  
     return
 ###################################################################################################
 
@@ -296,9 +291,9 @@ def do_btn_tcp_disconnect(window,master):
         print(connect_info)
     return 
 #重连网络
-def do_reconnect_modbus(window,master):
+def do_reconnect_modbus(window,master,camera):
     if master.is_reconnect():
-        do_btn_tcp_connect(window,master)
+        do_btn_tcp_connect(window,master,camera)
     else:
         pass
 
@@ -307,6 +302,11 @@ def do_ui_refresh(window,master):
     do_widget_set_enbaled(window,master)
     do_label_refresh(window,master)
     show_map(window)
+    #while 1:
+    #    do_widget_set_enbaled(window,master)
+    #    do_label_refresh(window,master)
+    #    show_map(window)
+    #    time.sleep(1)
 
 #设置控件可用
 def do_widget_set_enbaled(window,master):
@@ -347,6 +347,4 @@ def show_map(window):
 
 
 
-#thread_modbus = threading.Thread(target=do_btn_tcp_connect,args=(window,master_robo,), name='thread_modbus')
-#thread_modbus.start()
-#thread_modbus.join()
+

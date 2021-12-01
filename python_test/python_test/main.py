@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 import time
-
+import threading
 #from PyQt5.Qt import *
 from PyQt5.Qt import QMainWindow,QApplication
 from PyQt5.QtWebEngineWidgets import *
@@ -47,9 +47,15 @@ class Window(QMainWindow, Ui_MainWindow):
  
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = Window()
-    window.func_list()
-    window.show()
-    do_main_ui(window,master_robo,camera_robo)
+    window_main = Window()
+    window_main.func_list()    
+    window_main.show()
+    do_main_ui(window_main,master_robo,camera_robo)
+    #增加线程
+    thread_camera = threading.Thread(target=do_show_camera,args=(window_main,master_robo,camera_robo,), name='thread_camera')
+    thread_camera.start()
+    #thread_camera.join()
+    #thread_ui_refresh = threading.Thread(target=do_ui_refresh,args=(window_main,master_robo,), name='thread_ui_refresh')
+    #thread_ui_refresh.start()
     sys.exit(app.exec_())
     
