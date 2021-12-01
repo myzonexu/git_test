@@ -63,7 +63,7 @@
           <item>
            <widget class="QGroupBox" name="groupBox_map">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -81,7 +81,7 @@
              <item>
               <widget class="QScrollArea" name="scrollArea_map">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -109,7 +109,7 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>458</width>
+                  <width>335</width>
                   <height>321</height>
                  </rect>
                 </property>
@@ -145,14 +145,14 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>400</width>
-              <height>353</height>
+              <width>600</width>
+              <height>350</height>
              </size>
             </property>
             <property name="baseSize">
              <size>
-              <width>640</width>
-              <height>360</height>
+              <width>0</width>
+              <height>0</height>
              </size>
             </property>
             <property name="autoFillBackground">
@@ -185,7 +185,7 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>477</width>
+               <width>600</width>
                <height>353</height>
               </rect>
              </property>

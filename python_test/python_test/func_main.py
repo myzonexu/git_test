@@ -13,8 +13,7 @@ from func_camera import *
 
 ###################################################################################################
 def do_main_ui(window,master,camera):
-   
-    show_map(window)
+    load_map(window)
     #设置快捷键
     #ui_set_shortcut(window)
     #按钮响应
@@ -26,9 +25,9 @@ def do_main_ui(window,master,camera):
     window.timer2.start(5000)
 
     #定时刷新界面改用线程，不再使用定时器
-    window.timer3 = QTimer(window)  # 初始化一个定时器
-    window.timer3.timeout.connect(lambda:do_ui_refresh(window,master))  # 每次计时到时间时发出信号
-    window.timer3.start(1000)  # 设置计时间隔并启动；单位毫秒
+    #window.timer3 = QTimer(window)  # 初始化一个定时器
+    #window.timer3.timeout.connect(lambda:do_ui_refresh(window,master))  # 每次计时到时间时发出信号
+    #window.timer3.start(1000)  # 设置计时间隔并启动；单位毫秒
     
     #相机预览改用线程，不再使用定时器
     #window.timer_camera = QTimer(window)
@@ -299,14 +298,16 @@ def do_reconnect_modbus(window,master,camera):
 
 #刷新界面
 def do_ui_refresh(window,master):
+    '''
     do_widget_set_enbaled(window,master)
     do_label_refresh(window,master)
     show_map(window)
-    #while 1:
-    #    do_widget_set_enbaled(window,master)
-    #    do_label_refresh(window,master)
-    #    show_map(window)
-    #    time.sleep(1)
+    '''
+    while 1:
+        do_widget_set_enbaled(window,master)
+        do_label_refresh(window,master)
+        show_map(window)
+        time.sleep(1)
 
 #设置控件可用
 def do_widget_set_enbaled(window,master):
@@ -332,18 +333,27 @@ def do_label_refresh(window,master):
         window.label_bat_soc.setText("电量：" + "--" + "%")
         window.label_water_level.setText("水位：" + "--" + "%")
 
+def load_map(window):
+    window.svgWidget = QtSvg.QSvgWidget('map.svg')
+    window.scrollArea_map.setWidget(window.svgWidget)
 
 #显示SVG地图
 x=0
 def show_map(window):
-    svgWidget = QtSvg.QSvgWidget('map.svg')
-    #print(svgWidget.sizeHint())
-    render=svgWidget.renderer()
+    render=window.svgWidget.renderer()
     global x
-    #x=x+0.5
+    x=x+1
     render.setViewBox(QRect(x,10,100,80))
-    #svgWidget.setGeometry(0,0,400,600)
-    window.scrollArea_map.setWidget(svgWidget)
+    window.scrollArea_map.repaint()
+    '''
+    renderer = QtSvg.QSvgRenderer('Zeichen_123.svg') 
+    widget.resize(renderer.defaultSize()) 
+    painter = QtGui.QPainter(widget) 
+    painter.restore() 
+    renderer.render(painter) 
+    '''
+
+    
 
 
 

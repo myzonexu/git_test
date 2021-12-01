@@ -117,6 +117,7 @@ class CameraRtsp():
                 show_label.setPixmap(QPixmap.fromImage(img))
             else:
                 print("未获取到frame",has_frame)
+                self._has_init = False
                 pass
         else:
             print("未启动相机")

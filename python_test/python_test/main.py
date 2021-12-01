@@ -55,7 +55,7 @@ if __name__ == '__main__':
     thread_camera = threading.Thread(target=do_show_camera,args=(window_main,master_robo,camera_robo,), name='thread_camera')
     thread_camera.start()
     #thread_camera.join()
-    #thread_ui_refresh = threading.Thread(target=do_ui_refresh,args=(window_main,master_robo,), name='thread_ui_refresh')
-    #thread_ui_refresh.start()
+    thread_ui_refresh = threading.Thread(target=do_ui_refresh,args=(window_main,master_robo,), name='thread_ui_refresh')
+    thread_ui_refresh.start()
     sys.exit(app.exec_())
     
