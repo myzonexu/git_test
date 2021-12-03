@@ -2,6 +2,7 @@ import cv2
 from PyQt5.QtGui import QImage,QPixmap
 from PyQt5.QtCore import QUrl
 from PyQt5.QtWebEngineWidgets import *
+
 import threading
 
 
@@ -33,6 +34,7 @@ class CameraRtsp():
         self.pc_test = pc_test
         self.get_url()
         self.web_url()
+        self.img=QImage()
     def has_init(self):
         return self._has_init
     def get_url(self):
@@ -112,9 +114,10 @@ class CameraRtsp():
                 img = QImage(frame.data,frame.shape[1],frame.shape[0],QImage.Format_RGB888)
 
                 #图像缩放
-                img = img.scaled(self.show_width,self.show_height)
-                
-                show_label.setPixmap(QPixmap.fromImage(img))
+                self.img = img.scaled(self.show_width,self.show_height)
+
+                #不要在子线程中更改gui
+                #show_label.setPixmap(QPixmap.fromImage(self.img))
             else:
                 print("未获取到frame",has_frame)
                 self._has_init = False

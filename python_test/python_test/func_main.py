@@ -33,6 +33,11 @@ def do_main_ui(window,master,camera):
     #window.timer_camera = QTimer(window)
     #window.timer_camera.timeout.connect(lambda:do_show_camera(window,master,camera))  # 每次计时到时间时发出信号
     #window.timer_camera.start(40)  # 设置计时间隔并启动；单位毫秒  
+
+    window.timer_camera = QTimer(window)
+    window.timer_camera.timeout.connect(lambda:window.label_camera.setPixmap(QPixmap.fromImage(camera.img)))  # 每次计时到时间时发出信号
+    window.timer_camera.start(30)  # 设置计时间隔并启动；单位毫秒 
+    
     return
 ###################################################################################################
 
@@ -304,10 +309,12 @@ def do_ui_refresh(window,master):
     show_map(window)
     '''
     while 1:
+        time.sleep(1)
         do_widget_set_enbaled(window,master)
         do_label_refresh(window,master)
-        show_map(window)
-        time.sleep(1)
+        #show_map(window)
+        pass
+        
 
 #设置控件可用
 def do_widget_set_enbaled(window,master):
@@ -345,13 +352,8 @@ def show_map(window):
     x=x+1
     render.setViewBox(QRect(x,10,100,80))
     window.scrollArea_map.repaint()
-    '''
-    renderer = QtSvg.QSvgRenderer('Zeichen_123.svg') 
-    widget.resize(renderer.defaultSize()) 
-    painter = QtGui.QPainter(widget) 
-    painter.restore() 
-    renderer.render(painter) 
-    '''
+    #render.repaintNeeded.connect(window.scrollArea_map.repaint)
+
 
     
 
