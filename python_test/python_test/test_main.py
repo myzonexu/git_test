@@ -1,6 +1,7 @@
 
 #测试海康相机###############################################################
 import cv2
+import argparse
 url = "rtsp://admin:ylcx6666@192.168.1.64/Streaming/Channels/1"
 #url = "rtsp://admin:ylcx6666@192.168.1.64:554/h264/ch1/main/av_stream"
 cap = cv2.VideoCapture(0)
@@ -33,3 +34,7 @@ sys.exit(app.exec_())
 
 #测试svg读取显示###############################################################
 '''
+
+
+        
+    

@@ -14,6 +14,7 @@ from func_camera import *
 ###################################################################################################
 def do_main_ui(window,master,camera):
     load_map(window)
+    table_ui_setup(window)
     #设置快捷键
     #ui_set_shortcut(window)
     #按钮响应
@@ -318,7 +319,8 @@ def do_ui_refresh(window,master):
 
 #设置控件可用
 def do_widget_set_enbaled(window,master):
-    if master.is_opened() and master.is_reconnect()==False :
+    #if master.is_opened() and master.is_reconnect()==False :
+    if master.is_opened() :
         window.tabWidget_robo_ctrl.setEnabled(True)
     else:
         window.tabWidget_robo_ctrl.setEnabled(False)
@@ -354,9 +356,19 @@ def show_map(window):
     window.scrollArea_map.repaint()
     #render.repaintNeeded.connect(window.scrollArea_map.repaint)
 
+def table_ui_setup(window):
+    window.tableWidget_log_info.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+    window.tableWidget_task_list.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+    window.tableWidget_task_log.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+    window.tableWidget_robot_info.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+    window.tableWidget_task_info.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+    window.tableWidget_robot_list.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+    
+    
+    
 
     
 
 
 
-
+    

@@ -37,6 +37,9 @@
     <Compile Include="main.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="robot.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="test_main.py" />
     <Compile Include="ui_main.py" />
     <Compile Include="ui_test.py" />

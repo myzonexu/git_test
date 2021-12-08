@@ -22,8 +22,10 @@ import threading
 
 #海康相机rtsp视频流
 #pc_test=True时为使用电脑自带摄像头测试，pc_test=False时使用实机测试
-class CameraRtsp():
+class CameraRtsp(object):
     def __init__(self,username,passwd,ip,port=554,channel=1,codec="h264",pc_test=False):
+        self.url=""
+        self.web_url
         self.username = username
         self.passwd = passwd
         self.ip = ip
@@ -32,9 +34,11 @@ class CameraRtsp():
         self.codec = codec
         self._has_init = False
         self.pc_test = pc_test
-        self.get_url()
-        self.web_url()
+        self.show_width=None
+        self.show_height=None
         self.img=QImage()
+        self.get_url()
+        self.web_url()        
     def has_init(self):
         return self._has_init
     def get_url(self):
@@ -152,7 +156,7 @@ def set_camera_browser(camera,show_area):
 
 #变量定义
 #海康相机rtsp地址username,passwd,ip
-camera_robo = CameraRtsp(username="admin",passwd="ylcx6666",ip="192.168.1.64",pc_test=True)
+camera_robo = CameraRtsp(username="admin",passwd="ylcx6666",ip="192.168.1.64",pc_test=False)
 #print(camera.url)
 
 
