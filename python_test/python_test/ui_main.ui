@@ -45,7 +45,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab_ctrl">
        <attribute name="title">
@@ -1012,7 +1012,7 @@
              </size>
             </property>
             <property name="currentIndex">
-             <number>2</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="tab">
              <attribute name="title">
@@ -1024,61 +1024,30 @@
                 <property name="lineWidth">
                  <number>1</number>
                 </property>
-                <row>
-                 <property name="text">
-                  <string>1</string>
-                 </property>
-                </row>
-                <row>
-                 <property name="text">
-                  <string>2</string>
-                 </property>
-                </row>
-                <row>
-                 <property name="text">
-                  <string>3</string>
-                 </property>
-                </row>
-                <row>
-                 <property name="text">
-                  <string>4</string>
-                 </property>
-                </row>
-                <row>
-                 <property name="text">
-                  <string>5</string>
-                 </property>
-                </row>
-                <row>
-                 <property name="text">
-                  <string>6</string>
-                 </property>
-                </row>
-                <row>
-                 <property name="text">
-                  <string>7</string>
-                 </property>
-                </row>
-                <row>
-                 <property name="text">
-                  <string>8</string>
-                 </property>
-                </row>
-                <row>
-                 <property name="text">
-                  <string>10</string>
-                 </property>
-                </row>
-                <row>
-                 <property name="text">
-                  <string>11</string>
-                 </property>
-                </row>
-                <row>
-                 <property name="text">
-                  <string>12</string>
-                 </property>
-                </row>
+                <attribute name="horizontalHeaderCascadingSectionResizes">
+                 <bool>true</bool>
+                </attribute>
+                <attribute name="horizontalHeaderMinimumSectionSize">
+                 <number>20</number>
+                </attribute>
+                <attribute name="horizontalHeaderDefaultSectionSize">
+                 <number>20</number>
+                </attribute>
+                <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+                 <bool>true</bool>
+                </attribute>
+                <attribute name="horizontalHeaderStretchLastSection">
+                 <bool>true</bool>
+                </attribute>
+                <attribute name="verticalHeaderVisible">
+                 <bool>false</bool>
+                </attribute>
+                <attribute name="verticalHeaderCascadingSectionResizes">
+                 <bool>true</bool>
+                </attribute>
+                <attribute name="verticalHeaderMinimumSectionSize">
+                 <number>10</number>
+                </attribute>
                 <column>
                  <property name="text">
                   <string>项目</string>
@@ -1089,61 +1058,6 @@
                   <string>值</string>
                  </property>
                 </column>
-                <item row="0" column="0">
-                 <property name="text">
-                  <string>速度</string>
-                 </property>
-                </item>
-                <item row="1" column="0">
-                 <property name="text">
-                  <string>转向</string>
-                 </property>
-                </item>
-                <item row="2" column="0">
-                 <property name="text">
-                  <string>电量</string>
-                 </property>
-                </item>
-                <item row="3" column="0">
-                 <property name="text">
-                  <string>水位</string>
-                 </property>
-                </item>
-                <item row="4" column="0">
-                 <property name="text">
-                  <string>地址</string>
-                 </property>
-                </item>
-                <item row="5" column="0">
-                 <property name="text">
-                  <string>监控地址</string>
-                 </property>
-                </item>
-                <item row="6" column="0">
-                 <property name="text">
-                  <string>机器人编号</string>
-                 </property>
-                </item>
-                <item row="7" column="0">
-                 <property name="text">
-                  <string>程序版本</string>
-                 </property>
-                </item>
-                <item row="8" column="0">
-                 <property name="text">
-                  <string>总里程</string>
-                 </property>
-                </item>
-                <item row="9" column="0">
-                 <property name="text">
-                  <string>网络状态</string>
-                 </property>
-                </item>
-                <item row="10" column="0">
-                 <property name="text">
-                  <string>当前状态</string>
-                 </property>
-                </item>
                </widget>
               </item>
              </layout>
@@ -1171,7 +1085,7 @@
                  <bool>false</bool>
                 </property>
                 <attribute name="horizontalHeaderCascadingSectionResizes">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </attribute>
                 <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
                  <bool>false</bool>
@@ -1179,56 +1093,9 @@
                 <attribute name="horizontalHeaderStretchLastSection">
                  <bool>false</bool>
                 </attribute>
-                <row>
-                 <property name="text">
-                  <string>1</string>
-                 </property>
-                </row>
-                <row>
-                 <property name="text">
-                  <string>2</string>
-                 </property>
-                </row>
-                <row>
-                 <property name="text">
-                  <string>3</string>
-                 </property>
-                </row>
-                <row>
-                 <property name="text">
-                  <string>4</string>
-                 </property>
-                </row>
-                <row>
-                 <property name="text">
-                  <string>5</string>
-                 </property>
-                </row>
-                <row>
-                 <property name="text">
-                  <string>6</string>
-                 </property>
-                </row>
-                <row>
-                 <property name="text">
-                  <string>7</string>
-                 </property>
-                </row>
-                <row>
-                 <property name="text">
-                  <string>8</string>
-                 </property>
-                </row>
-                <row>
-                 <property name="text">
-                  <string>10</string>
-                 </property>
-                </row>
-                <row>
-                 <property name="text">
-                  <string>11</string>
-                 </property>
-                </row>
+                <attribute name="verticalHeaderVisible">
+                 <bool>false</bool>
+                </attribute>
                 <column>
                  <property name="text">
                   <string>项目</string>
@@ -1239,61 +1106,11 @@
                   <string>值</string>
                  </property>
                 </column>
-                <item row="0" column="0">
-                 <property name="text">
-                  <string>开始时间</string>
-                 </property>
-                </item>
-                <item row="1" column="0">
-                 <property name="text">
-                  <string>当前位置</string>
-                 </property>
-                </item>
-                <item row="2" column="0">
-                 <property name="text">
-                  <string>清扫数量</string>
-                 </property>
-                </item>
-                <item row="3" column="0">
-                 <property name="text">
-                  <string>加水次数</string>
-                 </property>
-                </item>
-                <item row="4" column="0">
-                 <property name="text">
-                  <string>充电次数</string>
-                 </property>
-                </item>
-                <item row="5" column="0">
-                 <property name="text">
-                  <string>工作时长</string>
-                 </property>
-                </item>
-                <item row="6" column="0">
-                 <property name="text">
-                  <string>剩余里程</string>
-                 </property>
-                </item>
-                <item row="7" column="0">
-                 <property name="text">
-                  <string>剩余时间</string>
-                 </property>
-                </item>
-                <item row="8" column="0">
-                 <property name="text">
-                  <string>完成时间</string>
-                 </property>
-                </item>
-                <item row="9" column="0">
-                 <property name="text">
-                  <string>行驶距离</string>
-                 </property>
-                </item>
                </widget>
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="tab_3">
+            <widget class="QWidget" name="tab_4">
              <attribute name="title">
               <string>页</string>
              </attribute>
@@ -1354,7 +1171,7 @@
              </size>
             </property>
             <property name="currentIndex">
-             <number>1</number>
+             <number>2</number>
             </property>
             <widget class="QWidget" name="tab_robo_list">
              <attribute name="title">
@@ -1363,24 +1180,37 @@
              <layout class="QVBoxLayout" name="verticalLayout_19">
               <item>
                <widget class="QTableWidget" name="tableWidget_robot_list">
+                <attribute name="horizontalHeaderCascadingSectionResizes">
+                 <bool>true</bool>
+                </attribute>
                 <column>
                  <property name="text">
-                  <string>机器人编码</string>
+                  <string>ID编号</string>
                  </property>
                 </column>
                 <column>
                  <property name="text">
-                  <string>机器人地址</string>
+                  <string>ip地址</string>
                  </property>
                 </column>
                 <column>
                  <property name="text">
-                  <string>监控地址</string>
+                  <string>通讯状态</string>
                  </property>
                 </column>
                 <column>
                  <property name="text">
-                  <string>状态</string>
+                  <string>运行状态</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>任务状态</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>报警/故障</string>
                  </property>
                 </column>
                 <column>
@@ -1399,6 +1229,12 @@
              <layout class="QVBoxLayout" name="verticalLayout_18">
               <item>
                <widget class="QTableWidget" name="tableWidget_log_info">
+                <attribute name="horizontalHeaderCascadingSectionResizes">
+                 <bool>true</bool>
+                </attribute>
+                <attribute name="verticalHeaderVisible">
+                 <bool>false</bool>
+                </attribute>
                 <column>
                  <property name="text">
                   <string>时间</string>
@@ -1417,6 +1253,16 @@
                </widget>
               </item>
              </layout>
+            </widget>
+            <widget class="QWidget" name="tab_error">
+             <attribute name="title">
+              <string>故障信息</string>
+             </attribute>
+            </widget>
+            <widget class="QWidget" name="tab_warning">
+             <attribute name="title">
+              <string>警告信息</string>
+             </attribute>
             </widget>
            </widget>
           </item>
@@ -1502,7 +1348,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_5">
+                <widget class="QPushButton" name="pushButton_add_task">
                  <property name="text">
                   <string>添加</string>
                  </property>
@@ -2038,11 +1884,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>219</x>
-     <y>486</y>
+     <y>484</y>
     </hint>
     <hint type="destinationlabel">
      <x>112</x>
-     <y>522</y>
+     <y>520</y>
     </hint>
    </hints>
   </connection>
@@ -2054,11 +1900,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>219</x>
-     <y>486</y>
+     <y>484</y>
     </hint>
     <hint type="destinationlabel">
      <x>306</x>
-     <y>545</y>
+     <y>543</y>
     </hint>
    </hints>
   </connection>
@@ -2070,11 +1916,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>306</x>
-     <y>545</y>
+     <y>543</y>
     </hint>
     <hint type="destinationlabel">
      <x>219</x>
-     <y>486</y>
+     <y>484</y>
     </hint>
    </hints>
   </connection>
@@ -2086,11 +1932,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>306</x>
-     <y>545</y>
+     <y>543</y>
     </hint>
     <hint type="destinationlabel">
      <x>112</x>
-     <y>522</y>
+     <y>520</y>
     </hint>
    </hints>
   </connection>
@@ -2102,11 +1948,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>112</x>
-     <y>522</y>
+     <y>520</y>
     </hint>
     <hint type="destinationlabel">
      <x>219</x>
-     <y>486</y>
+     <y>484</y>
     </hint>
    </hints>
   </connection>
@@ -2118,11 +1964,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>112</x>
-     <y>522</y>
+     <y>520</y>
     </hint>
     <hint type="destinationlabel">
      <x>306</x>
-     <y>545</y>
+     <y>543</y>
     </hint>
    </hints>
   </connection>
@@ -2134,11 +1980,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>219</x>
-     <y>562</y>
+     <y>560</y>
     </hint>
     <hint type="destinationlabel">
      <x>106</x>
-     <y>598</y>
+     <y>596</y>
     </hint>
    </hints>
   </connection>
@@ -2150,11 +1996,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>219</x>
-     <y>562</y>
+     <y>560</y>
     </hint>
     <hint type="destinationlabel">
      <x>306</x>
-     <y>621</y>
+     <y>619</y>
     </hint>
    </hints>
   </connection>
@@ -2166,11 +2012,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>106</x>
-     <y>598</y>
+     <y>596</y>
     </hint>
     <hint type="destinationlabel">
      <x>219</x>
-     <y>562</y>
+     <y>560</y>
     </hint>
    </hints>
   </connection>
@@ -2182,11 +2028,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>106</x>
-     <y>598</y>
+     <y>596</y>
     </hint>
     <hint type="destinationlabel">
      <x>306</x>
-     <y>621</y>
+     <y>619</y>
     </hint>
    </hints>
   </connection>
@@ -2198,11 +2044,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>306</x>
-     <y>621</y>
+     <y>619</y>
     </hint>
     <hint type="destinationlabel">
      <x>219</x>
-     <y>562</y>
+     <y>560</y>
     </hint>
    </hints>
   </connection>
@@ -2214,11 +2060,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>306</x>
-     <y>621</y>
+     <y>619</y>
     </hint>
     <hint type="destinationlabel">
      <x>106</x>
-     <y>598</y>
+     <y>596</y>
     </hint>
    </hints>
   </connection>

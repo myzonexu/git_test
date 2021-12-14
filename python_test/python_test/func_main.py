@@ -2,6 +2,7 @@ import time
 from func_modbus_tcp import *
 from PyQt5.QtCore import QTimer
 
+from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -10,6 +11,7 @@ from PyQt5.QtWebEngineWidgets import *
 from PyQt5 import QtSvg
 import threading
 from func_camera import *
+from func_robot import *
 
 ###################################################################################################
 def do_main_ui(window,master,camera):
@@ -356,6 +358,19 @@ def show_map(window):
     window.scrollArea_map.repaint()
     #render.repaintNeeded.connect(window.scrollArea_map.repaint)
 
+#表格填充数据-二维数组
+def table_fill_data_list_2d(table,list_2d):
+    len_row=len(list_2d)
+    len_col=len(list_2d[0])
+    table.setRowCount(len_row)
+    table.setColumnCount(len_col)
+    for row in range(len_row):
+        for col in range(len_col):
+            item=QTableWidgetItem(str(list_2d[row][col]))
+            table.setItem(row,col,item)
+    table.viewport().update()
+
+
 def table_ui_setup(window):
     window.tableWidget_log_info.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
     window.tableWidget_task_list.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
@@ -363,6 +378,22 @@ def table_ui_setup(window):
     window.tableWidget_robot_info.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
     window.tableWidget_task_info.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
     window.tableWidget_robot_list.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
+    window.tableWidget_log_info.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeToContents)
+    window.tableWidget_task_list.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeToContents)
+    window.tableWidget_task_log.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeToContents)
+    window.tableWidget_robot_info.horizontalHeader().setSectionResizeMode(1,QHeaderView.ResizeToContents)
+    window.tableWidget_task_info.horizontalHeader().setSectionResizeMode(1,QHeaderView.ResizeToContents)
+    window.tableWidget_robot_list.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeToContents)
+    window.tableWidget_robot_list.horizontalHeader().setSectionResizeMode(1,QHeaderView.ResizeToContents)
+
+
+    table_fill_data_list_2d(window.tableWidget_robot_info,robot_group.robot[robot_group.select].robot_info())
+    table_fill_data_list_2d(window.tableWidget_task_info,robot_group.robot[robot_group.select].task_info())
+    table_fill_data_list_2d(window.tableWidget_robot_list,robot_group.list_info())
+
+
+   
     
     
     

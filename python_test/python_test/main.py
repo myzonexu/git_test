@@ -2,12 +2,12 @@
 import sys
 import time
 import threading
-#from PyQt5.Qt import *
+
 from PyQt5.Qt import QMainWindow,QApplication
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import pyqtSlot
 
-# 导入ui文件，ui_main是.ui文件生成的.py文件名
 from ui_main import Ui_MainWindow
 from func_main import *
 from func_camera import *
@@ -28,6 +28,9 @@ class Window(QMainWindow, Ui_MainWindow):
     def func(self):
         #print('窗口函数')
         pass 
+    #@pyqtSlot()
+    #def on_pushButton_add_task_clicked(self):
+        #print("按下添加")
 
     def resizeEvent(self, QResizeEvent):
         #Window resize event.
