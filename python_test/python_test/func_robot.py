@@ -107,14 +107,21 @@ class ErrorCode(object):
         self.err_code = 0
         self.description = ""
         self.handle = ""
-        self.happen_time = datetime(1970,1,1)
+        
 
+#故障事件
+class ErrorEvent(object):
+    def __init__(self):
+        self.err_code = ErrorCode()
+        self.time_start = datetime(1970,1,1)
+        self.time_stop = datetime(1970,1,1)
 
 #故障状态
 class ErrorState(object):
     def __init__(self):
         self.active_count = 0
         self.history_count = 0
+        #ErrorEvent列表
         self.active_error_list = []
         self.history_error_list = []
 

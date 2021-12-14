@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
+
 import sys
-import time
-import threading
+#import time
+#import threading
 
-from PyQt5.Qt import QMainWindow,QApplication
-from PyQt5.QtWebEngineWidgets import *
-from PyQt5.QtCore import QTimer
-from PyQt5.QtCore import pyqtSlot
+#from PyQt5.Qt import QMainWindow,QApplication
+#from PyQt5.QtWebEngineWidgets import *
+#from PyQt5.QtCore import QTimer
+#from PyQt5.QtCore import pyqtSlot
 
-from ui_main import Ui_MainWindow
-from func_main import *
-from func_camera import *
+#from ui_main import Ui_MainWindow
+#from func_main import *
+#from func_camera import *
 
-
+from main_window import *
+'''
 class Window(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
@@ -50,7 +52,7 @@ class Window(QMainWindow, Ui_MainWindow):
             print(e)
         
  
- 
+''' 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window_main = Window()
