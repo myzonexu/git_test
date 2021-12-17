@@ -348,10 +348,10 @@ def do_label_refresh(window,master):
         '''
     #test   
 
-    robot1.get_communication_state() 
+
     #if master.is_opened():
     if 1:
-        robot1.get_state()
+        robot_group.robot_selected.get_state()
         table_fill_data_list_2d(window.tableWidget_robot_info,robot_group.robot_selected.robot_info())
         table_fill_data_list_2d(window.tableWidget_task_info,robot_group.robot_selected.task_info())
         table_fill_data_list_2d(window.tableWidget_robot_list,robot_group.list_info())
@@ -417,11 +417,8 @@ def table_ui_setup(window):
     window.tableWidget_error.horizontalHeader().setSectionResizeMode(1,QHeaderView.ResizeToContents)
     window.tableWidget_error.horizontalHeader().setSectionResizeMode(2,QHeaderView.ResizeToContents)
     window.tableWidget_error.horizontalHeader().setSectionResizeMode(3,QHeaderView.ResizeToContents)
-    window.tableWidget_robot_list.rowCount
 
-    table_fill_data_list_2d(window.tableWidget_robot_info,robot_group.robot_selected.robot_info())
-    table_fill_data_list_2d(window.tableWidget_task_info,robot_group.robot_selected.task_info())
-    table_fill_data_list_2d(window.tableWidget_robot_list,robot_group.list_info())
+
 
 
    

@@ -73,13 +73,13 @@ class VersionState:
 
 #通讯
 class CommunicationState(object):
-    def __init__(self):
+    def __init__(self,ip="127.0.0.1",port=502):
         self.is_online = False
         self.state = ValueDescriptionSet(communication_state)
-        self.ip = "127.0.0.1"
-        self.port = 502
+        self.ip = ip
+        self.port = port
         self.slave_id=1
-        self.heartbeat=0
+        self.heartbeat=None
 
         
 
@@ -257,11 +257,11 @@ class LogState(object):
         return count
         
 class Robot(object):
-    def __init__(self):
-        self.unique_id = 0
+    def __init__(self,ip="127.0.0.1",port=502):
+        self.unique_id = None
         self.base = BaseState()
         self.version = VersionState()
-        self.communication = CommunicationState()
+        self.communication = CommunicationState(ip,port)
         self.protocol=CommunicationProtocol()
         self.battery = BatteryState()
         self.drive = DriveState()
@@ -317,6 +317,7 @@ class Robot(object):
 
     #获取机器人状态，一次性读取所有只读部分并解析
     def get_state(self):
+        self.get_communication_state()
         self.read_all_readonly()
         self.parse_readonly_data()
 
@@ -355,9 +356,7 @@ class Robot(object):
         self.get_task_state()
         self.task.count_add_water = self.protocol.count_add_water.value
         self.task.count_charged = self.protocol.count_charged.value
-        
-        self.task.time_worked = self.protocol.clean_time_s.value
-                
+        self.task.time_worked = self.protocol.clean_time_s.value                
         #self.sync_time()
 
     def get_run_state(self):
@@ -501,12 +500,12 @@ robot_group = RobotGroup()
 
 #test
 robot1 = Robot()
-robot1.set_ip("127.0.0.1")
-robot2 = Robot()
-robot2.unique_id = 11
-robot2.set_ip("192.168.2.107")
+#robot1.set_ip("127.0.0.1")
+#robot2 = Robot()
+#robot2.unique_id = 11
+#robot2.set_ip("192.168.2.107")
 robot_group.add(robot1)
-robot_group.add(robot2)
+#robot_group.add(robot2)
 robot_group.select(robot1.unique_id)
 
 
