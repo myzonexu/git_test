@@ -45,7 +45,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_ctrl">
        <attribute name="title">
@@ -1012,7 +1012,7 @@
              </size>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>2</number>
             </property>
             <widget class="QWidget" name="tab">
              <attribute name="title">
@@ -1258,6 +1258,97 @@
              <attribute name="title">
               <string>故障信息</string>
              </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_22">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_3">
+                <item>
+                 <widget class="QRadioButton" name="radioButton_err_active">
+                  <property name="text">
+                   <string>现行故障</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="radioButton_err_history">
+                  <property name="text">
+                   <string>历史故障</string>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_2">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="pushButton_clear_err">
+                  <property name="text">
+                   <string>清除故障</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QTableWidget" name="tableWidget_error">
+                <attribute name="horizontalHeaderCascadingSectionResizes">
+                 <bool>true</bool>
+                </attribute>
+                <attribute name="verticalHeaderVisible">
+                 <bool>false</bool>
+                </attribute>
+                <column>
+                 <property name="text">
+                  <string>类型</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>开始时间</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>等级</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>故障码</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>故障描述</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>故障处理</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>结束时间</string>
+                 </property>
+                </column>
+               </widget>
+              </item>
+             </layout>
             </widget>
             <widget class="QWidget" name="tab_warning">
              <attribute name="title">
@@ -1739,7 +1830,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>192.168.1.5</string>
+                <string>127.0.0.1</string>
                </property>
               </widget>
              </item>

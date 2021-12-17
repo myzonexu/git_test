@@ -328,7 +328,9 @@ def do_widget_set_enbaled(window,master):
         window.tabWidget_robo_ctrl.setEnabled(False)
 
 #标签刷新###############################################################################
-def do_label_refresh(window,master):    
+def do_label_refresh(window,master):  
+
+    '''
     if master.is_opened():
         window.label_heartbeat.setText("心跳：" + str(master.read(heartbeat)))
         window.label_robo_speed.setText("速度：" + str(master.read(robo_speed)) + "mm/s")
@@ -343,6 +345,19 @@ def do_label_refresh(window,master):
         window.label_steer_angle.setText("转向：" + "--" + "度")
         window.label_bat_soc.setText("电量：" + "--" + "%")
         window.label_water_level.setText("水位：" + "--" + "%")
+        '''
+    #test   
+
+    robot1.get_communication_state() 
+    #if master.is_opened():
+    if 1:
+        robot1.get_state()
+        table_fill_data_list_2d(window.tableWidget_robot_info,robot_group.robot_selected.robot_info())
+        table_fill_data_list_2d(window.tableWidget_task_info,robot_group.robot_selected.task_info())
+        table_fill_data_list_2d(window.tableWidget_robot_list,robot_group.list_info())
+        window.show_table_error_list()
+        #table_fill_data_list_2d(window.tableWidget_error,robot_group.robot[robot_group.select].error_chassis.active_err_info())
+        #table_fill_data_list_2d(window.tableWidget_error,robot_group.robot[robot_group.select].error_chassis.history_err_info(),fill="new")
 
 def load_map(window):
     window.svgWidget = QtSvg.QSvgWidget('map.svg')
@@ -359,15 +374,26 @@ def show_map(window):
     #render.repaintNeeded.connect(window.scrollArea_map.repaint)
 
 #表格填充数据-二维数组
-def table_fill_data_list_2d(table,list_2d):
-    len_row=len(list_2d)
-    len_col=len(list_2d[0])
-    table.setRowCount(len_row)
-    table.setColumnCount(len_col)
-    for row in range(len_row):
-        for col in range(len_col):
-            item=QTableWidgetItem(str(list_2d[row][col]))
-            table.setItem(row,col,item)
+def table_fill_data_list_2d(table,list_2d,decimal_places=2,fill="new"):
+    if fill=="new":
+        start_row=0
+    elif fill=="append":
+        start_row=table.rowCount()
+
+    if list_2d==[]:
+        table.clearContents()
+    else:
+        len_row=len(list_2d)
+        len_col=len(list_2d[0])
+        table.setRowCount(start_row+len_row)
+        table.setColumnCount(len_col)
+        for row in range(len_row):
+            for col in range(len_col):
+                data=list_2d[row][col]            
+                if isinstance(data,float):
+                    data=round(data,decimal_places)
+                item=QTableWidgetItem(str(data))
+                table.setItem(start_row+row,col,item)
     table.viewport().update()
 
 
@@ -378,18 +404,23 @@ def table_ui_setup(window):
     window.tableWidget_robot_info.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
     window.tableWidget_task_info.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
     window.tableWidget_robot_list.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+    window.tableWidget_error.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
     window.tableWidget_log_info.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeToContents)
     window.tableWidget_task_list.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeToContents)
     window.tableWidget_task_log.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeToContents)
-    window.tableWidget_robot_info.horizontalHeader().setSectionResizeMode(1,QHeaderView.ResizeToContents)
-    window.tableWidget_task_info.horizontalHeader().setSectionResizeMode(1,QHeaderView.ResizeToContents)
+    window.tableWidget_robot_info.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeToContents)
+    window.tableWidget_task_info.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeToContents)
     window.tableWidget_robot_list.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeToContents)
     window.tableWidget_robot_list.horizontalHeader().setSectionResizeMode(1,QHeaderView.ResizeToContents)
+    window.tableWidget_error.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeToContents)
+    window.tableWidget_error.horizontalHeader().setSectionResizeMode(1,QHeaderView.ResizeToContents)
+    window.tableWidget_error.horizontalHeader().setSectionResizeMode(2,QHeaderView.ResizeToContents)
+    window.tableWidget_error.horizontalHeader().setSectionResizeMode(3,QHeaderView.ResizeToContents)
+    window.tableWidget_robot_list.rowCount
 
-
-    table_fill_data_list_2d(window.tableWidget_robot_info,robot_group.robot[robot_group.select].robot_info())
-    table_fill_data_list_2d(window.tableWidget_task_info,robot_group.robot[robot_group.select].task_info())
+    table_fill_data_list_2d(window.tableWidget_robot_info,robot_group.robot_selected.robot_info())
+    table_fill_data_list_2d(window.tableWidget_task_info,robot_group.robot_selected.task_info())
     table_fill_data_list_2d(window.tableWidget_robot_list,robot_group.list_info())
 
 

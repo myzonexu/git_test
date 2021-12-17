@@ -27,6 +27,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def func(self):
         #print('窗口函数')
         pass 
+
     @pyqtSlot()
     def on_pushButton_add_task_clicked(self):
         print("按下添加")
@@ -47,8 +48,24 @@ class Window(QMainWindow, Ui_MainWindow):
                 pass
         except Exception as e:
             print(e)
+    
+    def show_table_error_list(self):
+        if self.radioButton_err_active.isChecked():
+            err_list=robot_group.robot_selected.error_chassis.active_err_info()
+        else:
+            err_list=robot_group.robot_selected.error_chassis.history_err_info()
+        table_fill_data_list_2d(self.tableWidget_error,err_list)
         
- 
+    @pyqtSlot()
+    def on_radioButton_err_active_toggled(self):
+        self.show_table_error_list()
+    @pyqtSlot()
+    def on_pushButton_clear_err_clicked(self):
+        if self.radioButton_err_active.isChecked():
+            #清除现行故障
+            pass
+        else:
+            robot_group.robot_selected.error_chassis.clear_history()
  
 
     
