@@ -160,17 +160,6 @@ class ErrorCode(object):
         
 
 #故障事件
-'''
-class ErrorEvent(object):
-    def __init__(self,code=None):
-        #self.err_code = ErrorCode()
-        #self.time_start = datetime(2000,1,1)
-        #self.time_stop = datetime(2000,1,1)
-
-        self.err_code = ErrorCode(code)
-        self.time_start = datetime.now()
-        self.time_stop = None
-'''
 class ErrorEvent(ErrorCode):
     def __init__(self,code=None,code_dict= robot_error_code_dict):
         super().__init__(code,code_dict)
@@ -256,6 +245,41 @@ class LogState(object):
         #do
         return count
         
+    
+#机器人集合
+class RobotGroup(object):
+    def __init__(self):
+        self.robots = {}
+        self.id_selected = None
+        self.robot_selected=None
+
+    def add(self,robot):
+        self.robots[robot.unique_id]=robot
+
+    def delete(self,unique_id):
+        self.robots.pop(unique_id)
+
+    def select(self,unique_id):
+        if unique_id in self.robots:        
+            self.robot_selected=self.robots.get(unique_id)
+            self.id_selected =unique_id
+        else:
+            print("无法找到此机器人")
+
+    def list_info(self):
+        list_info = []
+        if self.robots == {}:
+            print("没有机器人")
+            pass
+        else:
+            count = len(self.robots)       
+            for id in self.robots:
+                list_info.append([self.robots.get(id).unique_id,self.robots.get(id).communication.ip,self.robots.get(id).communication.state.description(),
+                                  self.robots.get(id).base.run_state.description(),self.robots.get(id).task.state.description(),self.robots.get(id).err_count()])
+
+        return list_info
+
+#机器人
 class Robot(object):
     def __init__(self,ip="127.0.0.1",port=502):
         self.unique_id = None
@@ -443,56 +467,23 @@ class Robot(object):
             self.error_chassis.clear()            
         elif err_code not in self.error_chassis.active_error:
             self.error_chassis.add(ErrorEvent(err_code))
-            
-     
+
+    #界面控制机器人##########################################################################################################################
+    #清除现行故障
     
-#机器人
-class RobotGroup(object):
-    def __init__(self):
-        self.robots = {}
-        self.id_selected = None
-        self.robot_selected=None
+    #任务-开始
+    #任务-暂停
+    #任务-结束
+    #任务-充电
+    #任务-加水
+    #轨道行走-0暂停，1前进，2后退
+    #自由行走-速度
+    #自由行走-角度
+    #底盘重新上电
+    #机械臂位置-0~5
+    #滚刷
+    #机械臂重新上电
 
-    def add(self,robot):
-        self.robots[robot.unique_id]=robot
-
-    def delete(self,unique_id):
-        self.robots.pop(unique_id)
-
-    def select(self,unique_id):
-        if unique_id in self.robots:        
-            self.robot_selected=self.robots.get(unique_id)
-            self.id_selected =unique_id
-        else:
-            print("无法找到此机器人")
-
-    def list_info(self):
-        list_info = []
-        if self.robots == {}:
-            print("没有机器人")
-            pass
-        else:
-            count = len(self.robots)       
-            for id in self.robots:
-                list_info.append([self.robots.get(id).unique_id,self.robots.get(id).communication.ip,self.robots.get(id).communication.state.description(),
-                                  self.robots.get(id).base.run_state.description(),self.robots.get(id).task.state.description(),self.robots.get(id).err_count()])
-
-        return list_info
-'''
-class RobotGroup(object):
-    def __init__(self):
-        self.robot = []
-        self.select = 0
-
-    def list_info(self):
-        #有问题，改用dict
-        list_info = []
-        count = len(self.robot)
-        for x in range(count):
-            list_info.insert(x,[self.robot[x].unique_id,self.robot[x].communication.ip,self.robot[x].communication.state.description(),
-                                self.robot[x].base.run_state.description(),self.robot[x].task.state.description(),self.robot[x].err_count()])
-        return list_info
-'''
 
 
 #变量定义
@@ -500,12 +491,9 @@ robot_group = RobotGroup()
 
 #test
 robot1 = Robot()
-#robot1.set_ip("127.0.0.1")
-#robot2 = Robot()
-#robot2.unique_id = 11
-#robot2.set_ip("192.168.2.107")
+robot2 = Robot("192.168.2.107")
 robot_group.add(robot1)
-#robot_group.add(robot2)
+robot_group.add(robot2)
 robot_group.select(robot1.unique_id)
 
 

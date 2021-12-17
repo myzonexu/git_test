@@ -48,7 +48,20 @@ class Window(QMainWindow, Ui_MainWindow):
                 pass
         except Exception as e:
             print(e)
+    #######################################################################################################
+    #设置表格属性
+    #加载地图
+    #设置快捷键
+    #按钮响应
+    #控件使能
+
+    #定时器
+    #重连网络——改用线程
+    #刷新界面——改用信号
+    #视频显示——改用线程
     
+
+
     def show_table_error_list(self):
         if self.radioButton_err_active.isChecked():
             err_list=robot_group.robot_selected.error_chassis.active_err_info()

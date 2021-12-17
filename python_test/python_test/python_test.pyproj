@@ -25,6 +25,9 @@
     <Compile Include="example.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="func_common.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="func_camera.py">
       <SubType>Code</SubType>
     </Compile>
