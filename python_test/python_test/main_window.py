@@ -37,10 +37,10 @@ class Window(QMainWindow, Ui_MainWindow):
     def resizeEvent(self, QResizeEvent):
         #Window resize event.
         super().resizeEvent(QResizeEvent)
-        if robots.now==None:
+        if robots.current==None:
             pass
         else:
-            camera_ratio=robots.now.camera.ratio_w_h
+            camera_ratio=robots.current.camera.ratio_w_h
             camrea_show_height=self.groupBox_map.height()
             camrea_show_width=int(camrea_show_height*camera_ratio)
             offset_width=camrea_show_width-self.label_camera.width()
@@ -53,49 +53,49 @@ class Window(QMainWindow, Ui_MainWindow):
     #按钮响应
     @pyqtSlot()
     def on_pushButton_autorun_start_clicked(self):
-        robots.now.clean_task_start()
-        robots.now.task.start_time=datetime.now()
-        robots.now.task.stop_time=None
+        robots.current.clean_task_start()
+        robots.current.task.start_time=datetime.now()
+        robots.current.task.stop_time=None
     @pyqtSlot()
     def on_pushButton_autorun_stop_clicked(self):
-        robots.now.clean_task_stop()
-        robots.now.task.stop_time=datetime.now()
+        robots.current.clean_task_stop()
+        robots.current.task.stop_time=datetime.now()
     @pyqtSlot()
     def on_pushButton_autorun_charge_clicked(self):
-        robots.now.charge_battery()
+        robots.current.charge_battery()
     @pyqtSlot()
     def on_pushButton_autorun_add_water_clicked(self):
-        robots.now.add_water()
+        robots.current.add_water()
     @pyqtSlot()
     def on_pushButton_arm_position_origin_clicked(self):
-        robots.now.arm_ctrl_position(0)
+        robots.current.arm_ctrl_position(0)
     @pyqtSlot()
     def on_pushButton_arm_position_wall_1_clicked(self):
-        robots.now.arm_ctrl_position(1)
+        robots.current.arm_ctrl_position(1)
     @pyqtSlot()
     def on_pushButton_arm_position_wall_2_clicked(self):
-        robots.now.arm_ctrl_position(2)
+        robots.current.arm_ctrl_position(2)
     @pyqtSlot()
     def on_pushButton_arm_position_wall_3_clicked(self):
-        robots.now.arm_ctrl_position(3)
+        robots.current.arm_ctrl_position(3)
     @pyqtSlot()
     def on_pushButton_arm_position_wall_4_clicked(self):
-        robots.now.arm_ctrl_position(4)
+        robots.current.arm_ctrl_position(4)
     @pyqtSlot()
     def on_pushButton_arm_position_ground_1_clicked(self):
-        robots.now.arm_ctrl_position(5)
+        robots.current.arm_ctrl_position(5)
     @pyqtSlot()
     def on_pushButton_brush_clicked(self):
         if self.pushButton_brush.isChecked() == True :
-            robots.now.pump_brush_ctrl(1)
+            robots.current.pump_brush_ctrl(1)
             self.pushButton_brush.setText("关滚刷")
         else :
-            robots.now.pump_brush_ctrl(0)
+            robots.current.pump_brush_ctrl(0)
             self.pushButton_brush.setText("开滚刷")
         
     @pyqtSlot()
     def on_pushButton_arm_power_restart_clicked(self):
-        robots.now.restart_arm()
+        robots.current.restart_arm()
     @pyqtSlot()
     def on_pushButton_tcp_connect_clicked(self):
         pass
@@ -104,39 +104,39 @@ class Window(QMainWindow, Ui_MainWindow):
         pass
     @pyqtSlot(int)
     def on_spinBox_robo_speed_valueChanged(self,speed):
-        robots.now.free_drive_ctrl_speed(speed)
+        robots.current.free_drive_ctrl_speed(speed)
     @pyqtSlot()
     def on_pushButton_robo_speed_zero_clicked(self):
         self.spinBox_robo_speed.setValue(0)
-        #robots.now.free_drive_ctrl_speed(0)
+        #robots.current.free_drive_ctrl_speed(0)
     @pyqtSlot(int)
     def on_spinBox_steer_angle_valueChanged(self,angle):
-        robots.now.free_drive_ctrl_angle(angle)
+        robots.current.free_drive_ctrl_angle(angle)
     @pyqtSlot()
     def on_pushButton_steer_angle_zero_clicked(self):
         self.spinBox_steer_angle.setValue(0)
-        #robots.now.free_drive_ctrl_angle(0)
+        #robots.current.free_drive_ctrl_angle(0)
     @pyqtSlot()
     def on_pushButton_chassis_power_restart_clicked(self):
-        robots.now.restart_chassis()
+        robots.current.restart_chassis()
     @pyqtSlot()
     def on_pushButton_on_track_forward_clicked(self):
-        robots.now.on_track_drive_ctrl(1)
+        robots.current.on_track_drive_ctrl(1)
     @pyqtSlot()
     def on_pushButton_on_track_backward_clicked(self):
-        robots.now.on_track_drive_ctrl(2)
+        robots.current.on_track_drive_ctrl(2)
     @pyqtSlot()
     def on_pushButton_on_track_pause_clicked(self):
-        robots.now.on_track_drive_ctrl(3)
+        robots.current.on_track_drive_ctrl(3)
     @pyqtSlot()
     def on_radioButton_err_active_toggled(self):
         self.toggle_table_error_list()
     @pyqtSlot()
     def on_pushButton_clear_err_clicked(self):
         if self.radioButton_err_active.isChecked():
-            robots.now.clear_active_error()
+            robots.current.clear_active_error()
         else:
-            robots.now.error_chassis.clear_history()
+            robots.current.error_chassis.clear_history()
     #test
     @pyqtSlot()
     def on_pushButton_add_task_clicked(self):
@@ -192,34 +192,34 @@ class Window(QMainWindow, Ui_MainWindow):
     #更新表格显示
     def update_ui_table(self):
         table_fill_data_list_2d(self.tableWidget_robot_list,robots.list_info())      
-        if robots.now == None:
+        if robots.current == None:
             pass
         else:
-            table_fill_data_list_2d(self.tableWidget_robot_info,robots.now.robot_info())
-            table_fill_data_list_2d(self.tableWidget_task_info,robots.now.task_info())
+            table_fill_data_list_2d(self.tableWidget_robot_info,robots.current.robot_info())
+            table_fill_data_list_2d(self.tableWidget_task_info,robots.current.task_info())
         
 
             if self.radioButton_err_active.isChecked():
-                err_list=robots.now.error_chassis.active_err_info()
+                err_list=robots.current.error_chassis.active_err_info()
             else:
-                err_list=robots.now.error_chassis.history_err_info()
+                err_list=robots.current.error_chassis.history_err_info()
             table_fill_data_list_2d(self.tableWidget_error,err_list)
 
     #更新tab页文字
     def update_ui_tab_text(self):
         self.tabWidget_robots_info.setTabText(3,"机器人列表("+str(len(robots.robots))+")")
-        if robots.now==None:
+        if robots.current==None:
             pass
         else:
-            self.tabWidget_robots_info.setTabText(0,"故障信息("+str(robots.now.err_count())+")")
-            self.tabWidget_robots_info.setTabText(1,"警告信息("+str(robots.now.warning_count())+")")
+            self.tabWidget_robots_info.setTabText(0,"故障信息("+str(robots.current.err_count())+")")
+            self.tabWidget_robots_info.setTabText(1,"警告信息("+str(robots.current.warning_count())+")")
         
 
                
     #更新控件使能
     def update_ui_widget_enbaled(self):
         #if master.is_opened() and master.is_reconnect()==False :
-        if robots.now.master.is_opened() :
+        if robots.current.master.is_opened() :
             self.tabWidget_robo_ctrl.setEnabled(True)
         else:
             self.tabWidget_robo_ctrl.setEnabled(False)
@@ -228,10 +228,10 @@ class Window(QMainWindow, Ui_MainWindow):
 
     #显示监控视频
     def show_camera(self):
-        if robots.now==None:
+        if robots.current==None:
             pass
         else:
-            self.label_camera.setPixmap(QPixmap.fromImage(robots.now.camera.img_scaled))
+            self.label_camera.setPixmap(QPixmap.fromImage(robots.current.camera.img_scaled))
 
 
     #加载地图
@@ -258,9 +258,9 @@ class Window(QMainWindow, Ui_MainWindow):
     #故障信息：当前故障、历史故障切换
     def toggle_table_error_list(self):
         if self.radioButton_err_active.isChecked():
-            err_list=robots.now.error_chassis.active_err_info()
+            err_list=robots.current.error_chassis.active_err_info()
         else:
-            err_list=robots.now.error_chassis.history_err_info()
+            err_list=robots.current.error_chassis.history_err_info()
         table_fill_data_list_2d(self.tableWidget_error,err_list)
         
     
@@ -278,7 +278,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.timer_camera.start(30)  # 设置计时间隔并启动；单位毫秒
 
         self.timer_test = QTimer()
-        #self.timer_test.timeout.connect(lambda:self.progressBar.setValue(len(robots.now.master._write_buffer)))  # 每次计时到时间时发出信号
+        #self.timer_test.timeout.connect(lambda:self.progressBar.setValue(len(robots.current.master._write_buffer)))  # 每次计时到时间时发出信号
         self.timer_test.start(30)  # 设置计时间隔并启动；单位毫秒
 
         

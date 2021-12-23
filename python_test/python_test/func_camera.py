@@ -129,26 +129,5 @@ class CameraRtsp(object):
         self.show_height = height
         self.show_width = int(height * self.ratio_w_h)
         return self.show_width,self.show_height
-    
-'''
-#显示视频
-def do_show_camera(window,master,camera):
-    while 1:
-        if master.is_opened() and master.is_reconnect() == False and window.tabWidget_main.currentIndex()==0:
-        #if True :
-            camera.show_on_label(window.label_camera)
-
-        else:
-            pass
-
-
-
-#相机web页面
-def set_camera_browser(camera,show_area):
-    browser = QWebEngineView()
-    browser.load(QUrl(camera.web_url))
-    show_area.setWidget(browser)
-
-'''
 
 

@@ -5,27 +5,27 @@ from func_robot import *
 
 def get_camera_frame():
     while window_main.tabWidget_main.currentIndex()==0:
-        if robots.now.master.is_opened():
-            robots.now.camera.get_frame()
-            robots.now.camera.frame_scale(window_main.label_camera.height())
+        if robots.current.master.is_opened():
+            robots.current.camera.get_frame()
+            robots.current.camera.frame_scale(window_main.label_camera.height())
         else:
             pass
 
 def camera_frame_scale():
     while 1:
-        if robots.now.master.is_opened()  and window_main.tabWidget_main.currentIndex()==0:
+        if robots.current.master.is_opened()  and window_main.tabWidget_main.currentIndex()==0:
         #if True :
-            robots.now.camera.frame_scale(window_main.label_camera.height())
+            robots.current.camera.frame_scale(window_main.label_camera.height())
         else:
             pass
 def get_robots_state():    
     sec=0
     while 1:
-        if robots.now==None:
+        if robots.current==None:
             pass
         else:
-            if robots.now.communication.is_online:
-                robots.now.get_robot_time()
+            if robots.current.communication.is_online:
+                robots.current.get_robot_time()
         for id in robots.robots:
             if robots.robots.get(id).communication.is_online:
                 robots.robots.get(id).get_state()
@@ -57,8 +57,8 @@ def scan_robots():
                     robots.addrs_online.add(scan_ip)
                     print("检测到机器人id",new_id,scan_ip)
 
-                    if robots.now==None:
-                        robots.now=robots.robots.get(new_id)
+                    if robots.current==None:
+                        robots.current=robots.robots.get(new_id)
                         exit=0
             else:
                 print("ip已连接，跳过",scan_ip)

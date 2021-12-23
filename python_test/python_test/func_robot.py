@@ -231,7 +231,7 @@ class RobotGroup(object):
     def __init__(self):
         self.robots = {}
         self.addrs_online=set([])
-        self.now=None
+        self.current=None
         self.local_ip = None
         self.local_ip_strlist=None
 
@@ -266,7 +266,7 @@ class RobotGroup(object):
         # 获取本机ip
         self.local_ip = socket.gethostbyname(hostname)
         self.local_ip_strlist=self.local_ip.split('.')
-        print("获取本机ip",self.local_ip_strlist)
+        print("本机ip：",self.local_ip)
         return self.local_ip_strlist
     def setup_scan_ip(self,ip_4th):
         self.local_ip_strlist[3]=str(ip_4th)
@@ -540,10 +540,6 @@ class Robot(object):
         self.master.write(self.protocol.ctrl_mode,1)
         self.master.write(self.protocol.arm_ctrl,position)
     
-
-
-
 #变量定义
 robots = RobotGroup()
-
 
