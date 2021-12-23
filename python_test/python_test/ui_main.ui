@@ -52,13 +52,13 @@
         <string>控制</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="spacing">
+         <number>10</number>
+        </property>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="sizeConstraint">
-           <enum>QLayout::SetMinimumSize</enum>
+           <number>10</number>
           </property>
           <item>
            <widget class="QGroupBox" name="groupBox_map">
@@ -71,13 +71,16 @@
             <property name="minimumSize">
              <size>
               <width>0</width>
-              <height>0</height>
+              <height>350</height>
              </size>
             </property>
             <property name="title">
              <string>隧道</string>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <property name="leftMargin">
+              <number>9</number>
+             </property>
              <item>
               <widget class="QScrollArea" name="scrollArea_map">
                <property name="sizePolicy">
@@ -109,7 +112,7 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>458</width>
+                  <width>500</width>
                   <height>318</height>
                  </rect>
                 </property>
@@ -120,25 +123,9 @@
            </widget>
           </item>
           <item>
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>13</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QScrollArea" name="scrollArea_camera">
+           <widget class="QLabel" name="label_camera">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -149,18 +136,28 @@
               <height>350</height>
              </size>
             </property>
+            <property name="sizeIncrement">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="baseSize">
              <size>
               <width>0</width>
               <height>0</height>
              </size>
             </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="contextMenuPolicy">
+             <enum>Qt::DefaultContextMenu</enum>
             </property>
             <property name="styleSheet">
-             <string notr="true">padding:0px;
-</string>
+             <string notr="true"/>
             </property>
             <property name="frameShape">
              <enum>QFrame::NoFrame</enum>
@@ -171,127 +168,27 @@
             <property name="lineWidth">
              <number>0</number>
             </property>
-            <property name="sizeAdjustPolicy">
-             <enum>QAbstractScrollArea::AdjustToContents</enum>
+            <property name="text">
+             <string>监控</string>
             </property>
-            <property name="widgetResizable">
-             <bool>true</bool>
+            <property name="scaledContents">
+             <bool>false</bool>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
             </property>
-            <widget class="QWidget" name="scrollAreaWidgetContents_3">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>477</width>
-               <height>350</height>
-              </rect>
-             </property>
-             <layout class="QGridLayout" name="gridLayout">
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <property name="spacing">
-               <number>0</number>
-              </property>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_camera">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="sizeIncrement">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="baseSize">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <pointsize>9</pointsize>
-                 </font>
-                </property>
-                <property name="contextMenuPolicy">
-                 <enum>Qt::DefaultContextMenu</enum>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true"/>
-                </property>
-                <property name="frameShape">
-                 <enum>QFrame::NoFrame</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Plain</enum>
-                </property>
-                <property name="lineWidth">
-                 <number>0</number>
-                </property>
-                <property name="text">
-                 <string>监控</string>
-                </property>
-                <property name="scaledContents">
-                 <bool>false</bool>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-                <property name="indent">
-                 <number>0</number>
-                </property>
-                <property name="openExternalLinks">
-                 <bool>false</bool>
-                </property>
-                <property name="textInteractionFlags">
-                 <set>Qt::LinksAccessibleByMouse</set>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
+            <property name="indent">
+             <number>0</number>
+            </property>
+            <property name="openExternalLinks">
+             <bool>false</bool>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::LinksAccessibleByMouse</set>
+            </property>
            </widget>
           </item>
          </layout>
-        </item>
-        <item>
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>5</height>
-           </size>
-          </property>
-         </spacer>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout">
@@ -308,13 +205,13 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>300</width>
+              <width>280</width>
               <height>220</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>300</width>
+              <width>280</width>
               <height>220</height>
              </size>
             </property>
@@ -323,127 +220,289 @@
             </property>
             <widget class="QWidget" name="tab_auto_clean">
              <attribute name="title">
-              <string>清扫任务</string>
+              <string>轨道行走控制</string>
              </attribute>
-             <layout class="QGridLayout" name="gridLayout_2">
-              <item row="1" column="0">
-               <widget class="QPushButton" name="pushButton_autorun_charge">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>70</width>
-                  <height>40</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>70</width>
-                  <height>40</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>充电</string>
-                </property>
-               </widget>
+             <layout class="QVBoxLayout" name="verticalLayout_21">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_8">
+                <item>
+                 <spacer name="horizontalSpacer_3">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <layout class="QGridLayout" name="gridLayout_2">
+                  <item row="0" column="1">
+                   <widget class="QPushButton" name="pushButton_on_track_forward">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>40</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>40</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                    <property name="baseSize">
+                     <size>
+                      <width>40</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>前进</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QPushButton" name="pushButton_autorun_charge">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>40</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>40</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                    <property name="baseSize">
+                     <size>
+                      <width>40</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>充电</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QPushButton" name="pushButton_on_track_pause">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>40</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>40</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                    <property name="baseSize">
+                     <size>
+                      <width>40</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>暂停</string>
+                    </property>
+                    <property name="checkable">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="2">
+                   <widget class="QPushButton" name="pushButton_autorun_add_water">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>40</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>40</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                    <property name="baseSize">
+                     <size>
+                      <width>40</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>加水</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QPushButton" name="pushButton_on_track_backward">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>40</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>40</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                    <property name="baseSize">
+                     <size>
+                      <width>40</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>后退</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_4">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
               </item>
-              <item row="1" column="1">
-               <widget class="QPushButton" name="pushButton_autorun_add_water">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>70</width>
-                  <height>40</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>70</width>
-                  <height>40</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>加水</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QPushButton" name="pushButton_autorun_start">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>70</width>
-                  <height>40</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>70</width>
-                  <height>40</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>开始清扫</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QPushButton" name="pushButton_autorun_stop">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>70</width>
-                  <height>40</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>70</width>
-                  <height>40</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>结束清扫</string>
-                </property>
-               </widget>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_7">
+                <item>
+                 <widget class="QPushButton" name="pushButton_autorun_start">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>70</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>70</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>开始清扫</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="pushButton_autorun_stop">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>70</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>70</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>结束清扫</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
              </layout>
             </widget>
             <widget class="QWidget" name="tab_chassis_ctrl">
              <attribute name="title">
-              <string>底盘控制</string>
+              <string>自由行走控制</string>
              </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_4">
+             <layout class="QVBoxLayout" name="verticalLayout_16">
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_18">
+               <spacer name="verticalSpacer_4">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>5</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_4">
                 <item>
-                 <widget class="QLabel" name="label">
-                  <property name="text">
-                   <string>车速</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <layout class="QVBoxLayout" name="verticalLayout_15">
+                 <layout class="QHBoxLayout" name="horizontalLayout_6">
+                  <item>
+                   <widget class="QLabel" name="label_8">
+                    <property name="text">
+                     <string>-300</string>
+                    </property>
+                   </widget>
+                  </item>
                   <item>
                    <widget class="QSlider" name="horizontalSlider_robo_speed">
                     <property name="minimumSize">
@@ -476,115 +535,97 @@
                    </widget>
                   </item>
                   <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_16">
-                    <item>
-                     <widget class="QSpinBox" name="spinBox_robo_speed">
-                      <property name="minimum">
-                       <number>-300</number>
-                      </property>
-                      <property name="maximum">
-                       <number>300</number>
-                      </property>
-                      <property name="singleStep">
-                       <number>10</number>
-                      </property>
-                      <property name="value">
-                       <number>0</number>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_6">
-                      <property name="text">
-                       <string>mm/s</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="pushButton_robo_speed_zero">
-                      <property name="text">
-                       <string>暂停</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
+                   <widget class="QLabel" name="label_11">
+                    <property name="text">
+                     <string>300</string>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>
                 <item>
-                 <widget class="QDial" name="dial_robo_speed">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>80</width>
-                    <height>80</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>80</width>
-                    <height>80</height>
-                   </size>
-                  </property>
-                  <property name="mouseTracking">
-                   <bool>false</bool>
-                  </property>
-                  <property name="tabletTracking">
-                   <bool>false</bool>
-                  </property>
-                  <property name="autoFillBackground">
-                   <bool>false</bool>
-                  </property>
-                  <property name="minimum">
-                   <number>-300</number>
-                  </property>
-                  <property name="maximum">
-                   <number>300</number>
-                  </property>
-                  <property name="singleStep">
-                   <number>10</number>
-                  </property>
-                  <property name="pageStep">
-                   <number>50</number>
-                  </property>
-                  <property name="sliderPosition">
-                   <number>0</number>
-                  </property>
-                  <property name="invertedAppearance">
-                   <bool>false</bool>
-                  </property>
-                  <property name="invertedControls">
-                   <bool>false</bool>
-                  </property>
-                  <property name="wrapping">
-                   <bool>false</bool>
-                  </property>
-                  <property name="notchTarget">
-                   <double>50.000000000000000</double>
-                  </property>
-                  <property name="notchesVisible">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
+                 <layout class="QHBoxLayout" name="horizontalLayout_16">
+                  <item>
+                   <widget class="QLabel" name="label">
+                    <property name="text">
+                     <string>车速</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="spinBox_robo_speed">
+                    <property name="minimum">
+                     <number>-300</number>
+                    </property>
+                    <property name="maximum">
+                     <number>300</number>
+                    </property>
+                    <property name="singleStep">
+                     <number>10</number>
+                    </property>
+                    <property name="value">
+                     <number>0</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_6">
+                    <property name="text">
+                     <string>mm/s</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_13">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="pushButton_robo_speed_zero">
+                    <property name="text">
+                     <string>暂停</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                </layout>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_19">
+               <spacer name="verticalSpacer_3">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>5</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_15">
                 <item>
-                 <widget class="QLabel" name="label_2">
-                  <property name="text">
-                   <string>转向</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <layout class="QVBoxLayout" name="verticalLayout_16">
+                 <layout class="QHBoxLayout" name="horizontalLayout_10">
+                  <item>
+                   <widget class="QLabel" name="label_13">
+                    <property name="text">
+                     <string>-30</string>
+                    </property>
+                   </widget>
+                  </item>
                   <item>
                    <widget class="QSlider" name="horizontalSlider_steer_angle">
                     <property name="sizePolicy">
@@ -614,144 +655,82 @@
                    </widget>
                   </item>
                   <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_17">
-                    <item>
-                     <widget class="QSpinBox" name="spinBox_steer_angle">
-                      <property name="minimum">
-                       <number>-30</number>
-                      </property>
-                      <property name="maximum">
-                       <number>30</number>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_7">
-                      <property name="text">
-                       <string>度</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="pushButton_steer_angle_zero">
-                      <property name="text">
-                       <string>转向回正</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
+                   <widget class="QLabel" name="label_12">
+                    <property name="text">
+                     <string>30</string>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>
                 <item>
-                 <widget class="QDial" name="dial_steer_angle">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>80</width>
-                    <height>80</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>80</width>
-                    <height>80</height>
-                   </size>
-                  </property>
-                  <property name="mouseTracking">
-                   <bool>false</bool>
-                  </property>
-                  <property name="tabletTracking">
-                   <bool>false</bool>
-                  </property>
-                  <property name="autoFillBackground">
-                   <bool>false</bool>
-                  </property>
-                  <property name="minimum">
-                   <number>-30</number>
-                  </property>
-                  <property name="maximum">
-                   <number>30</number>
-                  </property>
-                  <property name="sliderPosition">
-                   <number>0</number>
-                  </property>
-                  <property name="invertedAppearance">
-                   <bool>false</bool>
-                  </property>
-                  <property name="invertedControls">
-                   <bool>false</bool>
-                  </property>
-                  <property name="wrapping">
-                   <bool>false</bool>
-                  </property>
-                  <property name="notchTarget">
-                   <double>50.000000000000000</double>
-                  </property>
-                  <property name="notchesVisible">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
+                 <layout class="QHBoxLayout" name="horizontalLayout_17">
+                  <item>
+                   <widget class="QLabel" name="label_2">
+                    <property name="text">
+                     <string>转向</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="spinBox_steer_angle">
+                    <property name="minimum">
+                     <number>-30</number>
+                    </property>
+                    <property name="maximum">
+                     <number>30</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_7">
+                    <property name="text">
+                     <string>度</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_14">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="pushButton_steer_angle_zero">
+                    <property name="text">
+                     <string>转向回正</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                </layout>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_6">
-                <item>
-                 <widget class="QPushButton" name="pushButton_drive_track_forward">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>80</width>
-                    <height>23</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>100</width>
-                    <height>23</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>沿轨道前进</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="pushButton_drive_track_backward">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>80</width>
-                    <height>23</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>100</width>
-                    <height>23</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>沿轨道后退</string>
-                  </property>
-                 </widget>
-                </item>
+               <spacer name="verticalSpacer_5">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>5</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_18">
                 <item>
                  <widget class="QPushButton" name="pushButton_chassis_power_restart">
                   <property name="sizePolicy">
@@ -762,7 +741,7 @@
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>80</width>
+                    <width>90</width>
                     <height>23</height>
                    </size>
                   </property>
@@ -773,7 +752,17 @@
                    </size>
                   </property>
                   <property name="text">
-                   <string>重新上电</string>
+                   <string>底盘重新上电</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QProgressBar" name="progressBar">
+                  <property name="value">
+                   <number>0</number>
+                  </property>
+                  <property name="format">
+                   <string>%p%</string>
                   </property>
                  </widget>
                 </item>
@@ -939,7 +928,7 @@
                  </widget>
                 </item>
                 <item row="1" column="2">
-                 <widget class="QPushButton" name="pushButton_work_clean">
+                 <widget class="QPushButton" name="pushButton_brush">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -963,6 +952,18 @@
                   </property>
                   <property name="checkable">
                    <bool>true</bool>
+                  </property>
+                  <property name="autoRepeat">
+                   <bool>false</bool>
+                  </property>
+                  <property name="autoDefault">
+                   <bool>false</bool>
+                  </property>
+                  <property name="default">
+                   <bool>false</bool>
+                  </property>
+                  <property name="flat">
+                   <bool>false</bool>
                   </property>
                  </widget>
                 </item>
@@ -1012,7 +1013,7 @@
              </size>
             </property>
             <property name="currentIndex">
-             <number>2</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="tab">
              <attribute name="title">
@@ -1110,60 +1111,10 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="tab_4">
-             <attribute name="title">
-              <string>页</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_21">
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_7">
-                <item>
-                 <layout class="QVBoxLayout" name="verticalLayout_8">
-                  <item>
-                   <widget class="QLabel" name="label_heartbeat">
-                    <property name="text">
-                     <string>通讯：--</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="label_robo_speed">
-                    <property name="text">
-                     <string>速度：--mm/s</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="label_steer_angle">
-                    <property name="text">
-                     <string>转向：--度</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="label_bat_soc">
-                    <property name="text">
-                     <string>电量：--%</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="label_water_level">
-                    <property name="text">
-                     <string>水位：--%</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </widget>
            </widget>
           </item>
           <item>
-           <widget class="QTabWidget" name="tabWidget_robot_list">
+           <widget class="QTabWidget" name="tabWidget_robots_info">
             <property name="maximumSize">
              <size>
               <width>16777215</width>
@@ -1171,92 +1122,11 @@
              </size>
             </property>
             <property name="currentIndex">
-             <number>2</number>
+             <number>3</number>
             </property>
-            <widget class="QWidget" name="tab_robo_list">
+            <widget class="QWidget" name="tab_robot_error">
              <attribute name="title">
-              <string>机器人列表</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_19">
-              <item>
-               <widget class="QTableWidget" name="tableWidget_robot_list">
-                <attribute name="horizontalHeaderCascadingSectionResizes">
-                 <bool>true</bool>
-                </attribute>
-                <column>
-                 <property name="text">
-                  <string>ID编号</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>ip地址</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>通讯状态</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>运行状态</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>任务状态</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>报警/故障</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>操作</string>
-                 </property>
-                </column>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="tab_robo_log">
-             <attribute name="title">
-              <string>运行信息</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_18">
-              <item>
-               <widget class="QTableWidget" name="tableWidget_log_info">
-                <attribute name="horizontalHeaderCascadingSectionResizes">
-                 <bool>true</bool>
-                </attribute>
-                <attribute name="verticalHeaderVisible">
-                 <bool>false</bool>
-                </attribute>
-                <column>
-                 <property name="text">
-                  <string>时间</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>类型</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>描述</string>
-                 </property>
-                </column>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="tab_error">
-             <attribute name="title">
-              <string>故障信息</string>
+              <string>故障信息(0)</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_22">
               <item>
@@ -1350,10 +1220,169 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="tab_warning">
+            <widget class="QWidget" name="tab_robot_warning">
              <attribute name="title">
-              <string>警告信息</string>
+              <string>警告信息(0)</string>
              </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_8">
+              <item>
+               <widget class="QTableWidget" name="tableWidget_warning">
+                <attribute name="horizontalHeaderCascadingSectionResizes">
+                 <bool>true</bool>
+                </attribute>
+                <attribute name="verticalHeaderVisible">
+                 <bool>false</bool>
+                </attribute>
+                <column>
+                 <property name="text">
+                  <string>开始时间</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>警告</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>处理</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>结束时间</string>
+                 </property>
+                </column>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_robot_log">
+             <attribute name="title">
+              <string>运行信息</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_18">
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_5">
+                <item>
+                 <widget class="QRadioButton" name="radioButton_robot_all">
+                  <property name="text">
+                   <string>所有机器人</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QRadioButton" name="radioButton_robot_selected">
+                  <property name="text">
+                   <string>当前选择机器人</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_10">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QTableWidget" name="tableWidget_log_info">
+                <attribute name="horizontalHeaderCascadingSectionResizes">
+                 <bool>true</bool>
+                </attribute>
+                <attribute name="verticalHeaderVisible">
+                 <bool>false</bool>
+                </attribute>
+                <column>
+                 <property name="text">
+                  <string>时间</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>类型</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>描述</string>
+                 </property>
+                </column>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_robot_list">
+             <attribute name="title">
+              <string>机器人列表(0)</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_19">
+              <item>
+               <widget class="QLabel" name="label_info_robots">
+                <property name="text">
+                 <string>自动扫描中……</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTableWidget" name="tableWidget_robot_list">
+                <attribute name="horizontalHeaderCascadingSectionResizes">
+                 <bool>true</bool>
+                </attribute>
+                <column>
+                 <property name="text">
+                  <string>ID编号</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>ip地址</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>通讯状态</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>运行状态</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>任务状态</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>故障</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>报警</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>操作</string>
+                 </property>
+                </column>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </widget>
           </item>
@@ -1968,102 +1997,6 @@
  <resources/>
  <connections>
   <connection>
-   <sender>horizontalSlider_robo_speed</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>spinBox_robo_speed</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>219</x>
-     <y>484</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>112</x>
-     <y>520</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>horizontalSlider_robo_speed</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>dial_robo_speed</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>219</x>
-     <y>484</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>306</x>
-     <y>543</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>dial_robo_speed</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>horizontalSlider_robo_speed</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>306</x>
-     <y>543</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>219</x>
-     <y>484</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>dial_robo_speed</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>spinBox_robo_speed</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>306</x>
-     <y>543</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>112</x>
-     <y>520</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinBox_robo_speed</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>horizontalSlider_robo_speed</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>112</x>
-     <y>520</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>219</x>
-     <y>484</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinBox_robo_speed</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>dial_robo_speed</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>112</x>
-     <y>520</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>306</x>
-     <y>543</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>horizontalSlider_steer_angle</sender>
    <signal>valueChanged(int)</signal>
    <receiver>spinBox_steer_angle</receiver>
@@ -2076,22 +2009,6 @@
     <hint type="destinationlabel">
      <x>106</x>
      <y>596</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>horizontalSlider_steer_angle</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>dial_steer_angle</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>219</x>
-     <y>560</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>306</x>
-     <y>619</y>
     </hint>
    </hints>
   </connection>
@@ -2112,50 +2029,34 @@
    </hints>
   </connection>
   <connection>
-   <sender>spinBox_steer_angle</sender>
+   <sender>spinBox_robo_speed</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>dial_steer_angle</receiver>
+   <receiver>horizontalSlider_robo_speed</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>106</x>
-     <y>596</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>306</x>
-     <y>619</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>dial_steer_angle</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>horizontalSlider_steer_angle</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>306</x>
-     <y>619</y>
+     <x>112</x>
+     <y>520</y>
     </hint>
     <hint type="destinationlabel">
      <x>219</x>
-     <y>560</y>
+     <y>484</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>dial_steer_angle</sender>
+   <sender>horizontalSlider_robo_speed</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>spinBox_steer_angle</receiver>
+   <receiver>spinBox_robo_speed</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>306</x>
-     <y>619</y>
+     <x>219</x>
+     <y>484</y>
     </hint>
     <hint type="destinationlabel">
-     <x>106</x>
-     <y>596</y>
+     <x>112</x>
+     <y>520</y>
     </hint>
    </hints>
   </connection>

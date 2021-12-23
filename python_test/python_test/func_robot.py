@@ -1,8 +1,9 @@
 from dataclasses import dataclass,field
 from typing import List
-import time
+import socket
 from datetime import datetime,timedelta
 
+from func_common import *
 from func_camera import *
 from func_modbus_tcp import *
 
@@ -16,10 +17,6 @@ clean_task_state = ((0,"无任务"),(1,"墙面1清洗中"),(2,"墙面2清洗中"
                     (6,"中途充电"),(7,"中途加水"),(8,"等待下次任务"))
 err_level = ((0,"无"),(1,"警告"),(2,"轻微故障"),(3,"严重故障"))
 robot_error_code_dict={0:["无","无故障","无需处理"],1:["轻微故障","测试故障描述","测试处理方式"]}
-
-#时间显示格式
-TIME_SHOW_ALL = '%Y-%m-%d %H:%M:%S'
-TIME_SHOW_H_M_S = '%H:%M:%S'
 
 
 #值-描述 集合
@@ -211,8 +208,8 @@ class ErrorState(object):
 class CleanTaskState(object):
     def __init__(self):
         self.state = ValueDescriptionSet(clean_task_state)
-        self.start_time = datetime(2000,1,1)
-        self.stop_time = datetime(2000,1,1)
+        self.start_time = None
+        self.stop_time = None
         self.mileage_driven = 0.0
         self.mileage_total = 0.0
         self.mileage_estimate = 0.0
@@ -227,31 +224,18 @@ class CleanTaskState(object):
         self.time_remain = 0
 
 
-#日志
-class LogEvent(object):
-    def __init__(self):
-        self.type = ValueDescriptionSet(log_type)
-        self.time=datetime(2000,1,1)
-        self.event=""
-
-
-class LogState(object):
-    def __init__(self):
-        #LogEvent列表
-        self.log_list=[]
-        
-    def type_count(self,log_type,time_start=datetime(2000,1,1)):
-        count=0
-        #do
-        return count
         
     
 #机器人集合
 class RobotGroup(object):
     def __init__(self):
         self.robots = {}
-        self.id_selected = None
-        self.robot_selected=None
+        self.addrs_online=set([])
+        self.now=None
+        self.local_ip = None
+        self.local_ip_strlist=None
+
+        self.get_local_ip()
 
     def add(self,robot):
         self.robots[robot.unique_id]=robot
@@ -263,19 +247,42 @@ class RobotGroup(object):
         if unique_id in self.robots:        
             self.robot_selected=self.robots.get(unique_id)
             self.id_selected =unique_id
+            return self.robot_selected
         else:
             print("无法找到此机器人")
+            return None
+
+    def check_addrs_online(self,robot):
+        if robot.communication.is_online:
+            self.addrs_online.add(robot.communication.ip)
+            self.addrs_online.add(robot.camera.ip)
+        else:
+            if robot.communication.ip in self.addrs_online:
+                self.addrs_online.remove(robot.communication.ip)
+                self.addrs_online.remove(robot.camera.ip)
+
+    def get_local_ip(self):
+        hostname = socket.gethostname()
+        # 获取本机ip
+        self.local_ip = socket.gethostbyname(hostname)
+        self.local_ip_strlist=self.local_ip.split('.')
+        print("获取本机ip",self.local_ip_strlist)
+        return self.local_ip_strlist
+    def setup_scan_ip(self,ip_4th):
+        self.local_ip_strlist[3]=str(ip_4th)
+        scan_ip='.'.join(self.local_ip_strlist)
+        return scan_ip
 
     def list_info(self):
         list_info = []
         if self.robots == {}:
-            print("没有机器人")
+            #print("没有机器人")
             pass
         else:
             count = len(self.robots)       
             for id in self.robots:
                 list_info.append([self.robots.get(id).unique_id,self.robots.get(id).communication.ip,self.robots.get(id).communication.state.description(),
-                                  self.robots.get(id).base.run_state.description(),self.robots.get(id).task.state.description(),self.robots.get(id).err_count()])
+                                  self.robots.get(id).base.run_state.description(),self.robots.get(id).task.state.description(),self.robots.get(id).err_count(),self.robots.get(id).warning_count()])
 
         return list_info
 
@@ -292,17 +299,20 @@ class Robot(object):
         self.navi = NaviState()
         self.cleaner = CleanerState()
         self.arm = ArmState()
-        self.robot_time = datetime(2000,1,1)
+        self.robot_time = None
         self.error_chassis = ErrorState()
         self.error_arm = ErrorState()
         self.task = CleanTaskState()
-        self.master = SpnTcpMaster()
-        self.camera = CameraRtsp()
+        self.master = SpnTcpMaster(host=ip,port=port)
+        self.camera = CameraRtsp(pc_test=True)
         self.log=LogState()
+        #self.init(ip)
 
-    def init(self,ip):
-        set_ip("")
-        self.master.open()
+    def init(self,ip):        
+        #self.master.open()
+        self.get_state()
+        self.sync_time()
+        #self.set_ip("")
 
     def set_ip(self,ip):
         self.communication.ip = ip
@@ -312,6 +322,9 @@ class Robot(object):
     def err_count(self):
         count=len(self.error_chassis.active_error)+len(self.error_arm.active_error)
         return count
+
+    def warning_count(self):
+        pass
 
     def get_communication_state(self):
             self.communication.is_online=self.master.is_opened()
@@ -323,29 +336,27 @@ class Robot(object):
                 else:
                     self.communication.state.value=0
 
-
     #获取机器人信息参数列表
     def robot_info(self):
-        robot_info = [["ID编号",self.unique_id],["运行状态",self.base.run_state.description()],
-              ["速度(mm/s)    ",self.drive.speed],["转角(°)",self.drive.steer_angle],["电量(%)",self.battery.soc],
-              ["水位(%)",self.cleaner.water_level],["总里程(m)",self.drive.mileage],["控制模式",self.base.ctrl_mode.description()],
-              ["ip地址",self.communication.ip],["连接状态",self.communication.state.description()],["程序版本",self.version.get()],["机器人时间",self.robot_time.strftime(TIME_SHOW_ALL)]]
+        robot_info = [["ID编号",self.unique_id],["连接状态",self.communication.state.description()],["运行状态",self.base.run_state.description()],
+              ["速度(mm/s)    ",self.drive.speed],["转角(°)",self.drive.steer_angle],["电量(%)",self.battery.soc],["水位(%)",self.cleaner.water_level],
+              ["总里程(m)",self.drive.mileage],["控制模式",self.base.ctrl_mode.description()],
+              ["ip地址",self.communication.ip],["程序版本",self.version.get()],["机器人时间",check_time_info(self.robot_time)]]
         return robot_info
 
     #获取任务信息参数列表
     def task_info(self):
-        task_info = [["状态",self.task.state.description()],["开始时间",self.task.start_time.strftime(TIME_SHOW_H_M_S)],["工作时长",self.task.time_worked],["行驶里程(m)    ",self.task.mileage_driven],
+        task_info = [["状态",self.task.state.description()],["开始时间",check_time_info(self.task.start_time)],["工作时长",self.task.time_worked],["行驶里程(m)    ",self.task.mileage_driven],
                    ["清扫数量",self.task.count_cleaned],["加水次数",self.task.count_add_water],["充电次数",self.task.count_charged],
-                   ["结束时间",self.task.stop_time.strftime(TIME_SHOW_H_M_S)]]            
+                   ["结束时间",check_time_info(self.task.stop_time)]]            
         return task_info
 
     #获取机器人状态，一次性读取所有只读部分并解析
     def get_state(self):
-        self.get_communication_state()
+        
         self.read_all_readonly()
         self.parse_readonly_data()
-
-        
+        self.get_communication_state()
 
     #一次性读所有只读
     def read_all_readonly(self):
@@ -381,7 +392,6 @@ class Robot(object):
         self.task.count_add_water = self.protocol.count_add_water.value
         self.task.count_charged = self.protocol.count_charged.value
         self.task.time_worked = self.protocol.clean_time_s.value                
-        #self.sync_time()
 
     def get_run_state(self):
         if test_bit(self.protocol.robot_state.value,4):
@@ -390,8 +400,7 @@ class Robot(object):
             self.base.run_state.value = 2
         if test_bit(self.protocol.robot_state.value,3):
             self.base.run_state.value = 5
-        
-        pass
+
     def get_ctrl_mode(self):
         if test_bit(self.protocol.robot_state.value,0):
             self.base.ctrl_mode.value = 0
@@ -421,11 +430,13 @@ class Robot(object):
     def sync_time(self):
         self.get_robot_time()
         time_now=datetime.now()
-        time_offset=datetime.now().timestamp()-self.robot_time.timestamp()
-
-        if abs(time_offset)>3:
+        if isinstance(self.robot_time,datetime):
+            time_offset=datetime.now().timestamp()-self.robot_time.timestamp()
+            if abs(time_offset)>3:
+                self.set_robot_time()
+                print("时间偏差:",time_offset,"同步时间")
+        else:
             self.set_robot_time()
-            print("时间偏差:",time_offset,"同步时间")
 
     #获取机器人时间
     def get_robot_time(self):
@@ -440,7 +451,7 @@ class Robot(object):
 
         if self.protocol.time_year.value<1970:
             print("非法时间值",self.protocol.time_year.value) 
-            self.robot_time = datetime(2000,1,1)
+            self.robot_time = False
         else:
             self.robot_time = datetime(self.protocol.time_year.value,self.protocol.time_month.value,
                                        self.protocol.time_day.value,self.protocol.time_hour.value,
@@ -470,30 +481,69 @@ class Robot(object):
 
     #界面控制机器人##########################################################################################################################
     #清除现行故障
-    
+    def clear_active_error(self):
+        #清除底盘故障
+        self.master.write(self.protocol.chassis_set,3)
+        #清除手臂故障
+        self.master.write(self.protocol.chassis_set,4)
     #任务-开始
-    #任务-暂停
+    def clean_task_start(self):
+        self.master.write(self.protocol.ctrl_mode,0)
+        self.master.write(self.protocol.start_clean,1)
     #任务-结束
-    #任务-充电
-    #任务-加水
-    #轨道行走-0暂停，1前进，2后退
+    def clean_task_stop(self):
+        self.master.write(self.protocol.ctrl_mode,0)
+        self.master.write(self.protocol.start_clean,2)
+    ##手动-暂停
+    #def clean_task_pause(self):
+    #    self.master.write(self.protocol.ctrl_mode,1)
+    #    self.master.write(self.protocol.start_clean,3)
+    
+    #手动-充电
+    def charge_battery(self):
+        self.master.write(self.protocol.ctrl_mode,1)
+        self.master.write(self.protocol.work_ctrl,2)
+    #手动-加水
+    def add_water(self):
+        self.master.write(self.protocol.ctrl_mode,1)
+        self.master.write(self.protocol.work_ctrl,3)
+    #手动-清洗 on_off:0-关闭；1-打开
+    def pump_brush_ctrl(self,on_off):
+        self.master.write(self.protocol.ctrl_mode,1)
+        self.master.write(self.protocol.work_ctrl,on_off)
+    #轨道行走-控制：1-前进；2-后退；3-暂停
+    def on_track_drive_ctrl(self,ctrl_mode):
+        self.master.write(self.protocol.ctrl_mode,1)
+        self.master.write(self.protocol.drive_ctrl,ctrl_mode)
+      
     #自由行走-速度
+    def free_drive_ctrl_speed(self,speed):
+        #self.master.write(self.protocol.drive_ctrl,0)
+        #self.master.write(self.protocol.robot_speed_set,speed)
+        self.master.write_buffer(self.protocol.drive_ctrl,0)
+        self.master.write_buffer(self.protocol.robot_speed_set,speed)
+
     #自由行走-角度
+    def free_drive_ctrl_angle(self,angle):
+        self.master.write(self.protocol.drive_ctrl,0)
+        self.master.write(self.protocol.steer_angle_set,angle)
     #底盘重新上电
-    #机械臂位置-0~5
-    #滚刷
+    def restart_chassis(self):
+        self.master.write(self.protocol.ctrl_mode,1)
+        self.master.write(self.protocol.chassis_set,7)
     #机械臂重新上电
+    def restart_arm(self):
+        self.master.write(self.protocol.ctrl_mode,1)
+        self.master.write(self.protocol.chassis_set,6)
+    #机械臂位置-0~5
+    def arm_ctrl_position(self,position):
+        self.master.write(self.protocol.ctrl_mode,1)
+        self.master.write(self.protocol.arm_ctrl,position)
+    
 
 
 
 #变量定义
-robot_group = RobotGroup()
-
-#test
-robot1 = Robot()
-robot2 = Robot("192.168.2.107")
-robot_group.add(robot1)
-robot_group.add(robot2)
-robot_group.select(robot1.unique_id)
+robots = RobotGroup()
 
 

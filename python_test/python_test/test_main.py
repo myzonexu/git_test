@@ -34,10 +34,15 @@ sys.exit(app.exec_())
 
 #测试svg读取显示###############################################################
 '''
-dict={1:[1,2,3],2:[4,5,6],3:[7,8,9]}
-value=dict.get(1)[2]
-print(value)
-
-
+a=set(['a','b'])
+print(a)
+a.remove('a')
+print(a)
+a.remove('b')
+print(a)
+a.remove('a')
+print(a)
+a.remove('c')
+print(a)
         
     

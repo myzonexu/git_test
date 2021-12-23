@@ -15,8 +15,8 @@ from func_robot import *
 
 ###################################################################################################
 def do_main_ui(window,master,camera):
-    load_map(window)
-    table_ui_setup(window)
+    #load_map(window)
+
     #设置快捷键
     #ui_set_shortcut(window)
     #按钮响应
@@ -313,7 +313,7 @@ def do_ui_refresh(window,master):
     '''
     while 1:
         time.sleep(1)
-        do_widget_set_enbaled(window,master)
+        #do_widget_set_enbaled(window,master)
         do_label_refresh(window,master)
         #show_map(window)
         pass
@@ -351,13 +351,13 @@ def do_label_refresh(window,master):
 
     #if master.is_opened():
     if 1:
-        robot_group.robot_selected.get_state()
-        table_fill_data_list_2d(window.tableWidget_robot_info,robot_group.robot_selected.robot_info())
-        table_fill_data_list_2d(window.tableWidget_task_info,robot_group.robot_selected.task_info())
-        table_fill_data_list_2d(window.tableWidget_robot_list,robot_group.list_info())
+        robots.robot_selected.get_state()
+        table_fill_data_list_2d(window.tableWidget_robot_info,robots.robot_selected.robot_info())
+        table_fill_data_list_2d(window.tableWidget_task_info,robots.robot_selected.task_info())
+        table_fill_data_list_2d(window.tableWidget_robot_list,robots.list_info())
         window.show_table_error_list()
-        #table_fill_data_list_2d(window.tableWidget_error,robot_group.robot[robot_group.select].error_chassis.active_err_info())
-        #table_fill_data_list_2d(window.tableWidget_error,robot_group.robot[robot_group.select].error_chassis.history_err_info(),fill="new")
+        #table_fill_data_list_2d(window.tableWidget_error,robots.robot[robots.select].error_chassis.active_err_info())
+        #table_fill_data_list_2d(window.tableWidget_error,robots.robot[robots.select].error_chassis.history_err_info(),fill="new")
 
 def load_map(window):
     window.svgWidget = QtSvg.QSvgWidget('map.svg')
@@ -397,37 +397,3 @@ def table_fill_data_list_2d(table,list_2d,decimal_places=2,fill="new"):
     table.viewport().update()
 
 
-def table_ui_setup(window):
-    window.tableWidget_log_info.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-    window.tableWidget_task_list.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-    window.tableWidget_task_log.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-    window.tableWidget_robot_info.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-    window.tableWidget_task_info.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-    window.tableWidget_robot_list.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-    window.tableWidget_error.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-
-    window.tableWidget_log_info.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeToContents)
-    window.tableWidget_task_list.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeToContents)
-    window.tableWidget_task_log.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeToContents)
-    window.tableWidget_robot_info.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeToContents)
-    window.tableWidget_task_info.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeToContents)
-    window.tableWidget_robot_list.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeToContents)
-    window.tableWidget_robot_list.horizontalHeader().setSectionResizeMode(1,QHeaderView.ResizeToContents)
-    window.tableWidget_error.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeToContents)
-    window.tableWidget_error.horizontalHeader().setSectionResizeMode(1,QHeaderView.ResizeToContents)
-    window.tableWidget_error.horizontalHeader().setSectionResizeMode(2,QHeaderView.ResizeToContents)
-    window.tableWidget_error.horizontalHeader().setSectionResizeMode(3,QHeaderView.ResizeToContents)
-
-
-
-
-   
-    
-    
-    
-
-    
-
-
-
-    

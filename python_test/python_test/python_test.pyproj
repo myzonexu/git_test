@@ -47,6 +47,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="test_main.py" />
+    <Compile Include="thread_manage.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ui_main.py" />
     <Compile Include="ui_test.py" />
   </ItemGroup>

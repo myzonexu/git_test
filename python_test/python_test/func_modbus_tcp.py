@@ -24,11 +24,12 @@ class SpnData(object):
 
 #定义SpnTcpMaster类，TcpMaster增加方法
 class SpnTcpMaster(modbus_tk.modbus_tcp.TcpMaster):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, host="127.0.0.1", port=502, timeout_in_sec=5.0):
+        super().__init__(host=host, port=port, timeout_in_sec=timeout_in_sec)
         self._is_reconnect=False
         #连接状态：0-未连接；1-已连接；2-掉线；3-掉线重连
         self.connect_status=0
+        self._write_buffer=[]
 
     #def open(self):
     #    try:
@@ -81,6 +82,31 @@ class SpnTcpMaster(modbus_tk.modbus_tcp.TcpMaster):
             pass
         finally:
             pass
+    #写入发送缓冲区
+    def write_buffer(self,spn_data,value):
+        spn_data.value=value
+        self._write_buffer.append(spn_data)
+
+    #发送写缓冲区数据
+    def send_write_buffer(self,slave_id=1):
+        while len(self._write_buffer) and self.is_opened():
+            spn_data=self._write_buffer[0]
+            try:
+                self.execute(slave_id, cst.WRITE_MULTIPLE_REGISTERS, spn_data.addr,output_value=[int(spn_data.send())])
+                self._write_buffer.pop(0)
+                #print("写入",spn_data.name,"值：",spn_data.value)
+            except modbus_tk.modbus.ModbusError as exc:
+                self._is_opened=False
+                self._is_reconnect=True
+                print("%s- Code=%d", exc, exc.get_exception_code())
+            except modbus_tk.modbus_tcp.socket.error as e:
+                self._is_opened=False
+                self._is_reconnect=True
+                print("连接网络: ",self._host," 失败，错误：",str(e))
+            else:
+                pass
+            finally:
+                pass
 
     #写单个数据
     def write(self,spn_data,value,slave_id=1):
@@ -90,11 +116,11 @@ class SpnTcpMaster(modbus_tk.modbus_tcp.TcpMaster):
             print("写入",spn_data.name,"值：",spn_data.value)
         except modbus_tk.modbus.ModbusError as exc:
             self._is_opened=False
-            self.is_reconnect=True
+            self._is_reconnect=True
             print("%s- Code=%d", exc, exc.get_exception_code())
         except modbus_tk.modbus_tcp.socket.error as e:
             self._is_opened=False
-            self.is_reconnect=True
+            self._is_reconnect=True
             print("连接网络: ",self._host," 失败，错误：",str(e))
         else:
             pass
@@ -196,24 +222,7 @@ class CommunicationProtocol(object):
         return self.addr_read_start,self.len_read
 
    
-
-
-
-
-
-#常量定义
-MODBUS_TIMEOUT=5
-steer_angle_set_manual = 10
-robo_speed_set_manual_forward = 50
-robo_speed_set_manual_backward = -50
-robo_steer_angle_set_manual_left = 15
-robo_steer_angle_set_manual_right = -15
-
-#变量定义
-master_robo = SpnTcpMaster()
-#通讯协议
-#protocol=CommunicationProtocol(1000,23,2000,16)
-#print(protocol.__dict__)
+'''
 
 
 #机器人参数定义
@@ -279,7 +288,7 @@ def test_bit(int_type, offset):
 #组合高低字节
 def join_byte_hi_lo(hi,lo,bit_count):
     return (hi<<bit_count | lo)
-
+'''
 
 
 
