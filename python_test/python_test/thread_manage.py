@@ -2,39 +2,39 @@ import threading
 import time
 import copy
 from func_robot import *
+from func_common import *
 
 def get_camera_frame():
-    while window_main.tabWidget_main.currentIndex()==0:
-        if robots.current.master.is_opened():
-            robots.current.camera.get_frame()
-            robots.current.camera.frame_scale(window_main.label_camera.height())
-        else:
+    while True:
+        if robots.current==None:
             pass
+        else:
+            if robots.current.master.is_opened():
+                robots.current.camera.get_frame()
+            else:
+                pass
 
-def camera_frame_scale():
-    while 1:
-        if robots.current.master.is_opened()  and window_main.tabWidget_main.currentIndex()==0:
-        #if True :
-            robots.current.camera.frame_scale(window_main.label_camera.height())
-        else:
-            pass
+
 def get_robots_state():    
     sec=0
-    while 1:
+    while True:
+        robots.add_robot_new_scanned()
         if robots.current==None:
             pass
         else:
             if robots.current.communication.is_online:
                 robots.current.get_robot_time()
+                pass
         for id in robots.robots:
-            if robots.robots.get(id).communication.is_online:
-                robots.robots.get(id).get_state()
-                robots.check_addrs_online(robots.robots.get(id))
+            robots.robots.get(id).get_state()
+            #if robots.robots.get(id).communication.is_online:
+            #    robots.robots.get(id).get_state()
+            #    robots.check_addrs_online(robots.robots.get(id))
 
-                #同步时间，间隔1分钟
-                if sec>60:
-                    robots.robots.get(id).sync_time()
-                    sec=0
+                ##同步时间，间隔1分钟
+                #if sec>60:
+                #    robots.robots.get(id).sync_time()
+                #    sec=0
         time.sleep(1)
         sec=sec+1
 
@@ -42,7 +42,7 @@ def scan_robots():
     #robots.local_ip
     exit=1
     while exit:
-        for n in range(110,120):
+        for n in range(113,120):
             scan_ip=robots.setup_scan_ip(n)
             if scan_ip not in robots.addrs_online:
                 new_robot=Robot(ip=scan_ip)
@@ -51,40 +51,55 @@ def scan_robots():
                 if new_robot.master.is_opened():
                     #lock
                     new_id=new_robot.protocol.robot_id.value
-                    robots.robots[new_id]=Robot(ip=scan_ip)
-                    robots.robots.get(new_id).get_state()
-                    robots.robots.get(new_id).sync_time()
-                    robots.addrs_online.add(scan_ip)
-                    print("检测到机器人id",new_id,scan_ip)
+                    robots.addrs_new_scanned.append([new_id,scan_ip])
+                    #robots.robots[new_id]=Robot(ip=scan_ip)
+                    #robots.robots.get(new_id).get_state()
+                    #robots.robots.get(new_id).sync_time()
+                    #robots.addrs_online.add(scan_ip)
+                    #print("检测到机器人id",new_id,scan_ip)
 
-                    if robots.current==None:
-                        robots.current=robots.robots.get(new_id)
+                    #if robots.current==None:
+                    #    robots.current=robots.robots.get(new_id)
+                    #    exit=0
+                    if robots.current is None:
+                        pass
+                    else:                        
                         exit=0
+                        break
             else:
                 print("ip已连接，跳过",scan_ip)
+                exit=0
+                break
+            time.sleep(1)
                     
                
     
 
 def send_modbus_write_buffer():
-    while 1:
-        for id in robots.robots:
+    while True:
+        for id in robots.robots:            
             robots.robots.get(id).master.send_write_buffer()
+           
 
 #线程管理
 def thread_manage():
-    #thread_get_camera_frame.start()
+    thread_get_camera_frame.setDaemon(True)
+    thread_get_camera_frame.start()
+    thread_get_robots_state.setDaemon(True)
     thread_get_robots_state.start()
-    #thread_send_modbus_write_buffer.start()
-    thread_scan_robots.start()
+    thread_send_modbus_write_buffer.setDaemon(True)
+    thread_send_modbus_write_buffer.start()
+    thread_scan_robots.setDaemon(True)
+    #thread_scan_robots.start()
 
 def thread_close():
     #thread_get_camera_frame.join()
     thread_get_robots_state.join()
     thread_send_modbus_write_buffer.join()
 
+#app_exit=False
 #线程：相机采集视频
-#thread_get_camera_frame = threading.Thread(target=get_camera_frame, name='get_camera_frame')
+thread_get_camera_frame = threading.Thread(target=get_camera_frame, name='get_camera_frame')
 #线程：读取机器人状态
 thread_get_robots_state = threading.Thread(target=get_robots_state, name='get_robots_state')
 #线程：发送modbus写缓存中的数据

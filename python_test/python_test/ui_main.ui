@@ -198,7 +198,7 @@
              <bool>true</bool>
             </property>
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -211,16 +211,16 @@
             </property>
             <property name="maximumSize">
              <size>
-              <width>280</width>
-              <height>220</height>
+              <width>300</width>
+              <height>280</height>
              </size>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="tab_auto_clean">
              <attribute name="title">
-              <string>轨道行走控制</string>
+              <string>轨道行走</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_21">
               <item>
@@ -473,7 +473,7 @@
             </widget>
             <widget class="QWidget" name="tab_chassis_ctrl">
              <attribute name="title">
-              <string>自由行走控制</string>
+              <string>自由行走</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_16">
               <item>
@@ -732,6 +732,34 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_18">
                 <item>
+                 <widget class="QProgressBar" name="progressBar">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>150</width>
+                    <height>15</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>150</width>
+                    <height>15</height>
+                   </size>
+                  </property>
+                  <property name="value">
+                   <number>0</number>
+                  </property>
+                  <property name="format">
+                   <string>%p</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <widget class="QPushButton" name="pushButton_chassis_power_restart">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -753,16 +781,6 @@
                   </property>
                   <property name="text">
                    <string>底盘重新上电</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QProgressBar" name="progressBar">
-                  <property name="value">
-                   <number>0</number>
-                  </property>
-                  <property name="format">
-                   <string>%p%</string>
                   </property>
                  </widget>
                 </item>
@@ -1000,16 +1018,22 @@
           </item>
           <item>
            <widget class="QTabWidget" name="tabWidget_robot_info">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="minimumSize">
              <size>
-              <width>200</width>
+              <width>280</width>
               <height>0</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>270</width>
-              <height>220</height>
+              <width>320</width>
+              <height>280</height>
              </size>
             </property>
             <property name="currentIndex">
@@ -1025,6 +1049,9 @@
                 <property name="lineWidth">
                  <number>1</number>
                 </property>
+                <attribute name="horizontalHeaderVisible">
+                 <bool>false</bool>
+                </attribute>
                 <attribute name="horizontalHeaderCascadingSectionResizes">
                  <bool>true</bool>
                 </attribute>
@@ -1085,6 +1112,9 @@
                 <property name="sortingEnabled">
                  <bool>false</bool>
                 </property>
+                <attribute name="horizontalHeaderVisible">
+                 <bool>false</bool>
+                </attribute>
                 <attribute name="horizontalHeaderCascadingSectionResizes">
                  <bool>true</bool>
                 </attribute>
@@ -1118,7 +1148,7 @@
             <property name="maximumSize">
              <size>
               <width>16777215</width>
-              <height>220</height>
+              <height>280</height>
              </size>
             </property>
             <property name="currentIndex">
@@ -1126,7 +1156,7 @@
             </property>
             <widget class="QWidget" name="tab_robot_error">
              <attribute name="title">
-              <string>故障信息(0)</string>
+              <string>故障(0)</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_22">
               <item>
@@ -1222,7 +1252,7 @@
             </widget>
             <widget class="QWidget" name="tab_robot_warning">
              <attribute name="title">
-              <string>警告信息(0)</string>
+              <string>警告(0)</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_8">
               <item>
@@ -1259,7 +1289,7 @@
             </widget>
             <widget class="QWidget" name="tab_robot_log">
              <attribute name="title">
-              <string>运行信息</string>
+              <string>运行日志</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_18">
               <item>

@@ -1,7 +1,7 @@
 import modbus_tk
 import modbus_tk.defines as cst
 import modbus_tk.modbus_tcp as modbus_tcp
-
+from func_common import *
 import time
 
 #定义通讯协议中的参数项
@@ -88,13 +88,14 @@ class SpnTcpMaster(modbus_tk.modbus_tcp.TcpMaster):
         self._write_buffer.append(spn_data)
 
     #发送写缓冲区数据
+    #@get_run_time
     def send_write_buffer(self,slave_id=1):
         while len(self._write_buffer) and self.is_opened():
             spn_data=self._write_buffer[0]
             try:
                 self.execute(slave_id, cst.WRITE_MULTIPLE_REGISTERS, spn_data.addr,output_value=[int(spn_data.send())])
                 self._write_buffer.pop(0)
-                #print("写入",spn_data.name,"值：",spn_data.value)
+                print("写入",spn_data.name,"值：",spn_data.value)
             except modbus_tk.modbus.ModbusError as exc:
                 self._is_opened=False
                 self._is_reconnect=True
@@ -109,23 +110,26 @@ class SpnTcpMaster(modbus_tk.modbus_tcp.TcpMaster):
                 pass
 
     #写单个数据
-    def write(self,spn_data,value,slave_id=1):
-        try:
-            spn_data.value=value
-            self.execute(slave_id, cst.WRITE_MULTIPLE_REGISTERS, spn_data.addr,output_value=[int(spn_data.send())])
-            print("写入",spn_data.name,"值：",spn_data.value)
-        except modbus_tk.modbus.ModbusError as exc:
-            self._is_opened=False
-            self._is_reconnect=True
-            print("%s- Code=%d", exc, exc.get_exception_code())
-        except modbus_tk.modbus_tcp.socket.error as e:
-            self._is_opened=False
-            self._is_reconnect=True
-            print("连接网络: ",self._host," 失败，错误：",str(e))
+    def write(self,spn_data,value,slave_id=1,enable_buffer=True):
+        if enable_buffer:
+            self.write_buffer(spn_data,value)
         else:
-            pass
-        finally:
-            pass
+            try:
+                spn_data.value=value
+                self.execute(slave_id, cst.WRITE_MULTIPLE_REGISTERS, spn_data.addr,output_value=[int(spn_data.send())])
+                print("写入",spn_data.name,"值：",spn_data.value)
+            except modbus_tk.modbus.ModbusError as exc:
+                self._is_opened=False
+                self._is_reconnect=True
+                print("%s- Code=%d", exc, exc.get_exception_code())
+            except modbus_tk.modbus_tcp.socket.error as e:
+                self._is_opened=False
+                self._is_reconnect=True
+                print("连接网络: ",self._host," 失败，错误：",str(e))
+            else:
+                pass
+            finally:
+                pass
 
     #读多个连续数据
     def read_multiple(self,addr_read_start,len_read,slave_id=1):

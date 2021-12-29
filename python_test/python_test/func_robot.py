@@ -2,7 +2,7 @@ from dataclasses import dataclass,field
 from typing import List
 import socket
 from datetime import datetime,timedelta
-
+from PyQt5.QtCore import QObject , pyqtSignal
 from func_common import *
 from func_camera import *
 from func_modbus_tcp import *
@@ -87,6 +87,8 @@ class BatteryState:
     soc : int = 0
     soh :int = 0
     voltage :float = 0.0
+    charging:bool=False
+
 
 
 #行驶状态
@@ -223,31 +225,77 @@ class CleanTaskState(object):
         self.time_estimate = 0
         self.time_remain = 0
 
-
-        
-    
+  
 #机器人集合
-class RobotGroup(object):
+class RobotGroup(QObject):
+    #current_inited=pyqtSignal(int)
+    #current_changed=pyqtSignal(int)
+    current_inited=pyqtSignal()
+    current_changed=pyqtSignal()
+
     def __init__(self):
+        super().__init__()
         self.robots = {}
         self.addrs_online=set([])
+        #新检测到的ip列表，[[id1,ip1],[id2,ip2]]
+        self.addrs_new_scanned=[]
         self.current=None
         self.local_ip = None
         self.local_ip_strlist=None
 
         self.get_local_ip()
 
+    def add_robot_new_scanned(self):
+        for n in range(len(self.addrs_new_scanned)):
+            new_id=self.addrs_new_scanned[n][0]
+            new_ip=self.addrs_new_scanned[n][1]
+            if new_id in self.robots:
+                self.robots.get(new_id).set_ip(new_ip)
+            else:
+                self.robots[new_id]=Robot(ip=new_ip)
+                print("检测到机器人id",new_id,new_ip)
+            self.robots.get(new_id).init()
+            self.addrs_online.add(new_ip)
+            self.addrs_new_scanned.pop(n)
+
+            if self.current==None:
+                self.current=self.robots.get(new_id)
+     
+
     def add(self,robot):
-        self.robots[robot.unique_id]=robot
+        robot.get_state()
+        if robot.unique_id is None:
+            print("获取ID失败")
+        else:
+            self.robots[robot.unique_id]=robot
+            print("获取ID,添加机器人",robot.unique_id)
 
     def delete(self,unique_id):
         self.robots.pop(unique_id)
 
-    def select(self,unique_id):
+    def init_current(self,unique_id):
+        if self.current is None:
+            if unique_id in self.robots:        
+                self.current=self.robots.get(unique_id)
+                #self.current_inited.emit(unique_id)
+                self.current_inited.emit()
+                print("设定当前机器人")
+                return self.current
+            else:
+                print("无法找到此机器人")
+                return None
+        else:
+            print("已有当前机器人")
+
+    def set_current(self,unique_id):
+        
         if unique_id in self.robots:        
-            self.robot_selected=self.robots.get(unique_id)
-            self.id_selected =unique_id
-            return self.robot_selected
+            self.current=self.robots.get(unique_id)
+            #self.current_changed.emit(unique_id)
+            self.current_changed.emit()
+            print("设定当前机器人ID为：",unique_id)
+            return self.current
+            
         else:
             print("无法找到此机器人")
             return None
@@ -265,8 +313,9 @@ class RobotGroup(object):
         hostname = socket.gethostname()
         # 获取本机ip
         self.local_ip = socket.gethostbyname(hostname)
+        #self.local_ip ="192.168.1.1"
         self.local_ip_strlist=self.local_ip.split('.')
-        print("本机ip：",self.local_ip)
+        print("ip：",self.local_ip)
         return self.local_ip_strlist
     def setup_scan_ip(self,ip_4th):
         self.local_ip_strlist[3]=str(ip_4th)
@@ -287,8 +336,10 @@ class RobotGroup(object):
         return list_info
 
 #机器人
-class Robot(object):
+class Robot(QObject):
+    state_updated=pyqtSignal()
     def __init__(self,ip="127.0.0.1",port=502):
+        super().__init__()
         self.unique_id = None
         self.base = BaseState()
         self.version = VersionState()
@@ -305,10 +356,11 @@ class Robot(object):
         self.task = CleanTaskState()
         self.master = SpnTcpMaster(host=ip,port=port)
         self.camera = CameraRtsp(pc_test=True)
+        #self.camera = CameraRtsp()
         self.log=LogState()
         #self.init(ip)
 
-    def init(self,ip):        
+    def init(self):        
         #self.master.open()
         self.get_state()
         self.sync_time()
@@ -352,11 +404,13 @@ class Robot(object):
         return task_info
 
     #获取机器人状态，一次性读取所有只读部分并解析
-    def get_state(self):
-        
+    #@get_run_time
+    def get_state(self):        
         self.read_all_readonly()
         self.parse_readonly_data()
         self.get_communication_state()
+
+        self.state_updated.emit()
 
     #一次性读所有只读
     def read_all_readonly(self):
@@ -432,7 +486,7 @@ class Robot(object):
         time_now=datetime.now()
         if isinstance(self.robot_time,datetime):
             time_offset=datetime.now().timestamp()-self.robot_time.timestamp()
-            if abs(time_offset)>3:
+            if abs(time_offset)>5:
                 self.set_robot_time()
                 print("时间偏差:",time_offset,"同步时间")
         else:
@@ -440,7 +494,7 @@ class Robot(object):
 
     #获取机器人时间
     def get_robot_time(self):
-        self.master.write(self.protocol.time_sync_rw,0)
+        #self.master.write(self.protocol.time_sync_rw,0)
         self.master.read(self.protocol.time_year)
         self.master.read(self.protocol.time_month)
         self.master.read(self.protocol.time_day)
@@ -448,27 +502,39 @@ class Robot(object):
         self.master.read(self.protocol.time_min)
         self.master.read(self.protocol.time_sec)
         self.master.read(self.protocol.time_weekday)
-
-        if self.protocol.time_year.value<1970:
-            print("非法时间值",self.protocol.time_year.value) 
-            self.robot_time = False
-        else:
-            self.robot_time = datetime(self.protocol.time_year.value,self.protocol.time_month.value,
+        try:
+            self.robot_time = datetime(self.protocol.time_year.value+2000,self.protocol.time_month.value,
                                        self.protocol.time_day.value,self.protocol.time_hour.value,
                                        self.protocol.time_min.value,self.protocol.time_sec.value)
+        except Exception as e:
+            print("时间值异常：",str(e))
+
+
+        #if self.protocol.time_year.value<1970:
+        #if self.protocol.time_year.value>99:
+        #    print("非法时间值",self.protocol.time_year.value) 
+        #    self.robot_time = False
+        #else:
+        #    self.robot_time = datetime(self.protocol.time_year.value+2000,self.protocol.time_month.value,
+        #                               self.protocol.time_day.value,self.protocol.time_hour.value,
+        #                               self.protocol.time_min.value,self.protocol.time_sec.value)
     
     #设置机器人时间为当前时间
     def set_robot_time(self):
-        time_now=datetime.now()
+        #time_now=datetime.now()
         self.master.write(self.protocol.time_sync_rw,1)
-        self.master.write(self.protocol.time_year,time_now.year)
+        time.sleep(1)
+        time_now=datetime.now()
+        self.master.write(self.protocol.time_year,time_now.year-2000)
         self.master.write(self.protocol.time_month,time_now.month)
         self.master.write(self.protocol.time_day,time_now.day)
         self.master.write(self.protocol.time_hour,time_now.hour)
         self.master.write(self.protocol.time_min,time_now.minute)
         self.master.write(self.protocol.time_sec,time_now.second)
         self.master.write(self.protocol.time_weekday,time_now.weekday())
+        time.sleep(1)
         self.master.write(self.protocol.time_sync_rw,0)
+
         pass
 
     #获取故障信息
@@ -518,10 +584,10 @@ class Robot(object):
       
     #自由行走-速度
     def free_drive_ctrl_speed(self,speed):
-        #self.master.write(self.protocol.drive_ctrl,0)
-        #self.master.write(self.protocol.robot_speed_set,speed)
-        self.master.write_buffer(self.protocol.drive_ctrl,0)
-        self.master.write_buffer(self.protocol.robot_speed_set,speed)
+        self.master.write(self.protocol.drive_ctrl,0)
+        self.master.write(self.protocol.robot_speed_set,speed)
+        #self.master.write_buffer(self.protocol.drive_ctrl,0)
+        #self.master.write_buffer(self.protocol.robot_speed_set,speed)
 
     #自由行走-角度
     def free_drive_ctrl_angle(self,angle):
@@ -542,4 +608,10 @@ class Robot(object):
     
 #变量定义
 robots = RobotGroup()
+robot1=Robot()
+robot2=Robot("192.168.2.107")
+robots.add(robot1)
+#robots.add(robot2)
+#robots.init_current(robot1.unique_id)
+#robots.current=robot1
 

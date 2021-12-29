@@ -1,4 +1,5 @@
 from datetime import datetime,timedelta
+import time
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -36,6 +37,19 @@ def check_time_info(time):
         info_time="错误时间值"
     return info_time
 
+import time
+
+#装饰器###################################################################
+#输出程序执行时间
+def get_run_time(func):
+    def call_func(*args, **kwargs):
+        begin_time = time.time()
+        ret = func(*args, **kwargs)
+        end_time = time.time()
+        Run_time = end_time - begin_time
+        print(str(func.__name__)+"函数运行时间为"+str(Run_time))
+        return ret
+    return call_func
 
 #表格操作####################################################################
 #表格填充数据-二维数组

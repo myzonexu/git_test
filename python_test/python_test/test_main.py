@@ -34,15 +34,38 @@ sys.exit(app.exec_())
 
 #测试svg读取显示###############################################################
 '''
-a=set(['a','b'])
-print(a)
-a.remove('a')
-print(a)
-a.remove('b')
-print(a)
-a.remove('a')
-print(a)
-a.remove('c')
-print(a)
+
+#测试相机，多线程，信号槽###############################################################
+import sys
+from PyQt5.Qt import QMainWindow,QApplication
+import threading
+from ui_test import Ui_MainWindow
+
+from func_camera import *
+
+#线程管理
+def get_camera_frame(camera):
+    while True:
+        camera.get_frame()
         
-    
+
+class Window(QMainWindow, Ui_MainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+
+
+if __name__ == '__main__':    
+    app = QApplication(sys.argv)
+    window = Window()
+    window.show()
+    camera=CameraRtsp(pc_test=True)
+    camera.frame_captured.connect(lambda:window.label.setPixmap(QPixmap.fromImage(camera.img)))
+    thread_camera = threading.Thread(target=get_camera_frame, args=(camera,),name='thread_camera')
+    thread_camera.start()
+    sys.exit(app.exec_())
+#测试相机，多线程，信号槽###############################################################
+
+
+
+

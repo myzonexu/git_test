@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-
+import sys
 from PyQt5.Qt import QMainWindow
 #from PyQt5.QtGui import QImage,QPixmap
-from PyQt5.QtWebEngineWidgets import *
+#from PyQt5.QtWebEngineWidgets import *
 #from PyQt5.QtCore import QTimer
 #from PyQt5.QtCore import pyqtSlot
 
@@ -28,26 +28,35 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def func_list(self):
         self.setup_ui_extra()
+        self.init_robot_slot()
         self.load_map()
         #self.ui_set_shortcut()
-        self.setup_timer()
+        #self.setup_timer()
  
     #事件响应###################################################################################################
+    def closeEvent(self,event):
+        pass
+
     #窗口大小改变响应
     def resizeEvent(self, QResizeEvent):
         #Window resize event.
         super().resizeEvent(QResizeEvent)
+
         if robots.current==None:
             pass
         else:
-            camera_ratio=robots.current.camera.ratio_w_h
-            camrea_show_height=self.groupBox_map.height()
-            camrea_show_width=int(camrea_show_height*camera_ratio)
-            offset_width=camrea_show_width-self.label_camera.width()
-            self.groupBox_map.resize(self.groupBox_map.width()-offset_width,self.groupBox_map.height())
-            self.label_camera.move(self.label_camera.x()-offset_width,self.label_camera.y())
-            self.label_camera.resize(camrea_show_width,camrea_show_height)
+            self.resize_camera_show()
 
+    def resize_camera_show(self):
+        camera_ratio=robots.current.camera.ratio_w_h
+        camrea_show_height=self.groupBox_map.height()
+        camrea_show_width=int(camrea_show_height*camera_ratio)
+        robots.current.camera.set_show_width(camrea_show_width)
+        robots.current.camera.set_show_height(camrea_show_height)
+        offset_width=camrea_show_width-self.label_camera.width()
+        self.groupBox_map.resize(self.groupBox_map.width()-offset_width,self.groupBox_map.height())
+        self.label_camera.move(self.label_camera.x()-offset_width,self.label_camera.y())
+        self.label_camera.resize(camrea_show_width,camrea_show_height)
 
     #信号-槽响应###############################################################################################
     #按钮响应
@@ -137,26 +146,64 @@ class Window(QMainWindow, Ui_MainWindow):
             robots.current.clear_active_error()
         else:
             robots.current.error_chassis.clear_history()
+    #机器人列表选择
+    @pyqtSlot(int,int)
+    def on_tableWidget_robot_list_cellClicked(self, row, col):
+        id=int(self.tableWidget_robot_list.item(row,0).text())
+        #选择ID
+        if col is 0:            
+            robots.set_current(id)
+        #选择故障
+        elif col is 5:
+            robots.set_current(id)
+            self.tabWidget_robots_info.setCurrentIndex(0)
+        #选择警告
+        elif col is 6:
+            robots.set_current(id)
+            self.tabWidget_robots_info.setCurrentIndex(1)
+
+    @pyqtSlot(int)
+    def on_tabWidget_main_currentChanged(self,index):
+        if index is 0:
+            robots.current.camera.enable_capture()
+            pass
+        else:
+            robots.current.camera.disable_capture()
+            #robots.current.camera.close()
+            print("关闭相机捕获")
     #test
     @pyqtSlot()
     def on_pushButton_add_task_clicked(self):
         print("按下添加")
-    @pyqtSlot()
-    def xxx(self):
-        pass
-    @pyqtSlot()
-    def xxx(self):
-        pass
+    
 
     #方法######################################################################################
     #UI额外设置
     def setup_ui_extra(self):
         self.init_table_group()
         self.setup_ui_tablewidget()
-        self.ui_set_shortcut()
-        pass
+        self.setup_ui_statusbar()
+        self.setup_ui_shortcut()
+        
+
+    #初始化当前机器人信号槽
+    def init_robot_slot(self):
+        robots.current_inited.connect(self.setup_ui_robot_current_slot)
+
+    def setup_ui_robot_current_slot(self):
+        robots.current.camera.inited.connect(self.resize_camera_show)
+        robots.current.camera.frame_captured.connect(self.update_ui_camera)
+        robots.current.state_updated.connect(self.update_ui)
+        robots.current_changed.connect(self.update_ui)
+        
+
+    def setup_ui_statusbar(self):
+        self.label_wirte_buffer = QLabel('{:<100}'.format('发送缓冲区:'))
+        self.statusbar.addWidget(self.label_wirte_buffer, 1)
+        self.statusbar.addWidget(self.progressBar, 2)
+        self.setStatusBar(self.statusbar)
     #设置快捷键
-    def ui_set_shortcut(self):
+    def setup_ui_shortcut(self):
         self.pushButton_on_track_forward.setShortcut('Up')
         self.pushButton_on_track_backward.setShortcut('Down')
         self.pushButton_autorun_start.setShortcut('Home')
@@ -177,17 +224,19 @@ class Window(QMainWindow, Ui_MainWindow):
             table_widget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
             table_widget.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeToContents)
 
-        for i in range(0,4):
+        for i in range(0,3):
             self.tableWidget_robot_list.horizontalHeader().setSectionResizeMode(i,QHeaderView.ResizeToContents)
 
-        for j in range(0,4):
+        for j in range(0,2):
             self.tableWidget_error.horizontalHeader().setSectionResizeMode(j,QHeaderView.ResizeToContents)
 
 
     #UI更新
     def update_ui(self):
+        self.update_ui_widget_enbaled()
         self.update_ui_table()
         self.update_ui_tab_text()
+        
 
     #更新表格显示
     def update_ui_table(self):
@@ -211,29 +260,42 @@ class Window(QMainWindow, Ui_MainWindow):
         if robots.current==None:
             pass
         else:
-            self.tabWidget_robots_info.setTabText(0,"故障信息("+str(robots.current.err_count())+")")
-            self.tabWidget_robots_info.setTabText(1,"警告信息("+str(robots.current.warning_count())+")")
-        
-
-               
+            self.tabWidget_robots_info.setTabText(0,"故障("+str(robots.current.err_count())+")")
+            self.tabWidget_robots_info.setTabText(1,"警告("+str(robots.current.warning_count())+")")
+             
     #更新控件使能
     def update_ui_widget_enbaled(self):
         #if master.is_opened() and master.is_reconnect()==False :
-        if robots.current.master.is_opened() :
-            self.tabWidget_robo_ctrl.setEnabled(True)
-        else:
+        self.tabWidget_main.setTabEnabled(3,False)
+        if robots.current==None:
             self.tabWidget_robo_ctrl.setEnabled(False)
-
-        #self.tab.setTabEnabled
-
+        else:
+            if robots.current.master.is_opened() :
+                self.tabWidget_robo_ctrl.setEnabled(True)
+            else:
+                self.tabWidget_robo_ctrl.setEnabled(False)
+    #相机web页面
+    def setup_ui_camera_web(self):
+        if robots.current==None:
+            pass
+        else:
+            if robots.current.camera.is_web_open==False:
+                self.browser = QWebEngineView()
+                self.browser.load(QUrl(robots.current.camera.web_url))
+                self.scrollArea_camera_browser.setWidget(self.browser)
+                self.scrollArea_camera_browser.show()
+                print(robots.current.camera.web_url)
+                robots.current.camera.is_web_open=True
+ 
     #显示监控视频
-    def show_camera(self):
+    def update_ui_camera(self):
         if robots.current==None:
             pass
         else:
             self.label_camera.setPixmap(QPixmap.fromImage(robots.current.camera.img_scaled))
-
-
+            #self.label_camera.setPixmap(QPixmap.fromImage(robots.current.camera.img))
+            self.progressBar.setValue(len(robots.current.master._write_buffer))
+ 
     #加载地图
     def load_map(self):
         self.svgWidget = QtSvg.QSvgWidget('map.svg')
@@ -248,13 +310,7 @@ class Window(QMainWindow, Ui_MainWindow):
         render.setViewBox(QRect(x,10,100,80))
         self.scrollArea_map.repaint()
         #render.repaintNeeded.connect(window.scrollArea_map.repaint)
-    
 
-    
-
- 
-        
-   
     #故障信息：当前故障、历史故障切换
     def toggle_table_error_list(self):
         if self.radioButton_err_active.isChecked():
@@ -263,27 +319,4 @@ class Window(QMainWindow, Ui_MainWindow):
             err_list=robots.current.error_chassis.history_err_info()
         table_fill_data_list_2d(self.tableWidget_error,err_list)
         
-    
-    
-            
-    
-
-    #定时器
-    def setup_timer(self):
-        self.timer_ui_refresh = QTimer(self)  # 初始化一个定时器
-        self.timer_ui_refresh.timeout.connect(self.update_ui)  # 每次计时到时间时发出信号
-        self.timer_ui_refresh.start(1000)  # 设置计时间隔并启动；单位毫秒
-        self.timer_camera = QTimer()
-        self.timer_camera.timeout.connect(self.show_camera)
-        self.timer_camera.start(30)  # 设置计时间隔并启动；单位毫秒
-
-        self.timer_test = QTimer()
-        #self.timer_test.timeout.connect(lambda:self.progressBar.setValue(len(robots.current.master._write_buffer)))  # 每次计时到时间时发出信号
-        self.timer_test.start(30)  # 设置计时间隔并启动；单位毫秒
-
-        
-    
-    #重连网络——改用线程
-    #刷新界面——改用信号
-    #视频显示——改用线程
-    
+ 
