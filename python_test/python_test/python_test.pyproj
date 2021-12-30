@@ -37,6 +37,7 @@
     <Compile Include="func_modbus_tcp.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="image_rc.py" />
     <Compile Include="main.py">
       <SubType>Code</SubType>
     </Compile>
@@ -54,6 +55,7 @@
     <Compile Include="ui_test.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="image.qrc" />
     <Content Include="ui_main.ui" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

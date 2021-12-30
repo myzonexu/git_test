@@ -6,12 +6,13 @@ from PyQt5.Qt import QMainWindow
 #from PyQt5.QtWebEngineWidgets import *
 #from PyQt5.QtCore import QTimer
 #from PyQt5.QtCore import pyqtSlot
-
+import threading
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5 import QtSvg
+from PyQt5.QtCore import QObject , pyqtSignal
 
 from ui_main import Ui_MainWindow
 #from func_main import *
@@ -20,6 +21,7 @@ from func_robot import *
 
 
 class Window(QMainWindow, Ui_MainWindow):
+    camera_offlined=pyqtSignal()
     #初始化###################################################################################################
     def __init__(self):
         super().__init__()
@@ -30,6 +32,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.setup_ui_extra()
         self.init_robot_slot()
         self.load_map()
+        self.thread_manage()
         #self.ui_set_shortcut()
         #self.setup_timer()
  
@@ -184,6 +187,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.setup_ui_tablewidget()
         self.setup_ui_statusbar()
         self.setup_ui_shortcut()
+        self.camera_offlined.connect(self.update_ui_camera_offline)
         
 
     #初始化当前机器人信号槽
@@ -195,6 +199,7 @@ class Window(QMainWindow, Ui_MainWindow):
         robots.current.camera.frame_captured.connect(self.update_ui_camera)
         robots.current.state_updated.connect(self.update_ui)
         robots.current_changed.connect(self.update_ui)
+        #robots.current.master.offlined.connect(self.update_ui)
         
 
     def setup_ui_statusbar(self):
@@ -295,7 +300,11 @@ class Window(QMainWindow, Ui_MainWindow):
             self.label_camera.setPixmap(QPixmap.fromImage(robots.current.camera.img_scaled))
             #self.label_camera.setPixmap(QPixmap.fromImage(robots.current.camera.img))
             self.progressBar.setValue(len(robots.current.master._write_buffer))
- 
+    #监控画面显示为离线图片
+    def update_ui_camera_offline(self):        
+        self.label_camera.setPixmap(QPixmap(":/main_window/img/camera.jpeg"))
+        pass
+
     #加载地图
     def load_map(self):
         self.svgWidget = QtSvg.QSvgWidget('map.svg')
@@ -319,4 +328,22 @@ class Window(QMainWindow, Ui_MainWindow):
             err_list=robots.current.error_chassis.history_err_info()
         table_fill_data_list_2d(self.tableWidget_error,err_list)
         
- 
+    #多线程函数##############################################################################################
+    def get_camera_frame(self):
+        while True:
+            if robots.current==None:
+                self.camera_offlined.emit()
+            else:
+                if robots.current.master.is_opened():
+                    robots.current.camera.get_frame()
+                else:
+                    self.camera_offlined.emit() 
+
+
+    #多线程管理##############################################################################################
+    def thread_manage(self):
+        self.thread_get_camera_frame = threading.Thread(target=self.get_camera_frame, name='get_camera_frame')
+        self.thread_get_camera_frame.setDaemon(True)
+        self.thread_get_camera_frame.start()
+
+    

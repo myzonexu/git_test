@@ -1,6 +1,7 @@
 import modbus_tk
 import modbus_tk.defines as cst
 import modbus_tk.modbus_tcp as modbus_tcp
+from PyQt5.QtCore import QObject , pyqtSignal
 from func_common import *
 import time
 
@@ -22,10 +23,21 @@ class SpnData(object):
     def recv(self,data_recv):
         self.value = data_recv * self.rate + self.offset
 
+'''master类中增加打开和离线信号
+class SpnTcpMaster(modbus_tk.modbus_tcp.TcpMaster,QObject):
+    opened = pyqtSignal()
+    offlined= pyqtSignal()
+    def __init__(self, host="127.0.0.1", port=502, timeout_in_sec=5.0):
+        super().__init__()
+        super().__init__(host=host, port=port, timeout_in_sec=timeout_in_sec)
+        self.offlined.emit()
+'''
 #定义SpnTcpMaster类，TcpMaster增加方法
 class SpnTcpMaster(modbus_tk.modbus_tcp.TcpMaster):
     def __init__(self, host="127.0.0.1", port=502, timeout_in_sec=5.0):
+        super().__init__()
         super().__init__(host=host, port=port, timeout_in_sec=timeout_in_sec)
+        
         self._is_reconnect=False
         #连接状态：0-未连接；1-已连接；2-掉线；3-掉线重连
         self.connect_status=0
@@ -73,10 +85,12 @@ class SpnTcpMaster(modbus_tk.modbus_tcp.TcpMaster):
         except modbus_tk.modbus.ModbusError as exc:
             self._is_opened=False
             self._is_reconnect=True
+            
             print("%s- Code=%d", exc, exc.get_exception_code())
         except modbus_tk.modbus_tcp.socket.error as e:
             self._is_opened=False
             self._is_reconnect=True
+
             print("连接网络: ",self._host," 失败，错误：",str(e))
         else:
             pass

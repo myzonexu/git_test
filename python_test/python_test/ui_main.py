@@ -89,6 +89,8 @@ class Ui_MainWindow(object):
         self.label_camera.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.label_camera.setFrameShadow(QtWidgets.QFrame.Plain)
         self.label_camera.setLineWidth(0)
+        self.label_camera.setText("")
+        self.label_camera.setPixmap(QtGui.QPixmap(":/main_window/img/camera.jpeg"))
         self.label_camera.setScaledContents(False)
         self.label_camera.setAlignment(QtCore.Qt.AlignCenter)
         self.label_camera.setIndent(0)
@@ -879,7 +881,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.tabWidget_main.setCurrentIndex(0)
-        self.tabWidget_robo_ctrl.setCurrentIndex(1)
+        self.tabWidget_robo_ctrl.setCurrentIndex(0)
         self.tabWidget_robot_info.setCurrentIndex(0)
         self.tabWidget_robots_info.setCurrentIndex(3)
         self.horizontalSlider_steer_angle.valueChanged['int'].connect(self.spinBox_steer_angle.setValue)
@@ -892,7 +894,6 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "隧道清扫机器人控制"))
         self.groupBox_map.setTitle(_translate("MainWindow", "隧道"))
-        self.label_camera.setText(_translate("MainWindow", "监控"))
         self.pushButton_on_track_forward.setText(_translate("MainWindow", "前进"))
         self.pushButton_autorun_charge.setText(_translate("MainWindow", "充电"))
         self.pushButton_on_track_pause.setText(_translate("MainWindow", "暂停"))
@@ -1049,3 +1050,4 @@ class Ui_MainWindow(object):
         self.actionworklog.setText(_translate("MainWindow", "导出清扫记录"))
         self.actionrunlog.setText(_translate("MainWindow", "导出运行记录"))
         self.actionabout.setText(_translate("MainWindow", "关于"))
+import image_rc

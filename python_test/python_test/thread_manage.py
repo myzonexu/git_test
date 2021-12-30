@@ -83,8 +83,8 @@ def send_modbus_write_buffer():
 
 #线程管理
 def thread_manage():
-    thread_get_camera_frame.setDaemon(True)
-    thread_get_camera_frame.start()
+    #thread_get_camera_frame.setDaemon(True)
+    #thread_get_camera_frame.start()
     thread_get_robots_state.setDaemon(True)
     thread_get_robots_state.start()
     thread_send_modbus_write_buffer.setDaemon(True)
@@ -99,7 +99,7 @@ def thread_close():
 
 #app_exit=False
 #线程：相机采集视频
-thread_get_camera_frame = threading.Thread(target=get_camera_frame, name='get_camera_frame')
+#thread_get_camera_frame = threading.Thread(target=get_camera_frame, name='get_camera_frame')
 #线程：读取机器人状态
 thread_get_robots_state = threading.Thread(target=get_robots_state, name='get_robots_state')
 #线程：发送modbus写缓存中的数据
