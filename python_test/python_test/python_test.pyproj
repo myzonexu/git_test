@@ -37,6 +37,9 @@
     <Compile Include="func_modbus_tcp.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="func_svg.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="image_rc.py" />
     <Compile Include="main.py">
       <SubType>Code</SubType>
@@ -52,7 +55,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ui_main.py" />
-    <Compile Include="ui_test.py" />
+    <Compile Include="ui_test000.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="image.qrc" />

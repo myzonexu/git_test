@@ -26,7 +26,11 @@ def get_robots_state():
                 robots.current.get_robot_time()
                 pass
         for id in robots.robots:
+            robots.check_addrs_online(robots.robots.get(id))
             robots.robots.get(id).get_state()
+            if sec>60:
+                    robots.robots.get(id).sync_time()
+                    sec=0
             #if robots.robots.get(id).communication.is_online:
             #    robots.robots.get(id).get_state()
             #    robots.check_addrs_online(robots.robots.get(id))
@@ -79,6 +83,8 @@ def send_modbus_write_buffer():
     while True:
         for id in robots.robots:            
             robots.robots.get(id).master.send_write_buffer()
+
+            time.sleep(1)
            
 
 #线程管理

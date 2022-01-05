@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import os
 from PyQt5.Qt import QMainWindow
 #from PyQt5.QtGui import QImage,QPixmap
 #from PyQt5.QtWebEngineWidgets import *
@@ -199,7 +200,7 @@ class Window(QMainWindow, Ui_MainWindow):
         robots.current.camera.frame_captured.connect(self.update_ui_camera)
         robots.current.state_updated.connect(self.update_ui)
         robots.current_changed.connect(self.update_ui)
-        #robots.current.master.offlined.connect(self.update_ui)
+        robots.current.master.offlined.connect(self.update_ui)
         
 
     def setup_ui_statusbar(self):
@@ -307,7 +308,19 @@ class Window(QMainWindow, Ui_MainWindow):
 
     #加载地图
     def load_map(self):
-        self.svgWidget = QtSvg.QSvgWidget('map.svg')
+        
+        with open('./map/map.svg', 'r',encoding='UTF-8') as f:
+            file_size=os.path.getsize('./map/map.svg')
+            #file=QString(f.read())
+            file=f.read()
+            print(type(file))
+        
+        map_svg=QByteArray()
+        map_svg.append(file)
+
+        #self.svgWidget = QtSvg.QSvgWidget('map.svg')
+        self.svgWidget = QtSvg.QSvgWidget()
+        self.svgWidget.load(map_svg)
         self.scrollArea_map.setWidget(self.svgWidget)
 
     #显示SVG地图

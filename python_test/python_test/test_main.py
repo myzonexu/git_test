@@ -34,7 +34,7 @@ sys.exit(app.exec_())
 
 #测试svg读取显示###############################################################
 '''
-
+'''
 #测试相机，多线程，信号槽###############################################################
 import sys
 from PyQt5.Qt import QMainWindow,QApplication
@@ -65,7 +65,39 @@ if __name__ == '__main__':
     thread_camera.start()
     sys.exit(app.exec_())
 #测试相机，多线程，信号槽###############################################################
+'''
+
+#测试JSON转换###############################################################
+
+import json
+from dataclasses import dataclass
+
+@dataclass
+class TaskState:
+    #['任务ID', 'robot_ID', '起点', '终点','途经点', '优先级', '等待信号']
+    id : int
+    robot_id : int=0
+    start_point : int=0
+    end_point : int=0
+    way_point :int=0
+    priority : int=0
+    wait_button : int =0
 
 
+table_task_state=[]
 
+for id in range(10):
+    table_task_state.append(TaskState(id))
+
+print(table_task_state[0].__dict__)
+json_str = json.dumps(table_task_state[0], default=lambda o: o.__dict__, indent=4)
+print(json_str)
+
+with open('data.json', 'w') as f:
+    json.dump(table_task_state[0],f, default=lambda o: o.__dict__,  indent=4)
+with open('data.json', 'r') as ff:
+    data = json.load(ff)
+print(data.get("id"))
+
+#测试JSON转换###############################################################
 

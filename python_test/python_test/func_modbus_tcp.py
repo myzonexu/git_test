@@ -4,6 +4,7 @@ import modbus_tk.modbus_tcp as modbus_tcp
 from PyQt5.QtCore import QObject , pyqtSignal
 from func_common import *
 import time
+from collections import deque
 
 #定义通讯协议中的参数项
 class SpnData(object):
@@ -33,31 +34,40 @@ class SpnTcpMaster(modbus_tk.modbus_tcp.TcpMaster,QObject):
         self.offlined.emit()
 '''
 #定义SpnTcpMaster类，TcpMaster增加方法
-class SpnTcpMaster(modbus_tk.modbus_tcp.TcpMaster):
+class SpnTcpMaster(QObject,modbus_tk.modbus_tcp.TcpMaster):
+    opened = pyqtSignal()
+    offlined= pyqtSignal()
     def __init__(self, host="127.0.0.1", port=502, timeout_in_sec=5.0):
         super().__init__()
-        super().__init__(host=host, port=port, timeout_in_sec=timeout_in_sec)
         
+        """Constructor. Set the communication settings"""
+        self._host = host
+        self._port = port
+        self._sock = None
+        self._timeout = timeout_in_sec
+        self._verbose = False
+        self._is_opened = False
+
         self._is_reconnect=False
+
         #连接状态：0-未连接；1-已连接；2-掉线；3-掉线重连
         self.connect_status=0
-        self._write_buffer=[]
+        self._write_buffer=deque([])
 
     #def open(self):
-    #    try:
-    #        """open the communication with the slave"""
-    #        if not self._is_opened:
-    #            self._do_open()
-    #            self._is_opened = True
-    #            self._is_reconnect=False
-    #    except modbus_tk.modbus_tcp.socket.error as e:
-    #        self._is_opened=False
-    #        self._is_reconnect=True
-    #        print("连接网络: ",self._host," 失败，错误：",str(e))
-    #    else:
-    #        pass
-    #    finally:
-    #        pass
+    #    """open the communication with the slave"""
+    #    if not self._is_opened:
+    #        self._do_open()
+    #        self._is_opened = True
+    #        self.opened.emit()
+
+    #def close(self):
+    #    """close the communication with the slave"""
+    #    if self._is_opened:
+    #        ret = self._do_close()
+    #        if ret:
+    #            self._is_opened = False
+    #            self.offlined.emit()
 
     def is_opened(self):
         return self._is_opened
@@ -84,11 +94,13 @@ class SpnTcpMaster(modbus_tk.modbus_tcp.TcpMaster):
             return spn_data.value
         except modbus_tk.modbus.ModbusError as exc:
             self._is_opened=False
+            self.offlined.emit()
             self._is_reconnect=True
             
             print("%s- Code=%d", exc, exc.get_exception_code())
         except modbus_tk.modbus_tcp.socket.error as e:
             self._is_opened=False
+            self.offlined.emit()
             self._is_reconnect=True
 
             print("连接网络: ",self._host," 失败，错误：",str(e))
@@ -108,14 +120,17 @@ class SpnTcpMaster(modbus_tk.modbus_tcp.TcpMaster):
             spn_data=self._write_buffer[0]
             try:
                 self.execute(slave_id, cst.WRITE_MULTIPLE_REGISTERS, spn_data.addr,output_value=[int(spn_data.send())])
-                self._write_buffer.pop(0)
+                #self._write_buffer.pop(0)
+                self._write_buffer.popleft()
                 print("写入",spn_data.name,"值：",spn_data.value)
             except modbus_tk.modbus.ModbusError as exc:
                 self._is_opened=False
+                self.offlined.emit()
                 self._is_reconnect=True
                 print("%s- Code=%d", exc, exc.get_exception_code())
             except modbus_tk.modbus_tcp.socket.error as e:
                 self._is_opened=False
+                self.offlined.emit()
                 self._is_reconnect=True
                 print("连接网络: ",self._host," 失败，错误：",str(e))
             else:
@@ -134,10 +149,12 @@ class SpnTcpMaster(modbus_tk.modbus_tcp.TcpMaster):
                 print("写入",spn_data.name,"值：",spn_data.value)
             except modbus_tk.modbus.ModbusError as exc:
                 self._is_opened=False
+                self.offlined.emit()
                 self._is_reconnect=True
                 print("%s- Code=%d", exc, exc.get_exception_code())
             except modbus_tk.modbus_tcp.socket.error as e:
                 self._is_opened=False
+                self.offlined.emit()
                 self._is_reconnect=True
                 print("连接网络: ",self._host," 失败，错误：",str(e))
             else:
@@ -153,10 +170,12 @@ class SpnTcpMaster(modbus_tk.modbus_tcp.TcpMaster):
             return recv_datas
         except modbus_tk.modbus.ModbusError as exc:
             self._is_opened=False
+            self.offlined.emit()
             self._is_reconnect=True
             print("%s- Code=%d", exc, exc.get_exception_code())
         except modbus_tk.modbus_tcp.socket.error as e:
             self._is_opened=False
+            self.offlined.emit()
             self._is_reconnect=True
             print("连接网络: ",self._host," 失败，错误：",str(e))
         else:

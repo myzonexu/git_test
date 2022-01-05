@@ -45,7 +45,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab_ctrl">
        <attribute name="title">
@@ -1480,7 +1480,7 @@
             <property name="title">
              <string>添加调度</string>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_11">
+            <layout class="QVBoxLayout" name="verticalLayout_23">
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_11">
                <item>
@@ -1554,22 +1554,13 @@
                  </property>
                  <item>
                   <layout class="QGridLayout" name="gridLayout_5">
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_5">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>20</width>
-                       <height>0</height>
-                      </size>
-                     </property>
+                   <item row="0" column="3">
+                    <widget class="QTimeEdit" name="timeEdit"/>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QLabel" name="label_9">
                      <property name="text">
-                      <string>每</string>
+                      <string>天</string>
                      </property>
                     </widget>
                    </item>
@@ -1589,29 +1580,55 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="2">
-                    <widget class="QLabel" name="label_9">
-                     <property name="text">
-                      <string>天</string>
-                     </property>
+                   <item row="0" column="0">
+                    <widget class="QComboBox" name="comboBox">
+                     <item>
+                      <property name="text">
+                       <string>每N天</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>每周</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>每月</string>
+                      </property>
+                     </item>
                     </widget>
-                   </item>
-                   <item row="0" column="3">
-                    <widget class="QTimeEdit" name="timeEdit"/>
                    </item>
                   </layout>
                  </item>
                  <item>
                   <layout class="QGridLayout" name="gridLayout_6">
                    <item row="0" column="0">
-                    <widget class="QLabel" name="label_10">
+                    <widget class="QCheckBox" name="checkBox">
                      <property name="text">
-                      <string>首次执行日期</string>
+                      <string>有效时间</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="1">
+                   <item row="0" column="3">
+                    <widget class="QLabel" name="label_14">
+                     <property name="text">
+                      <string>结束时间：</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QDateEdit" name="dateEdit_2"/>
+                   </item>
+                   <item row="0" column="4">
                     <widget class="QDateEdit" name="dateEdit"/>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QLabel" name="label_5">
+                     <property name="text">
+                      <string>起始时间：</string>
+                     </property>
+                    </widget>
                    </item>
                   </layout>
                  </item>
@@ -1638,12 +1655,12 @@
              <item>
               <widget class="QRadioButton" name="radioButton_2">
                <property name="text">
-                <string>选定日期执行</string>
+                <string>特定时间</string>
                </property>
               </widget>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_13">
+              <layout class="QHBoxLayout" name="horizontalLayout_15">
                <item>
                 <spacer name="horizontalSpacer_6">
                  <property name="orientation">
@@ -1661,7 +1678,36 @@
                 </spacer>
                </item>
                <item>
-                <widget class="QDateTimeEdit" name="dateTimeEdit"/>
+                <layout class="QVBoxLayout" name="verticalLayout_11">
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_9">
+                   <item>
+                    <widget class="QRadioButton" name="radioButton_3">
+                     <property name="text">
+                      <string>清扫</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QRadioButton" name="radioButton_4">
+                     <property name="text">
+                      <string>不清扫</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_13">
+                   <item>
+                    <widget class="QDateEdit" name="dateEdit_3"/>
+                   </item>
+                   <item>
+                    <widget class="QTimeEdit" name="timeEdit_2"/>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
                </item>
                <item>
                 <spacer name="horizontalSpacer_8">

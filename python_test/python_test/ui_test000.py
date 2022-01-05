@@ -63,8 +63,8 @@ class Ui_MainWindow(QMainWindow,object):
         self.timer2.start(1000)
 
     def test(self):
-        self.tableWidget.setRowCount(100)
-        self.tableWidget.setItem(self.num,0,QtWidgets.QTableWidgetItem(str(self.num)))
+        #self.tableWidget.setRowCount(100)
+        #self.tableWidget.setItem(self.num,0,QtWidgets.QTableWidgetItem(str(self.num)))
 
         self.model.setItem(self.num,0,QtGui.QStandardItem(str(self.num)))
 
@@ -100,5 +100,5 @@ if __name__ == '__main__':
     win.test()
     win.test()
     win.test()
-    #win.set_timer()
+    win.set_timer()
     sys.exit(app.exec_())

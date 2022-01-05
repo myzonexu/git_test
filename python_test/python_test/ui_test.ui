@@ -16,10 +16,25 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
+     <widget class="QTableView" name="tableView"/>
+    </item>
+    <item>
+     <widget class="QTableWidget" name="tableWidget">
+      <column>
+       <property name="text">
+        <string>新建列</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>序号</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>描述</string>
+       </property>
+      </column>
      </widget>
     </item>
    </layout>

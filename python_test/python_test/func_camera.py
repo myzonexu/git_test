@@ -25,7 +25,7 @@ class CameraRtsp(QObject):
     frame_captured = pyqtSignal()
     frame_no_captured = pyqtSignal()
     inited=pyqtSignal()
-    def __init__(self,username="admin",passwd="ylcx6666",ip="192.168.1.64",port=554,channel=1,codec="h264",pc_test=False):
+    def __init__(self,username="admin",passwd="ylcx6666",ip="192.168.1.64",port=554,channel=1,codec="h265",pc_test=False):
         super().__init__()
         self._capture_enable=True
         self.url=""
@@ -56,7 +56,7 @@ class CameraRtsp(QObject):
     def has_init(self):
         return self._has_init
     def get_rtsp_url(self):
-        self.url = "rtsp://" + self.username + ":" + self.passwd + "@" + self.ip + ":" + str(self.port) + "/" + self.codec + "/ch" + str(self.channel) + "/main/av_stream"
+        self.url = "rtsp://" + self.username + ":" + self.passwd + "@" + self.ip + ":" + str(self.port) + "/" + self.codec + "/ch" + str(self.channel) + "/sub/av_stream"
         return self.url
     def set_ip(self,ip):
         self.ip = ip

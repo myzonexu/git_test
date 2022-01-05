@@ -1,6 +1,7 @@
 from dataclasses import dataclass,field
 from typing import List
 import socket
+import json
 from datetime import datetime,timedelta
 from PyQt5.QtCore import QObject , pyqtSignal
 from func_common import *
@@ -355,8 +356,8 @@ class Robot(QObject):
         self.error_arm = ErrorState()
         self.task = CleanTaskState()
         self.master = SpnTcpMaster(host=ip,port=port)
-        self.camera = CameraRtsp(pc_test=True)
-        #self.camera = CameraRtsp()
+        #self.camera = CameraRtsp(pc_test=True)
+        self.camera = CameraRtsp()
         self.log=LogState()
         #self.init(ip)
 
@@ -607,9 +608,30 @@ class Robot(QObject):
         self.master.write(self.protocol.arm_ctrl,position)
     
 #变量定义
+f=None
+try:
+    f = open('config.json', 'r')
+    config = json.load(f)
+except Exception as e:
+    print("无配置文件 ，采用默认配置",str(e))
+    
+    config=None
+finally:
+    if f:
+        f.close()
+#with open('config.json', 'r') as f:
+#    config = json.load(f)
+#print(config)
+
 robots = RobotGroup()
-robot1=Robot()
-robot2=Robot("192.168.2.107")
+if config:
+    if config.get("pc_test") is True:
+        robot1=Robot()
+        robot1.camera.pc_test=True
+    else:
+        robot1=Robot(config.get("ip"))
+else:
+    robot1=Robot("192.168.1.5")
 robots.add(robot1)
 #robots.add(robot2)
 #robots.init_current(robot1.unique_id)
