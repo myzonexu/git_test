@@ -1,3 +1,19 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+-------------------------------------------------------------------------------
+File   Name ： func_common.py
+Description :  通用函数实现
+Author      :  simon
+Create Time ： 20220105
+-------------------------------------------------------------------------------
+Change Activity:
+               时间:更改内容
+-------------------------------------------------------------------------------
+"""
+__author__ = 'simon'
+
+
 from datetime import datetime,timedelta
 import time
 from PyQt5.QtCore import *

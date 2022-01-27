@@ -8,7 +8,7 @@ from PyQt5.Qt import QMainWindow
 #from PyQt5.QtCore import QTimer
 #from PyQt5.QtCore import pyqtSlot
 import threading
-from PyQt5.QtCore import *
+
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
@@ -329,6 +329,7 @@ class Window(QMainWindow, Ui_MainWindow):
         render=self.svgWidget.renderer()
         global x
         x=x+1
+        render.setAspectRatioMode(Qt.KeepAspectRatio)
         render.setViewBox(QRect(x,10,100,80))
         self.scrollArea_map.repaint()
         #render.repaintNeeded.connect(window.scrollArea_map.repaint)

@@ -1,4 +1,17 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+-------------------------------------------------------------------------------
+File   Name ： main.py
+Description :  主程序
+Author      :  simon
+Create Time ： 20220105
+-------------------------------------------------------------------------------
+Change Activity:
+               时间:更改内容
+-------------------------------------------------------------------------------
+"""
+__author__ = 'simon'
 
 import sys
 from PyQt5.Qt import QApplication
@@ -19,5 +32,3 @@ if __name__ == '__main__':
     robots.init_current(robot1.unique_id)
     thread_manage()
     sys.exit(app.exec_())
-
-   
