@@ -9,7 +9,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QFile, QIODevice, QModelIndex, QAbstractItemModel
 from PyQt5.QtXml import QDomDocument
 from PyQt5 import QtSvg
-
+from svg.path import Path, Line, Arc, CubicBezier, QuadraticBezier, Close
+from svg.path import parse_path
 #class RenderArea(QWidget):
 #    def __init__(self):
 #        super().__init__()
@@ -55,13 +56,22 @@ class Window(QMainWindow, Ui_MainWindow):
         self.doc = QDomDocument('map')
         self.doc.setContent(file)
         #self.docElem = self.doc.documentElement()
-        self.elem_robot=self.doc.elementsByTagName("ellipse").item(0).toElement()        
+        self.elem_robot=self.doc.elementsByTagName("ellipse").item(0).toElement()
+        self.elem_path=self.doc.elementsByTagName("path").item(0).toElement()
         self.svgWidget.load(self.doc.toByteArray())
         
 
     @pyqtSlot(int)
     def on_horizontalSlider_valueChanged(self,cx):
-        self.elem_robot.setAttribute("cx",str(cx))
+        #path1 = parse_path('m 105.55796,42.191564 -49.859422,10e-7 -7.688792,-8.525182 H 33.376242 l -9.300956,8.525182 -23.31859798,-10e-7')
+        path1 = parse_path(self.elem_path.attribute("d"))
+        length=path1.length()        
+        pos=path1.point(cx/length)
+        print(pos.real,pos.imag )
+        self.elem_robot.setAttribute("cx",str(pos.real))
+        self.elem_robot.setAttribute("cy",str(pos.imag))
+
+        #self.elem_robot.setAttribute("cx",str(cx))
         self.svgWidget.load(self.doc.toByteArray())
         #self.scrollArea_2.repaint()
         pass
@@ -79,6 +89,17 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
 
+def test_svg_length():
+    #path1 = parse_path('M100,100L300,100L200,300z')
+    path1 = parse_path('m 105.55796,42.191564 -49.859422,10e-7 -7.688792,-8.525182 H 33.376242 l -9.300956,8.525182 -23.31859798,-10e-7')
+    print(path1.length())
+    pos=path1.point(1)
+    print(pos.real,pos.imag )
+
+
+    pass
+
+
 if __name__ == '__main__':    
     #doc = QDomDocument('map')
     #load_xml(doc)
@@ -86,6 +107,7 @@ if __name__ == '__main__':
     window = Window()
     window.load_map()
     window.show()
+    #test_svg_length()
 
     
     sys.exit(app.exec_())
