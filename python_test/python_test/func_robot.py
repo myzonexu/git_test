@@ -99,6 +99,18 @@ class DriveState:
     steer_angle : float = 0.0    
     mileage :float = 0.0
 
+#位置状态
+@dataclass
+class PositonState:
+    positionInitialized:bool=False
+    localizationScore : float = 1.0    
+    deviation_range :float = 0.0
+    x:float=0.0
+    x:float=0.0
+    theta:float=0.0
+    map_id:str=""
+    map_discription:str=""
+    path_pos:float=0.0
 
 #导航
 @dataclass(init=True)
@@ -348,6 +360,7 @@ class Robot(QObject):
         self.protocol=CommunicationProtocol()
         self.battery = BatteryState()
         self.drive = DriveState()
+        self.position=PositonState()
         self.navi = NaviState()
         self.cleaner = CleanerState()
         self.arm = ArmState()
@@ -393,7 +406,7 @@ class Robot(QObject):
     def robot_info(self):
         robot_info = [["ID编号",self.unique_id],["连接状态",self.communication.state.description()],["运行状态",self.base.run_state.description()],
               ["速度(mm/s)    ",self.drive.speed],["转角(°)",self.drive.steer_angle],["电量(%)",self.battery.soc],["水位(%)",self.cleaner.water_level],
-              ["总里程(m)",self.drive.mileage],["控制模式",self.base.ctrl_mode.description()],
+              ["当前位置(cm)",self.position.path_pos],["总里程(m)",self.drive.mileage],["控制模式",self.base.ctrl_mode.description()],
               ["ip地址",self.communication.ip],["程序版本",self.version.get()],["机器人时间",check_time_info(self.robot_time)]]
         return robot_info
 
@@ -435,7 +448,8 @@ class Robot(QObject):
         self.battery.voltage= self.protocol.bat_voltage.value
         self.drive.speed = self.protocol.robot_speed.value
         self.drive.steer_angle = self.protocol.steer_angle.value
-        self.drive.mileage = join_byte_hi_lo(self.protocol.mileage_hi.value,self.protocol.mileage_lo.value,16)
+        self.position.path_pos=self.protocol.position_path.value
+        self.drive.mileage = join_byte_hi_lo(self.protocol.mileage_hi.value,self.protocol.mileage_lo.value,16)/1000
         self.get_avoide_state()
         self.navi.position=self.protocol.position_mark.value
         self.cleaner.water_level=self.protocol.water_level.value
@@ -585,6 +599,7 @@ class Robot(QObject):
       
     #自由行走-速度
     def free_drive_ctrl_speed(self,speed):
+        self.master.write(self.protocol.ctrl_mode,1)
         self.master.write(self.protocol.drive_ctrl,0)
         self.master.write(self.protocol.robot_speed_set,speed)
         #self.master.write_buffer(self.protocol.drive_ctrl,0)
@@ -592,6 +607,7 @@ class Robot(QObject):
 
     #自由行走-角度
     def free_drive_ctrl_angle(self,angle):
+        self.master.write(self.protocol.ctrl_mode,1)
         self.master.write(self.protocol.drive_ctrl,0)
         self.master.write(self.protocol.steer_angle_set,angle)
     #底盘重新上电

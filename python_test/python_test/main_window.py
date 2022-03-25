@@ -12,8 +12,12 @@ import threading
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
-from PyQt5 import QtSvg
 from PyQt5.QtCore import QObject , pyqtSignal
+
+from PyQt5.QtXml import QDomDocument
+from PyQt5 import QtSvg
+from svg.path import Path, Line, Arc, CubicBezier, QuadraticBezier, Close
+from svg.path import parse_path
 
 from ui_main import Ui_MainWindow
 #from func_main import *
@@ -36,6 +40,13 @@ class Window(QMainWindow, Ui_MainWindow):
         self.thread_manage()
         #self.ui_set_shortcut()
         #self.setup_timer()
+
+        #self.browser = QWebEngineView()
+        #self.scrollArea_camera_browser.setWidget(self.browser)
+        #self.browser.load(QUrl('http://192.168.0.64/'))
+        
+        self.scrollArea_camera_browser.show()
+
  
     #事件响应###################################################################################################
     def closeEvent(self,event):
@@ -171,6 +182,9 @@ class Window(QMainWindow, Ui_MainWindow):
         if index is 0:
             robots.current.camera.enable_capture()
             pass
+        elif index is 1:
+            self.setup_ui_camera_web()
+            pass
         else:
             robots.current.camera.disable_capture()
             #robots.current.camera.close()
@@ -242,6 +256,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.update_ui_widget_enbaled()
         self.update_ui_table()
         self.update_ui_tab_text()
+        self.update_robot_pos(robots.current.position.path_pos)
         
 
     #更新表格显示
@@ -282,16 +297,21 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.tabWidget_robo_ctrl.setEnabled(False)
     #相机web页面
     def setup_ui_camera_web(self):
-        if robots.current==None:
-            pass
-        else:
-            if robots.current.camera.is_web_open==False:
-                self.browser = QWebEngineView()
-                self.browser.load(QUrl(robots.current.camera.web_url))
-                self.scrollArea_camera_browser.setWidget(self.browser)
-                self.scrollArea_camera_browser.show()
-                print(robots.current.camera.web_url)
-                robots.current.camera.is_web_open=True
+        self.browser = QWebEngineView()
+        self.browser.load(QUrl(robots.current.camera.web_url))
+        self.scrollArea_camera_browser.setWidget(self.browser)
+        self.scrollArea_camera_browser.show()
+
+        #if robots.current==None:
+        #    pass
+        #else:
+        #    if robots.current.camera.is_web_open==False:
+        #        self.browser = QWebEngineView()
+        #        self.browser.load(QUrl(robots.current.camera.web_url))
+        #        self.scrollArea_camera_browser.setWidget(self.browser)
+        #        self.scrollArea_camera_browser.show()
+        #        print(robots.current.camera.web_url)
+        #        robots.current.camera.is_web_open=True
  
     #显示监控视频
     def update_ui_camera(self):
@@ -307,7 +327,7 @@ class Window(QMainWindow, Ui_MainWindow):
         pass
 
     #加载地图
-    def load_map(self):
+    def load_map_old(self):
         
         with open('./map/map.svg', 'r',encoding='UTF-8') as f:
             file_size=os.path.getsize('./map/map.svg')
@@ -322,6 +342,53 @@ class Window(QMainWindow, Ui_MainWindow):
         self.svgWidget = QtSvg.QSvgWidget()
         self.svgWidget.load(map_svg)
         self.scrollArea_map.setWidget(self.svgWidget)
+
+
+    #加载地图
+    def load_map(self):
+        self.svgWidget = QtSvg.QSvgWidget()
+        self.scrollArea_map.setWidget(self.svgWidget)
+        
+        with open('./map/map.svg', 'r',encoding='UTF-8') as f:
+            file_size=os.path.getsize('./map/map.svg')
+            #file=QString(f.read())
+            file=f.read()
+            print(type(file))
+        
+        #self.map_svg=QByteArray()
+        #self.map_svg.append(file)
+        #self.svgWidget.load(self.map_svg)
+
+        self.doc = QDomDocument('map')
+        self.doc.setContent(file)
+        #self.docElem = self.doc.documentElement()
+        self.elem_robot=self.doc.elementsByTagName("ellipse").item(0).toElement()
+        self.elem_path=self.doc.elementsByTagName("path").item(0).toElement()
+        self.svgWidget.load(self.doc.toByteArray())
+
+        self.path1 = parse_path(self.elem_path.attribute("d"))
+        self.path1_length=self.path1.length()
+        print("路径长度"+str(self.path1_length))
+        
+    #更新机器人位置，单位cm
+    def update_robot_pos(self,cx):
+        #path1 = parse_path('m 105.55796,42.191564 -49.859422,10e-7 -7.688792,-8.525182 H 33.376242 l -9.300956,8.525182 -23.31859798,-10e-7')
+        #path1 = parse_path(self.elem_path.attribute("d"))
+        #length=path1.length()
+        _pos=cx/6/self.path1_length
+        if _pos>1.0:
+            _pos=1.0
+        elif _pos<0.0:
+            _pos=0.0
+        pos=self.path1.point(_pos)
+        print(pos.real,pos.imag )
+        self.elem_robot.setAttribute("cx",str(pos.real))
+        self.elem_robot.setAttribute("cy",str(pos.imag))
+
+        #self.elem_robot.setAttribute("cx",str(cx))
+        self.svgWidget.load(self.doc.toByteArray())
+        #self.scrollArea_2.repaint()
+        pass
 
     #显示SVG地图
     x=0

@@ -201,7 +201,7 @@ class CommunicationProtocol(object):
         self.bat_soh = SpnData(name = "bat_soh",addr = 1008,length = 1,rate = 1,offset = 0,rw="r")
         self.water_level = SpnData(name = "water_level",addr = 1009,length = 1,rate = 1,offset = 0,rw="r")
         self.position_mark = SpnData(name = "position_mark",addr = 1010,length = 1,rate = 1,offset = 0,rw="r")
-        self.position_last = SpnData(name = "position_last",addr = 1011,length = 1,rate = 1,offset = 0,rw="r")
+        self.position_path = SpnData(name = "position_last",addr = 1011,length = 1,rate = 1,offset = 0,rw="r")
         self.mileage_lo = SpnData(name = "mileage_lo",addr = 1012,length = 1,rate = 1,offset = 0,rw="r")
         self.mileage_hi = SpnData(name = "mileage_hi",addr = 1013,length = 1,rate = 1,offset = 0,rw="r")
         self.chassis_state = SpnData(name = "chassis_state",addr = 1014,length = 1,rate = 1,offset = 0,rw="r")
