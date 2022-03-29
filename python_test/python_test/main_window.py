@@ -22,7 +22,7 @@ from svg.path import parse_path
 from ui_main import Ui_MainWindow
 #from func_main import *
 from func_robot import *
-
+from func_svg import *
 
 
 class Window(QMainWindow, Ui_MainWindow):
@@ -37,6 +37,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.setup_ui_extra()
         self.init_robot_slot()
         self.load_map()
+        
         self.thread_manage()
         #self.ui_set_shortcut()
         #self.setup_timer()
@@ -256,7 +257,9 @@ class Window(QMainWindow, Ui_MainWindow):
         self.update_ui_widget_enbaled()
         self.update_ui_table()
         self.update_ui_tab_text()
-        self.update_robot_pos(robots.current.position.path_pos)
+        self.update_ui_map()
+        #self.update_robot_pos(robots.current.position.path_pos)
+
         
 
     #更新表格显示
@@ -327,6 +330,16 @@ class Window(QMainWindow, Ui_MainWindow):
         pass
 
     #加载地图
+    def load_map(self):
+        self.svgWidget = QtSvg.QSvgWidget()
+        self.scrollArea_map.setWidget(self.svgWidget)
+        self.svgWidget.load(svg_map.doc.toByteArray())
+
+    #更新地图
+    def update_ui_map(self):
+        svg_map.update_robot_pos(robots.current.position.path_pos,reverse=True)
+        self.svgWidget.load(svg_map.doc.toByteArray())
+
     def load_map_old(self):
         
         with open('./map/map.svg', 'r',encoding='UTF-8') as f:
@@ -342,10 +355,9 @@ class Window(QMainWindow, Ui_MainWindow):
         self.svgWidget = QtSvg.QSvgWidget()
         self.svgWidget.load(map_svg)
         self.scrollArea_map.setWidget(self.svgWidget)
+ 
 
-
-    #加载地图
-    def load_map(self):
+    def load_map_old2(self):
         self.svgWidget = QtSvg.QSvgWidget()
         self.scrollArea_map.setWidget(self.svgWidget)
         
@@ -362,7 +374,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.doc = QDomDocument('map')
         self.doc.setContent(file)
         #self.docElem = self.doc.documentElement()
-        self.elem_robot=self.doc.elementsByTagName("ellipse").item(0).toElement()
+        self.elem_robot=self.doc.elementsByTagName("circle").item(0).toElement()
         self.elem_path=self.doc.elementsByTagName("path").item(0).toElement()
         self.svgWidget.load(self.doc.toByteArray())
 
@@ -375,7 +387,7 @@ class Window(QMainWindow, Ui_MainWindow):
         #path1 = parse_path('m 105.55796,42.191564 -49.859422,10e-7 -7.688792,-8.525182 H 33.376242 l -9.300956,8.525182 -23.31859798,-10e-7')
         #path1 = parse_path(self.elem_path.attribute("d"))
         #length=path1.length()
-        _pos=cx/6/self.path1_length
+        _pos=1-cx/self.path1_length
         if _pos>1.0:
             _pos=1.0
         elif _pos<0.0:
