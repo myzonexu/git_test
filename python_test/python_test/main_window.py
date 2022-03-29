@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import sys
 import os
 from PyQt5.Qt import QMainWindow
@@ -26,7 +25,7 @@ from func_svg import *
 
 
 class Window(QMainWindow, Ui_MainWindow):
-    camera_offlined=pyqtSignal()
+    camera_offlined = pyqtSignal()
     #初始化###################################################################################################
     def __init__(self):
         super().__init__()
@@ -58,20 +57,20 @@ class Window(QMainWindow, Ui_MainWindow):
         #Window resize event.
         super().resizeEvent(QResizeEvent)
 
-        if robots.current==None:
+        if robots.current == None:
             pass
         else:
             self.resize_camera_show()
 
     def resize_camera_show(self):
-        camera_ratio=robots.current.camera.ratio_w_h
-        camrea_show_height=self.groupBox_map.height()
-        camrea_show_width=int(camrea_show_height*camera_ratio)
+        camera_ratio = robots.current.camera.ratio_w_h
+        camrea_show_height = self.groupBox_map.height()
+        camrea_show_width = int(camrea_show_height * camera_ratio)
         robots.current.camera.set_show_width(camrea_show_width)
         robots.current.camera.set_show_height(camrea_show_height)
-        offset_width=camrea_show_width-self.label_camera.width()
-        self.groupBox_map.resize(self.groupBox_map.width()-offset_width,self.groupBox_map.height())
-        self.label_camera.move(self.label_camera.x()-offset_width,self.label_camera.y())
+        offset_width = camrea_show_width - self.label_camera.width()
+        self.groupBox_map.resize(self.groupBox_map.width() - offset_width,self.groupBox_map.height())
+        self.label_camera.move(self.label_camera.x() - offset_width,self.label_camera.y())
         self.label_camera.resize(camrea_show_width,camrea_show_height)
 
     #信号-槽响应###############################################################################################
@@ -79,12 +78,12 @@ class Window(QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_pushButton_autorun_start_clicked(self):
         robots.current.clean_task_start()
-        robots.current.task.start_time=datetime.now()
-        robots.current.task.stop_time=None
+        robots.current.task.start_time = datetime.now()
+        robots.current.task.stop_time = None
     @pyqtSlot()
     def on_pushButton_autorun_stop_clicked(self):
         robots.current.clean_task_stop()
-        robots.current.task.stop_time=datetime.now()
+        robots.current.task.stop_time = datetime.now()
     @pyqtSlot()
     def on_pushButton_autorun_charge_clicked(self):
         robots.current.charge_battery()
@@ -165,7 +164,7 @@ class Window(QMainWindow, Ui_MainWindow):
     #机器人列表选择
     @pyqtSlot(int,int)
     def on_tableWidget_robot_list_cellClicked(self, row, col):
-        id=int(self.tableWidget_robot_list.item(row,0).text())
+        id = int(self.tableWidget_robot_list.item(row,0).text())
         #选择ID
         if col is 0:            
             robots.set_current(id)
@@ -237,9 +236,9 @@ class Window(QMainWindow, Ui_MainWindow):
         self.pushButton_arm_position_ground_1.setShortcut('5')
     #设置表格属性
     def init_table_group(self):
-        self.tableWidget_group_show=[self.tableWidget_robot_list,self.tableWidget_robot_info,self.tableWidget_task_info ,
+        self.tableWidget_group_show = [self.tableWidget_robot_list,self.tableWidget_robot_info,self.tableWidget_task_info ,
                                         self.tableWidget_error ,self.tableWidget_warning,self.tableWidget_log_info ,
-                                        self.tableWidget_task_list ,self.tableWidget_task_log ]
+                                        self.tableWidget_task_list ,self.tableWidget_task_log]
     def setup_ui_tablewidget(self):
         for table_widget in self.tableWidget_group_show:
             table_widget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
@@ -258,9 +257,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.update_ui_table()
         self.update_ui_tab_text()
         self.update_ui_map()
-        #self.update_robot_pos(robots.current.position.path_pos)
-
-        
+               
 
     #更新表格显示
     def update_ui_table(self):
@@ -273,25 +270,25 @@ class Window(QMainWindow, Ui_MainWindow):
         
 
             if self.radioButton_err_active.isChecked():
-                err_list=robots.current.error_chassis.active_err_info()
+                err_list = robots.current.error_chassis.active_err_info()
             else:
-                err_list=robots.current.error_chassis.history_err_info()
+                err_list = robots.current.error_chassis.history_err_info()
             table_fill_data_list_2d(self.tableWidget_error,err_list)
 
     #更新tab页文字
     def update_ui_tab_text(self):
-        self.tabWidget_robots_info.setTabText(3,"机器人列表("+str(len(robots.robots))+")")
-        if robots.current==None:
+        self.tabWidget_robots_info.setTabText(3,"机器人列表(" + str(len(robots.robots)) + ")")
+        if robots.current == None:
             pass
         else:
-            self.tabWidget_robots_info.setTabText(0,"故障("+str(robots.current.err_count())+")")
-            self.tabWidget_robots_info.setTabText(1,"警告("+str(robots.current.warning_count())+")")
+            self.tabWidget_robots_info.setTabText(0,"故障(" + str(robots.current.err_count()) + ")")
+            self.tabWidget_robots_info.setTabText(1,"警告(" + str(robots.current.warning_count()) + ")")
              
     #更新控件使能
     def update_ui_widget_enbaled(self):
         #if master.is_opened() and master.is_reconnect()==False :
         self.tabWidget_main.setTabEnabled(3,False)
-        if robots.current==None:
+        if robots.current == None:
             self.tabWidget_robo_ctrl.setEnabled(False)
         else:
             if robots.current.master.is_opened() :
@@ -318,7 +315,7 @@ class Window(QMainWindow, Ui_MainWindow):
  
     #显示监控视频
     def update_ui_camera(self):
-        if robots.current==None:
+        if robots.current == None:
             pass
         else:
             self.label_camera.setPixmap(QPixmap.fromImage(robots.current.camera.img_scaled))
@@ -340,91 +337,18 @@ class Window(QMainWindow, Ui_MainWindow):
         svg_map.update_robot_pos(robots.current.position.path_pos,reverse=True)
         self.svgWidget.load(svg_map.doc.toByteArray())
 
-    def load_map_old(self):
-        
-        with open('./map/map.svg', 'r',encoding='UTF-8') as f:
-            file_size=os.path.getsize('./map/map.svg')
-            #file=QString(f.read())
-            file=f.read()
-            print(type(file))
-        
-        map_svg=QByteArray()
-        map_svg.append(file)
-
-        #self.svgWidget = QtSvg.QSvgWidget('map.svg')
-        self.svgWidget = QtSvg.QSvgWidget()
-        self.svgWidget.load(map_svg)
-        self.scrollArea_map.setWidget(self.svgWidget)
- 
-
-    def load_map_old2(self):
-        self.svgWidget = QtSvg.QSvgWidget()
-        self.scrollArea_map.setWidget(self.svgWidget)
-        
-        with open('./map/map.svg', 'r',encoding='UTF-8') as f:
-            file_size=os.path.getsize('./map/map.svg')
-            #file=QString(f.read())
-            file=f.read()
-            print(type(file))
-        
-        #self.map_svg=QByteArray()
-        #self.map_svg.append(file)
-        #self.svgWidget.load(self.map_svg)
-
-        self.doc = QDomDocument('map')
-        self.doc.setContent(file)
-        #self.docElem = self.doc.documentElement()
-        self.elem_robot=self.doc.elementsByTagName("circle").item(0).toElement()
-        self.elem_path=self.doc.elementsByTagName("path").item(0).toElement()
-        self.svgWidget.load(self.doc.toByteArray())
-
-        self.path1 = parse_path(self.elem_path.attribute("d"))
-        self.path1_length=self.path1.length()
-        print("路径长度"+str(self.path1_length))
-        
-    #更新机器人位置，单位cm
-    def update_robot_pos(self,cx):
-        #path1 = parse_path('m 105.55796,42.191564 -49.859422,10e-7 -7.688792,-8.525182 H 33.376242 l -9.300956,8.525182 -23.31859798,-10e-7')
-        #path1 = parse_path(self.elem_path.attribute("d"))
-        #length=path1.length()
-        _pos=1-cx/self.path1_length
-        if _pos>1.0:
-            _pos=1.0
-        elif _pos<0.0:
-            _pos=0.0
-        pos=self.path1.point(_pos)
-        print(pos.real,pos.imag )
-        self.elem_robot.setAttribute("cx",str(pos.real))
-        self.elem_robot.setAttribute("cy",str(pos.imag))
-
-        #self.elem_robot.setAttribute("cx",str(cx))
-        self.svgWidget.load(self.doc.toByteArray())
-        #self.scrollArea_2.repaint()
-        pass
-
-    #显示SVG地图
-    x=0
-    def show_map(self):
-        render=self.svgWidget.renderer()
-        global x
-        x=x+1
-        render.setAspectRatioMode(Qt.KeepAspectRatio)
-        render.setViewBox(QRect(x,10,100,80))
-        self.scrollArea_map.repaint()
-        #render.repaintNeeded.connect(window.scrollArea_map.repaint)
-
     #故障信息：当前故障、历史故障切换
     def toggle_table_error_list(self):
         if self.radioButton_err_active.isChecked():
-            err_list=robots.current.error_chassis.active_err_info()
+            err_list = robots.current.error_chassis.active_err_info()
         else:
-            err_list=robots.current.error_chassis.history_err_info()
+            err_list = robots.current.error_chassis.history_err_info()
         table_fill_data_list_2d(self.tableWidget_error,err_list)
         
     #多线程函数##############################################################################################
     def get_camera_frame(self):
         while True:
-            if robots.current==None:
+            if robots.current == None:
                 self.camera_offlined.emit()
             else:
                 if robots.current.master.is_opened():

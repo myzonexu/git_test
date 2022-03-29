@@ -30,10 +30,10 @@ class SvgPath(object):
         :returns: no return
         :raises: no exception
         """
-        self.element=element
-        self.id=self.element.attribute("id")
-        self.parse=parse_path(self.element.attribute("d"))
-        self.length=self.parse.length()
+        self.element = element
+        self.id = self.element.attribute("id")
+        self.parse = parse_path(self.element.attribute("d"))
+        self.length = self.parse.length()
 
 
 class SvgMap(object):
@@ -47,9 +47,9 @@ class SvgMap(object):
         :returns: no return
         :raises: no exception
         """
-        self.doc=QDomDocument('map')
-        self.paths=[]
-        self.robots=[]
+        self.doc = QDomDocument('map')
+        self.paths = []
+        self.robots = []
         self.load(svg_file)
         self.init_path()
         self.init_robot()
@@ -63,7 +63,7 @@ class SvgMap(object):
         :raises: no exception
         """
         with open(svg_file, 'r',encoding='UTF-8') as f:
-            file=f.read()
+            file = f.read()
             self.doc.setContent(file)
     
     def init_path(self):
@@ -91,16 +91,16 @@ class SvgMap(object):
         :raises: no exception
         """
         if reverse:
-            _pos=1-path_length/self.paths[0].length
+            _pos = 1 - path_length / self.paths[0].length
         else:
-            _pos=path_length/self.paths[0].length
+            _pos = path_length / self.paths[0].length
          
-        if _pos>1.0:
-            _pos=1.0
-        elif _pos<0.0:
-            _pos=0.0
+        if _pos > 1.0:
+            _pos = 1.0
+        elif _pos < 0.0:
+            _pos = 0.0
 
-        pos=self.paths[0].parse.point(_pos)
+        pos = self.paths[0].parse.point(_pos)
         #print(pos.real,pos.imag )
         self.robots[0].setAttribute("cx",str(pos.real))
         self.robots[0].setAttribute("cy",str(pos.imag))
@@ -113,6 +113,5 @@ class SvgMap(object):
 
 
 
-
-svg_map=SvgMap('./map/map.svg')
+svg_map = SvgMap('./map/map.svg')
 
