@@ -40,6 +40,9 @@
     <Compile Include="func_svg.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="func_task.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="image_rc.py" />
     <Compile Include="main.py">
       <SubType>Code</SubType>

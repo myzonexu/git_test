@@ -8,9 +8,9 @@ xmlns="http://www.w3.org/2000/svg">
 	<g id="path">
 		<path id="path_1" d="m0 10  300 0 240 190" style="fill:none;stroke:black;stroke-width:4"/>
 	</g>
-	<g id="robot">
+	<g id="g_robot">
 		<circle id="robot_1" cx="10" cy="10" r="10" stroke="black" stroke-width="2" fill="red"/>
-		
+
 	</g>
 
 </svg>

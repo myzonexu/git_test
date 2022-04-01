@@ -1,3 +1,113 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'Calendar1.ui'
+#
+# Created by: PyQt5 UI code generator 5.11.3
+#
+# WARNING! All changes made in this file will be lost!
+import sys
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+class Ui_MainWindow(object):
+
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(800, 667)
+        MainWindow.setUnifiedTitleAndToolBarOnMac(True)
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget.setObjectName("centralwidget")
+        self.calendarWidget = QtWidgets.QCalendarWidget(self.centralwidget)
+        self.workless_day_fn = None
+        self.workless_date_list = []
+        self.workless_day_read_path = "workless_day.txt"
+        # self.calendarWidget.clicked.connect(self.single_click)  # 关联单击事件
+        self.calendarWidget.activated.connect(self.double_click)  # 关联双击事件
+        self.calendarWidget.setGeometry(QtCore.QRect(60, 60, 481, 451))
+        self.calendarWidget.setFirstDayOfWeek(QtCore.Qt.Sunday)
+        self.calendarWidget.setGridVisible(True)
+        self.calendarWidget.setHorizontalHeaderFormat(QtWidgets.QCalendarWidget.LongDayNames)
+        self.calendarWidget.setVerticalHeaderFormat(QtWidgets.QCalendarWidget.NoVerticalHeader)
+        self.calendarWidget.setNavigationBarVisible(True)
+        self.calendarWidget.setDateEditEnabled(True)
+        self.calendarWidget.setDateEditAcceptDelay(1500)
+        self.calendarWidget.setObjectName("calendarWidget")
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+        self.set_to_red_or_black()
+
+    def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "Calender"))
+
+    def double_click(self):
+        date = self.calendarWidget.selectedDate()  # 获取当前被选中的日期
+        date_str = str(date.toPyDate())
+        if date_str in self.workless_date_list:
+            self.set_to_blank()
+            self.workless_date_list.remove(date_str)
+        else:
+            self.set_to_red()
+            self.workless_date_list.append(date_str)
+        self.workless_day_write()
+
+    def workless_day_read(self):
+        try:
+            self.workless_day_fn = open(self.workless_day_read_path, "r+")
+            for line in self.workless_day_fn.readlines():
+                if (line.strip("\n") not in self.workless_date_list):
+                    self.workless_date_list.append(line.strip("\n"))
+        except:
+            self.workless_day_write()
+        self.workless_day_fn.close()
+
+    def workless_day_write(self):
+        self.workless_day_fn = open(self.workless_day_read_path, "w")
+        for i in range(len(self.workless_date_list)):
+            self.workless_day_fn.write("{}\n".format(self.workless_date_list[i]))
+        self.workless_day_fn.close()
+
+    def set_to_red(self):  # 设置颜色为红色
+        cmd_fmt = QtGui.QTextCharFormat()
+        brush = QtGui.QBrush()
+        brush.setColor(QtGui.QColor('Red'))
+
+        cmd_fmt.setForeground(brush)
+        self.calendarWidget.setDateTextFormat(self.calendarWidget.selectedDate(), cmd_fmt)
+
+    def set_to_blank(self):  # 去掉背景色
+        cmd_fmt = QtGui.QTextCharFormat()
+        brush = QtGui.QBrush()
+        brush.setColor(QtGui.QColor('Black'))
+        cmd_fmt.setForeground(brush)
+        self.calendarWidget.setDateTextFormat(self.calendarWidget.selectedDate(), cmd_fmt)
+
+    def set_to_red_or_black(self):#再次启动程序是对日历控件修改
+        first_day = QtCore.QDate()
+        first_day.setDate(self.calendarWidget.yearShown(), self.calendarWidget.monthShown(), 1)
+        days = first_day.daysInMonth()
+        cmd_fmt = QtGui.QTextCharFormat()
+        brush = QtGui.QBrush()
+        for i in range(days):
+            self.workless_day_read()
+            date_str = str(first_day.addDays(i).toPyDate())
+            if date_str in self.workless_date_list:
+                brush.setColor(QtGui.QColor('Red'))
+                cmd_fmt.setForeground(brush)
+                self.calendarWidget.setDateTextFormat(first_day.addDays(i), cmd_fmt)
+
+
+if __name__ == "__main__":
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()  # 生成类实例对象
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
+
+
+'''
 import sys
 import os
 from PyQt5.Qt import QMainWindow,QApplication
@@ -112,7 +222,7 @@ if __name__ == '__main__':
     
     sys.exit(app.exec_())
 
-
+'''
 
 
 

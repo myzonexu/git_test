@@ -68,10 +68,7 @@ class SvgMap(object):
     
     def init_path(self):
         """初始化路径."""
-        #self.element_paths=self.doc.elementsByTagName("path")
-        #for i in self.element_paths:
-        #    self.paths[i]=SvgPath(self.element_paths.item(i).toElement())
-        print(self.doc.elementsByTagName("path").length())
+       
         for i in range(self.doc.elementsByTagName("path").length()):
             self.paths.append(SvgPath(self.doc.elementsByTagName("path").item(i).toElement()))
     

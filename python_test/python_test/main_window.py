@@ -238,7 +238,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def init_table_group(self):
         self.tableWidget_group_show = [self.tableWidget_robot_list,self.tableWidget_robot_info,self.tableWidget_task_info ,
                                         self.tableWidget_error ,self.tableWidget_warning,self.tableWidget_log_info ,
-                                        self.tableWidget_task_list ,self.tableWidget_task_log]
+                                        self.tableWidget_task_plan_list ]
     def setup_ui_tablewidget(self):
         for table_widget in self.tableWidget_group_show:
             table_widget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
