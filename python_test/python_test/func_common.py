@@ -36,7 +36,7 @@ def test_bit(int_type, offset):
     return(int_type & mask)
 #组合高低字节
 def join_byte_hi_lo(hi,lo,bit_count):
-    return (hi<<bit_count | lo)
+    return (hi<<bit_count) | lo
 
 #时间相关###################################################################
 #时间显示格式
@@ -90,6 +90,12 @@ def table_fill_data_list_2d(table_widget,list_2d,decimal_places=2,fill="new"):
                 item=QTableWidgetItem(str(data))
                 table_widget.setItem(start_row+row,col,item)
     table_widget.viewport().update()
+
+#list所有元素组合为字符串
+def all_list_str(list,str_join=","):    
+    return str_join.join('%s' %e for e in list)
+
+
 
 
 #日志

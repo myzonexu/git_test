@@ -22,7 +22,7 @@ from ui_main import Ui_MainWindow
 #from func_main import *
 from func_robot import *
 from func_svg import *
-
+from func_task import *
 
 class Window(QMainWindow, Ui_MainWindow):
     camera_offlined = pyqtSignal()
@@ -37,7 +37,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.init_robot_slot()
         self.load_map()
         
-        self.thread_manage()
+        #self.thread_manage()
         #self.ui_set_shortcut()
         #self.setup_timer()
 
@@ -189,16 +189,28 @@ class Window(QMainWindow, Ui_MainWindow):
             robots.current.camera.disable_capture()
             #robots.current.camera.close()
             print("关闭相机捕获")
-    #test
+
+    #计划任务预览
+    @pyqtSlot()
+    def on_pushButton_add_task_preview_clicked(self):
+        self.new_task_preview()
+            
+    #计划任务添加
     @pyqtSlot()
     def on_pushButton_add_task_clicked(self):
-        print("按下添加")
+        if self.new_task_preview() is True:        
+            task_plans.plan_list.append(task_plans.new_plan)
+            self.lineEdit_add_task_name.setText("")
+            table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info())
+        else:
+            pass
     
 
     #方法######################################################################################
     #UI额外设置
     def setup_ui_extra(self):
         self.init_table_group()
+        self.init_ui_task_plan()
         self.setup_ui_tablewidget()
         self.setup_ui_statusbar()
         self.setup_ui_shortcut()
@@ -249,6 +261,9 @@ class Window(QMainWindow, Ui_MainWindow):
 
         for j in range(0,2):
             self.tableWidget_error.horizontalHeader().setSectionResizeMode(j,QHeaderView.ResizeToContents)
+
+        for j in range(0,4):
+            self.tableWidget_task_plan_list.horizontalHeader().setSectionResizeMode(j,QHeaderView.ResizeToContents)
 
 
     #UI更新
@@ -344,7 +359,69 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             err_list = robots.current.error_chassis.history_err_info()
         table_fill_data_list_2d(self.tableWidget_error,err_list)
+    
+       
+
+    
+    def init_ui_task_plan(self):
+        """初始化计划任务ui."""
+        self.dateEdit_task_cycle_start_time.setDate(QDate.currentDate())
+        self.dateEdit_task_cycle_end_time.setDate(QDate.currentDate())
+        self.dateEdit_task_once_date.setDate(QDate.currentDate())
+        self.dateEdit_task_ignore_start_time.setDate(QDate.currentDate())
+        self.dateEdit_task_ignore_end_time.setDate(QDate.currentDate())
+
+    
+    def new_task_plan(self):
+        """新建计划任务."""
+        new_datetime_set=None
+        if self.comboBox_add_task_type.currentIndex() is PlanType.Cycle.value:
+
+            if self.comboBox_task_cycle_type.currentIndex() is CycleType.Nday.value:
+                new_datetime_set=DatetimeCycle(CycleType.Nday,self.spinBox_task_cycle_n_day.value(),self.timeEdit_task_start_time_n_day.time())
+            elif self.comboBox_task_cycle_type.currentIndex() is CycleType.Weekday.value:
+                new_datetime_set=DatetimeCycle(CycleType.Weekday,self.comboBox_task_cycle_weekday.currentIndex(),self.timeEdit_task_start_time_weekday.time())
+            elif self.comboBox_task_cycle_type.currentIndex() is CycleType.Monthday.value:
+                new_datetime_set=DatetimeCycle(CycleType.Monthday,self.spinBox_task_cycle_monthday.value(),self.timeEdit__task_start_time_monthday.time())
+            else:
+                pass
+            new_datetime_set.start_date=self.dateEdit_task_cycle_start_time.date()
+            if self.radioButton_task_cycle_stop_time.isChecked():
+                new_datetime_set.end_date=self.dateEdit_task_cycle_end_time.date()
+            else:
+                new_datetime_set.end_date=None
+
+        elif self.comboBox_add_task_type.currentIndex() is PlanType.Once.value:
+            new_datetime_set=DatetimeOnce(self.dateEdit_task_once_date.date(),self.timeEdit_task_once_time.time())
+        elif self.comboBox_add_task_type.currentIndex() is PlanType.Ignore.value:
+            new_datetime_set=DatetimeIgnore(self.dateEdit_task_ignore_start_time.date(),self.dateEdit_task_ignore_end_time.date())
+        else:
+            pass
         
+        task_plans.new_plan=TaskPlan(self.lineEdit_add_task_name.text(),self.comboBox_add_task_type.currentIndex(),new_datetime_set)
+
+    def new_task_preview(self):
+        """新任务预览."""
+        if self.lineEdit_add_task_name.text() is "":
+            QMessageBox.information(self,'提示','计划任务名称不能为空!请填写。',QMessageBox.Ok)
+            return False
+        else:
+            self.new_task_plan()        
+            nl = '\n'
+            self.textBrowser_add_task_preview.setText(f'任务ID： {task_plans.new_plan.id}{nl}{nl}\
+任务名称： {self.lineEdit_add_task_name.text()}{nl}{nl}\
+任务执行时间：{nl}{task_plans.new_plan.datetime_set.datetime_str()}')
+            task_plans.new_plan.add_time=datetime.now()   
+            mark_calendar_plan_date(self.calendarWidget_add_task_preview,task_plans.new_plan)
+            
+            return True
+
+    #标记日历中计划执行日期
+
+
+
+
+
     #多线程函数##############################################################################################
     def get_camera_frame(self):
         while True:
