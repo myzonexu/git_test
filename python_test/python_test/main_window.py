@@ -193,17 +193,25 @@ class Window(QMainWindow, Ui_MainWindow):
     #计划任务预览
     @pyqtSlot()
     def on_pushButton_add_task_preview_clicked(self):
-        self.new_task_preview()
+        self.preview_new_task_plan()
             
     #计划任务添加
     @pyqtSlot()
     def on_pushButton_add_task_clicked(self):
-        if self.new_task_preview() is True:        
-            task_plans.plan_list.append(task_plans.new_plan)
-            self.lineEdit_add_task_name.setText("")
-            table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info())
+        self.set_new_task_plan()
+        if task_plans.new_plan.name is "":
+            QMessageBox.information(self,'提示','计划任务名称不能为空!请填写。',QMessageBox.Ok)
         else:
-            pass
+            self.preview_task_plan(task_plans.new_plan)        
+            task_plans.new_plan.add_time=datetime.now() 
+            #task_plans.new_plan.add_time=QDateTime.currentDateTime()
+            task_plans.plan_list.append(task_plans.new_plan)
+            table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info())
+
+            #清空新任务信息
+            self.lineEdit_add_task_name.setText("")
+            task_plans.new_plan.__init__()
+            self.preview_task_plan(task_plans.new_plan)
     
 
     #方法######################################################################################
@@ -215,6 +223,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.setup_ui_statusbar()
         self.setup_ui_shortcut()
         self.camera_offlined.connect(self.update_ui_camera_offline)
+        self.calendarWidget_task_preview.currentPageChanged.connect(self.preview_new_task_plan)
+        
         
 
     #初始化当前机器人信号槽
@@ -372,55 +382,63 @@ class Window(QMainWindow, Ui_MainWindow):
         self.dateEdit_task_ignore_end_time.setDate(QDate.currentDate())
 
     
-    def new_task_plan(self):
+    def set_new_task_plan(self):
         """新建计划任务."""
-        new_datetime_set=None
-        if self.comboBox_add_task_type.currentIndex() is PlanType.Cycle.value:
+
+        task_plans.new_plan.name=self.lineEdit_add_task_name.text()
+
+        if self.comboBox_add_plan_type.currentIndex() is PlanType.Cycle.value:
+            task_plans.new_plan.plan_type=PlanType.Cycle
+
+            task_plans.new_plan.start_date=self.dateEdit_task_cycle_start_time.date()
+            if self.radioButton_task_cycle_stop_time.isChecked():
+                task_plans.new_plan.end_date=self.dateEdit_task_cycle_end_time.date()
+            else:
+                task_plans.new_plan.end_date=QDate()
 
             if self.comboBox_task_cycle_type.currentIndex() is CycleType.Nday.value:
-                new_datetime_set=DatetimeCycle(CycleType.Nday,self.spinBox_task_cycle_n_day.value(),self.timeEdit_task_start_time_n_day.time())
+                task_plans.new_plan.cycle_type=CycleType.Nday
+                task_plans.new_plan.cycle_value=self.spinBox_task_cycle_n_day.value()
+                task_plans.new_plan.do_time=self.timeEdit_task_do_time_n_day.time()
+                
             elif self.comboBox_task_cycle_type.currentIndex() is CycleType.Weekday.value:
-                new_datetime_set=DatetimeCycle(CycleType.Weekday,self.comboBox_task_cycle_weekday.currentIndex(),self.timeEdit_task_start_time_weekday.time())
-            elif self.comboBox_task_cycle_type.currentIndex() is CycleType.Monthday.value:
-                new_datetime_set=DatetimeCycle(CycleType.Monthday,self.spinBox_task_cycle_monthday.value(),self.timeEdit__task_start_time_monthday.time())
-            else:
-                pass
-            new_datetime_set.start_date=self.dateEdit_task_cycle_start_time.date()
-            if self.radioButton_task_cycle_stop_time.isChecked():
-                new_datetime_set.end_date=self.dateEdit_task_cycle_end_time.date()
-            else:
-                new_datetime_set.end_date=None
+                task_plans.new_plan.cycle_type=CycleType.Weekday
+                task_plans.new_plan.cycle_value=self.comboBox_task_cycle_weekday.currentIndex()+1
+                task_plans.new_plan.do_time=self.timeEdit_task_do_time_weekday.time()
 
-        elif self.comboBox_add_task_type.currentIndex() is PlanType.Once.value:
-            new_datetime_set=DatetimeOnce(self.dateEdit_task_once_date.date(),self.timeEdit_task_once_time.time())
-        elif self.comboBox_add_task_type.currentIndex() is PlanType.Ignore.value:
-            new_datetime_set=DatetimeIgnore(self.dateEdit_task_ignore_start_time.date(),self.dateEdit_task_ignore_end_time.date())
+            elif self.comboBox_task_cycle_type.currentIndex() is CycleType.Monthday.value:
+                task_plans.new_plan.cycle_type=CycleType.Monthday
+                task_plans.new_plan.cycle_value=self.spinBox_task_cycle_monthday.value()
+                task_plans.new_plan.do_time=self.timeEdit_task_do_time_monthday.time()
+
+            else:
+                pass            
+
+        elif self.comboBox_add_plan_type.currentIndex() is PlanType.Once.value:
+            task_plans.new_plan.plan_type=PlanType.Once
+            task_plans.new_plan.start_date=self.dateEdit_task_once_date.date()
+            task_plans.new_plan.do_time=self.timeEdit_task_once_time.time()
+
+        elif self.comboBox_add_plan_type.currentIndex() is PlanType.Ignore.value:
+            task_plans.new_plan.plan_type=PlanType.Ignore
+            task_plans.new_plan.start_date=self.dateEdit_task_ignore_start_time.date()
+            task_plans.new_plan.end_date=self.dateEdit_task_ignore_end_time.date()
+
         else:
             pass
+ 
+    def preview_task_plan(self,task_plan):
+        """任务预览."""
         
-        task_plans.new_plan=TaskPlan(self.lineEdit_add_task_name.text(),self.comboBox_add_task_type.currentIndex(),new_datetime_set)
+        nl = '\n'
+        self.textBrowser_task_plan_preview.setText(f'任务ID： {task_plan.id}{nl}{nl}任务名称： {task_plan.name}{nl}{nl}任务执行时间：{nl}{task_plan.plan_time_str()}')
+        mark_calendar_plan_date(self.calendarWidget_task_preview,task_plan)
 
-    def new_task_preview(self):
-        """新任务预览."""
-        if self.lineEdit_add_task_name.text() is "":
-            QMessageBox.information(self,'提示','计划任务名称不能为空!请填写。',QMessageBox.Ok)
-            return False
-        else:
-            self.new_task_plan()        
-            nl = '\n'
-            self.textBrowser_add_task_preview.setText(f'任务ID： {task_plans.new_plan.id}{nl}{nl}\
-任务名称： {self.lineEdit_add_task_name.text()}{nl}{nl}\
-任务执行时间：{nl}{task_plans.new_plan.datetime_set.datetime_str()}')
-            task_plans.new_plan.add_time=datetime.now()   
-            mark_calendar_plan_date(self.calendarWidget_add_task_preview,task_plans.new_plan)
-            
-            return True
-
-    #标记日历中计划执行日期
-
-
-
-
+    
+    def preview_new_task_plan(self):
+        """预览新增任务."""
+        self.set_new_task_plan()
+        self.preview_task_plan(task_plans.new_plan)
 
     #多线程函数##############################################################################################
     def get_camera_frame(self):

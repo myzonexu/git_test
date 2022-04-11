@@ -1,3 +1,12 @@
+from PyQt5.QtCore import QTime,QDate
+if __name__ == "__main__":
+    time_1=QTime()
+    date_1=QDate()
+    print("test")
+    print(time_1.isNull(),date_1.isNull())
+    print(time_1.toString("hh:mm"),date_1.toString("yyyy/MM/dd"))
+
+"""
 # -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file 'Calendar1.ui'
@@ -105,7 +114,7 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-
+"""
 
 '''
 import sys

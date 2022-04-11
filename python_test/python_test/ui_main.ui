@@ -112,8 +112,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>100</width>
-                  <height>30</height>
+                  <width>500</width>
+                  <height>318</height>
                  </rect>
                 </property>
                </widget>
@@ -1524,8 +1524,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>100</width>
-             <height>30</height>
+             <width>982</width>
+             <height>594</height>
             </rect>
            </property>
           </widget>
@@ -1541,7 +1541,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_29">
           <item>
-           <widget class="QGroupBox" name="groupBox_5">
+           <widget class="QGroupBox" name="groupBox_add_task_plan">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -1600,7 +1600,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QComboBox" name="comboBox_add_task_type">
+                  <widget class="QComboBox" name="comboBox_add_plan_type">
                    <item>
                     <property name="text">
                      <string>周期执行</string>
@@ -1700,6 +1700,12 @@
                                <height>0</height>
                               </size>
                              </property>
+                             <property name="minimum">
+                              <number>1</number>
+                             </property>
+                             <property name="maximum">
+                              <number>250</number>
+                             </property>
                              <property name="value">
                               <number>1</number>
                              </property>
@@ -1713,7 +1719,7 @@
                             </widget>
                            </item>
                            <item>
-                            <widget class="QTimeEdit" name="timeEdit_task_start_time_n_day">
+                            <widget class="QTimeEdit" name="timeEdit_task_do_time_n_day">
                              <property name="time">
                               <time>
                                <hour>9</hour>
@@ -1794,7 +1800,7 @@
                             </widget>
                            </item>
                            <item>
-                            <widget class="QTimeEdit" name="timeEdit_task_start_time_weekday">
+                            <widget class="QTimeEdit" name="timeEdit_task_do_time_weekday">
                              <property name="time">
                               <time>
                                <hour>9</hour>
@@ -1865,7 +1871,7 @@
                             </widget>
                            </item>
                            <item>
-                            <widget class="QTimeEdit" name="timeEdit__task_start_time_monthday">
+                            <widget class="QTimeEdit" name="timeEdit_task_do_time_monthday">
                              <property name="time">
                               <time>
                                <hour>9</hour>
@@ -2113,7 +2119,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QGroupBox" name="groupBox">
+           <widget class="QGroupBox" name="groupBox_preview_task_plan">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
               <horstretch>0</horstretch>
@@ -2131,7 +2137,7 @@
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_27">
              <item>
-              <widget class="QTextBrowser" name="textBrowser_add_task_preview">
+              <widget class="QTextBrowser" name="textBrowser_task_plan_preview">
                <property name="html">
                 <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -2589,28 +2595,28 @@ p, li { white-space: pre-wrap; }
    <slot>setCurrentIndex(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>93</x>
-     <y>216</y>
+     <x>99</x>
+     <y>196</y>
     </hint>
     <hint type="destinationlabel">
-     <x>277</x>
-     <y>225</y>
+     <x>357</x>
+     <y>205</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>comboBox_add_task_type</sender>
+   <sender>comboBox_add_plan_type</sender>
    <signal>activated(int)</signal>
    <receiver>stackedWidget</receiver>
    <slot>setCurrentIndex(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>178</x>
-     <y>159</y>
+     <x>196</x>
+     <y>144</y>
     </hint>
     <hint type="destinationlabel">
-     <x>100</x>
-     <y>265</y>
+     <x>123</x>
+     <y>245</y>
     </hint>
    </hints>
   </connection>
@@ -2637,12 +2643,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>339</x>
-     <y>252</y>
+     <x>340</x>
+     <y>232</y>
     </hint>
     <hint type="destinationlabel">
-     <x>429</x>
-     <y>254</y>
+     <x>430</x>
+     <y>234</y>
     </hint>
    </hints>
   </connection>
