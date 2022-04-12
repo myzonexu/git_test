@@ -449,8 +449,12 @@ class Robot(QObject):
         self.drive.speed = self.protocol.robot_speed.value
         self.drive.steer_angle = self.protocol.steer_angle.value
         self.position.path_pos=self.protocol.position_path.value
-        self.drive.mileage = join_byte_hi_lo(self.protocol.mileage_hi.value,self.protocol.mileage_lo.value,16)
-        print(self.protocol.mileage_hi.value,self.protocol.mileage_lo.value,self.protocol.mileage_hi.value<<16|self.protocol.mileage_lo.value)
+
+        import struct
+        self.protocol.mileage_lo.value=struct.unpack('>H', struct.pack('>h', self.protocol.mileage_lo.value))[0]
+        self.drive.mileage = join_byte_hi_lo(self.protocol.mileage_hi.value,self.protocol.mileage_lo.value,16)/1000
+        
+
         self.get_avoide_state()
         self.navi.position=self.protocol.position_mark.value
         self.cleaner.water_level=self.protocol.water_level.value

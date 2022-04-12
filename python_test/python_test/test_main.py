@@ -1,10 +1,24 @@
-from PyQt5.QtCore import QTime,QDate
+#测试位操作运算
+from func_common import *
+import struct
+
+#i = -1
+#print('{0:08b}'.format(i))
+
+#packed = struct.pack('>h', i)  # Packing a long number.
+#unpacked = struct.unpack('>H', packed)[0]  # Unpacking a packed long number to unsigned long
+#print(unpacked)
+#print('{0:b}'.format(unpacked))
+
 if __name__ == "__main__":
-    time_1=QTime()
-    date_1=QDate()
-    print("test")
-    print(time_1.isNull(),date_1.isNull())
-    print(time_1.toString("hh:mm"),date_1.toString("yyyy/MM/dd"))
+    a=1
+    b=1
+    d=struct.unpack('>H', struct.pack('>h', b))[0]
+    c=join_byte_hi_lo(a,d,16)
+    #d=struct.unpack('>I', struct.pack('>i', c))[0]
+    print(f'a={a:#016b} b={b:#016b} c={c:#032b} d={d:#032b}')
+    print(f'a={a} b={b} c={c} d={d}')
+
 
 """
 # -*- coding: utf-8 -*-

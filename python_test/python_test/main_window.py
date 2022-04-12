@@ -37,7 +37,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.init_robot_slot()
         self.load_map()
         
-        #self.thread_manage()
+        self.thread_manage()
         #self.ui_set_shortcut()
         #self.setup_timer()
 
