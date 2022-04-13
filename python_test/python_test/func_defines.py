@@ -59,6 +59,7 @@ class RunState(EnumDef):
     SLEEP = (3, '休眠')
     STOP = (4, '停机')
     EMERGENCY = (5, '急停')
+    NOTASK = (6, '无任务')
 
 @unique
 class CtrlMode(EnumDef):

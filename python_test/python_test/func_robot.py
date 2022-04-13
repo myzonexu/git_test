@@ -435,10 +435,7 @@ class Robot(QObject):
         self.unique_id=self.protocol.robot_id.value
 
         #有符号转为无符号
-        print(f"{self.protocol.robot_state.value:016b}")
         self.protocol.robot_state.value=struct.unpack('>H', struct.pack('>h', self.protocol.robot_state.value))[0]
-        print(f"{self.protocol.robot_state.value:016b}")
-
         self.get_run_state()
         self.get_ctrl_mode()
         self.version.patch=self.protocol.soft_version.value
@@ -468,6 +465,20 @@ class Robot(QObject):
         self.task.time_worked = self.protocol.clean_time_s.value                
 
     def get_run_state(self):
+        state_1=get_bits(self.protocol.robot_state.value,0,1)
+        state_2=get_bits(self.protocol.robot_state.value,2,5)
+        state_3=get_bits(self.protocol.robot_state.value,6,9)
+        print(state_1,state_2,state_3)
+        if state_2==2:
+            self.base.run_state=RunState.WORK
+        elif state_2==3:
+            self.base.run_state=RunState.STANDBY
+        elif state_2==1:
+            self.base.run_state=RunState.EMERGENCY
+        elif state_2==0:
+            self.base.run_state=RunState.NOTASK
+
+
         #if test_bit(self.protocol.robot_state.value,4):
         #    self.base.run_state.value = 1
         #if test_bit(self.protocol.robot_state.value,6):
@@ -477,18 +488,13 @@ class Robot(QObject):
         #print(f'{self.protocol.robot_state.value:#016b}')
         #self.base.ctrl_mode.value = get_bits(self.protocol.robot_state.value,0,1)
         #self.base.run_state=RunState(get_bits(self.protocol.robot_state.value,0,1))
-        self.base.ctrl_mode = CtrlMode(get_bits(self.protocol.robot_state.value,0,1))
+        #self.base.ctrl_mode = CtrlMode(get_bits(self.protocol.robot_state.value,0,1))
         #print(f'{self.base.ctrl_mode.value:#016b}')
         #self.base.run_state.value=struct.unpack('>H', struct.pack('>h', self.base.run_state.value))[0]
 
     def get_ctrl_mode(self):
-        #if test_bit(self.protocol.robot_state.value,0):
-        #    self.base.ctrl_mode.value = 0
-        #if test_bit(self.protocol.robot_state.value,1):
-        #    self.base.ctrl_mode.value = 1
-        #if test_bit(self.protocol.robot_state.value,2):
-        #    self.base.ctrl_mode.value = 2
-        pass
+        self.base.ctrl_mode = CtrlMode(get_bits(self.protocol.robot_state.value,0,1))
+
     def get_avoide_state(self):
         if test_bit(self.protocol.chassis_state.value,9):
             self.navi.avoide_front=1
