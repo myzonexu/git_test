@@ -1,24 +1,21 @@
+#测试枚举
+from func_defines import *
+
+print(RunState['WORK'])
+print(CtrlMode.MANUAL.string)
+print(RunState(1).string)
+
+'''
 #测试位操作运算
 from func_common import *
 import struct
 
-#i = -1
-#print('{0:08b}'.format(i))
-
-#packed = struct.pack('>h', i)  # Packing a long number.
-#unpacked = struct.unpack('>H', packed)[0]  # Unpacking a packed long number to unsigned long
-#print(unpacked)
-#print('{0:b}'.format(unpacked))
-
 if __name__ == "__main__":
-    a=1
-    b=1
-    d=struct.unpack('>H', struct.pack('>h', b))[0]
-    c=join_byte_hi_lo(a,d,16)
-    #d=struct.unpack('>I', struct.pack('>i', c))[0]
-    print(f'a={a:#016b} b={b:#016b} c={c:#032b} d={d:#032b}')
-    print(f'a={a} b={b} c={c} d={d}')
-
+    a=0b110101110010
+    b=get_bits(a, 2,9)
+    print(f'{a:#016b}')
+    print(f'{b:#016b}')
+'''
 
 """
 # -*- coding: utf-8 -*-

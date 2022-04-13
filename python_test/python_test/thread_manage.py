@@ -22,7 +22,7 @@ def get_robots_state():
         if robots.current==None:
             pass
         else:
-            if robots.current.communication.is_online:
+            if robots.current.connect.is_online:
                 robots.current.get_robot_time()
                 pass
         for id in robots.robots:
@@ -31,7 +31,7 @@ def get_robots_state():
             if sec>60:
                     robots.robots.get(id).sync_time()
                     sec=0
-            #if robots.robots.get(id).communication.is_online:
+            #if robots.robots.get(id).connect.is_online:
             #    robots.robots.get(id).get_state()
             #    robots.check_addrs_online(robots.robots.get(id))
 

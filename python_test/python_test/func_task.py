@@ -21,10 +21,6 @@ from func_common import *
 
 
 #classes#######################################################################
-class PlcDatetime(datetime):
-    """PLC时间类."""
-    pass
-
 @unique
 class PlanType(Enum):
     Cycle = 0 

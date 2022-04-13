@@ -7,59 +7,53 @@ from PyQt5.QtCore import QObject , pyqtSignal
 from func_common import *
 from func_camera import *
 from func_modbus_tcp import *
+from func_defines import *
+import struct
 
 #常量定义
-robot_run_state = ((0,"关机"),(1,"运行"),(2,"待机"),(3,"休眠"),(4,"停机"),(5,"急停"))
-robot_ctrl_mode = ((0,"自动"),(1,"手动"),(2,"遥控器"))
-communication_state = ((0,"离线"),(1,"在线"),(2,"掉线重联"))
-arm_state = ((0,"报警"),(1,"运行"),(2,"到位"))
-clean_task_state = ((0,"无任务"),(1,"墙面1清洗中"),(2,"墙面2清洗中"),(3,"墙面3清洗中"),
-                    (4,"墙面4清洗中"),(5,"地面清洗中"),
-                    (6,"中途充电"),(7,"中途加水"),(8,"等待下次任务"))
-err_level = ((0,"无"),(1,"警告"),(2,"轻微故障"),(3,"严重故障"))
 robot_error_code_dict={0:["无","无故障","无需处理"],1:["轻微故障","测试故障描述","测试处理方式"]}
 
 
 #值-描述 集合
-class ValueDescriptionSet(object):
-    def __init__(self, tuple_value_description, value=0):
-        self.value_set = tuple_value_description
-        self.value = value
+#class ValueDescriptionSet(object):
+#    def __init__(self, tuple_value_description, value=0):
+#        self.value_set = tuple_value_description
+#        self.value = value
 
-    def set_value(self,value):
-        self.value = value
+#    def set_value(self,value):
+#        self.value = value
 
-    def get_value(self):
-        return self.value
+#    def get_value(self):
+#        return self.value
 
-    def description(self,format="value:description"):
-        if self.value<len(self.value_set):
-            desc = self.value_set[self.value][1]
-        else:
-            desc="非法值"
-        if format == "description":
-            description = str(desc)
-        elif format == "value:description":
-            description = str(self.value) + ":" + str(desc)
-        elif format == "value-description":
-            description = str(self.value) + "-" + str(desc)
-        elif format == "description(value)":
-            description = str(desc) + "(" + str(self.value) + ")"
-        return description
+#    def description(self,format="value:description"):
+#        if self.value<len(self.value_set):
+#            desc = self.value_set[self.value][1]
+#        else:
+#            desc="非法值"
+#        if format == "description":
+#            description = str(desc)
+#        elif format == "value:description":
+#            description = str(self.value) + ":" + str(desc)
+#        elif format == "value-description":
+#            description = str(self.value) + "-" + str(desc)
+#        elif format == "description(value)":
+#            description = str(desc) + "(" + str(self.value) + ")"
+#        return description
     
 
 #基本状态
-class BaseState(object):
+class Base(object):
     def __init__(self):
         self._type = ""
         self.tag = 0
-        self.run_state = ValueDescriptionSet(robot_run_state)
-        self.ctrl_mode = ValueDescriptionSet(robot_ctrl_mode)
+        self.run_state = RunState.OFF #ValueDescriptionSet(robot_run_state)
+        self.ctrl_mode = CtrlMode.AUTO  #ValueDescriptionSet(robot_ctrl_mode)
 
 
 #版本
 @dataclass(init=True)
-class VersionState:
+class Version:
     #主版本、次版本、修订
     major :int = 0
     minor :int = 0
@@ -70,10 +64,10 @@ class VersionState:
 
 
 #通讯
-class CommunicationState(object):
+class Connect(object):
     def __init__(self,ip="127.0.0.1",port=502):
         self.is_online = False
-        self.state = ValueDescriptionSet(communication_state)
+        self.state = ConnectState.OFFLINE #ValueDescriptionSet(communication_state)
         self.ip = ip
         self.port = port
         self.slave_id=1
@@ -84,7 +78,7 @@ class CommunicationState(object):
 
 #电池
 @dataclass(init=True)
-class BatteryState:
+class Battery:
     soc : int = 0
     soh :int = 0
     voltage :float = 0.0
@@ -94,14 +88,14 @@ class BatteryState:
 
 #行驶状态
 @dataclass
-class DriveState:
+class Drive:
     speed : float = 0.0
     steer_angle : float = 0.0    
     mileage :float = 0.0
 
 #位置状态
 @dataclass
-class PositonState:
+class Positon:
     positionInitialized:bool=False
     localizationScore : float = 1.0    
     deviation_range :float = 0.0
@@ -123,15 +117,15 @@ class NaviState:
 
 #清扫附件
 @dataclass
-class CleanerState:
+class Cleaner:
     is_open :bool = False
     water_level :int = 0
 
 
 #机械臂
-class ArmState(object):
+class Arm(object):
     def __init__(self):
-        self.state = ValueDescriptionSet(arm_state)
+        self.state = ArmState.WORK #ArmState.WARN  #ValueDescriptionSet(arm_state)
         self.position = 0
 
 
@@ -179,7 +173,7 @@ class ErrorEvent(ErrorCode):
         self.time_stop = None
 
 #故障状态
-class ErrorState(object):
+class Error(object):
     def __init__(self):
         #ErrorEvent列表
         self.active_error = {}
@@ -220,9 +214,9 @@ class ErrorState(object):
         return list
 
 #清扫任务
-class CleanTaskState(object):
+class CleanTask(object):
     def __init__(self):
-        self.state = ValueDescriptionSet(clean_task_state)
+        self.state = CleanTaskState.NONE #ValueDescriptionSet(clean_task_state)
         self.start_time = None
         self.stop_time = None
         self.mileage_driven = 0.0
@@ -314,12 +308,12 @@ class RobotGroup(QObject):
             return None
 
     def check_addrs_online(self,robot):
-        if robot.communication.is_online:
-            self.addrs_online.add(robot.communication.ip)
+        if robot.connect.is_online:
+            self.addrs_online.add(robot.connect.ip)
             self.addrs_online.add(robot.camera.ip)
         else:
-            if robot.communication.ip in self.addrs_online:
-                self.addrs_online.remove(robot.communication.ip)
+            if robot.connect.ip in self.addrs_online:
+                self.addrs_online.remove(robot.connect.ip)
                 self.addrs_online.remove(robot.camera.ip)
 
     def get_local_ip(self):
@@ -343,8 +337,8 @@ class RobotGroup(QObject):
         else:
             count = len(self.robots)       
             for id in self.robots:
-                list_info.append([self.robots.get(id).unique_id,self.robots.get(id).communication.ip,self.robots.get(id).communication.state.description(),
-                                  self.robots.get(id).base.run_state.description(),self.robots.get(id).task.state.description(),self.robots.get(id).err_count(),self.robots.get(id).warning_count()])
+                list_info.append([self.robots.get(id).unique_id,self.robots.get(id).connect.ip,self.robots.get(id).connect.state.string,
+                                  self.robots.get(id).base.run_state.string,self.robots.get(id).task.state.string,self.robots.get(id).err_count(),self.robots.get(id).warning_count()])
 
         return list_info
 
@@ -354,24 +348,24 @@ class Robot(QObject):
     def __init__(self,ip="127.0.0.1",port=502):
         super().__init__()
         self.unique_id = None
-        self.base = BaseState()
-        self.version = VersionState()
-        self.communication = CommunicationState(ip,port)
+        self.base = Base()
+        self.version = Version()
+        self.connect = Connect(ip,port)
         self.protocol=CommunicationProtocol()
-        self.battery = BatteryState()
-        self.drive = DriveState()
-        self.position=PositonState()
+        self.battery = Battery()
+        self.drive = Drive()
+        self.position=Positon()
         self.navi = NaviState()
-        self.cleaner = CleanerState()
-        self.arm = ArmState()
+        self.cleaner = Cleaner()
+        self.arm = Arm()
         self.robot_time = None
-        self.error_chassis = ErrorState()
-        self.error_arm = ErrorState()
-        self.task = CleanTaskState()
+        self.error_chassis = Error()
+        self.error_arm = Error()
+        self.task = CleanTask()
         self.master = SpnTcpMaster(host=ip,port=port)
         #self.camera = CameraRtsp(pc_test=True)
         self.camera = CameraRtsp()
-        self.log=LogState()
+        self.log=Log()
         #self.init(ip)
 
     def init(self):        
@@ -381,7 +375,7 @@ class Robot(QObject):
         #self.set_ip("")
 
     def set_ip(self,ip):
-        self.communication.ip = ip
+        self.connect.ip = ip
         self.master.set_host(ip)
         #self.camera.set_ip(ip)
 
@@ -393,26 +387,26 @@ class Robot(QObject):
         pass
 
     def get_communication_state(self):
-            self.communication.is_online=self.master.is_opened()
+            self.connect.is_online=self.master.is_opened()
             if self.master.is_opened():
-                self.communication.state.value=1
+                self.connect.state=ConnectState.ONLINE
             else:
                 if self.master.is_reconnect():
-                    self.communication.state.value=2
+                    self.connect.state=ConnectState.RECONNECT
                 else:
-                    self.communication.state.value=0
+                    self.connect.state=ConnectState.OFFLINE
 
     #获取机器人信息参数列表
     def robot_info(self):
-        robot_info = [["ID编号",self.unique_id],["连接状态",self.communication.state.description()],["运行状态",self.base.run_state.description()],
+        robot_info = [["ID编号",self.unique_id],["连接状态",self.connect.state.string],["运行状态",self.base.run_state.string],
               ["速度(mm/s)    ",self.drive.speed],["转角(°)",self.drive.steer_angle],["电量(%)",self.battery.soc],["水位(%)",self.cleaner.water_level],
-              ["当前位置(cm)",self.position.path_pos],["总里程(m)",self.drive.mileage],["控制模式",self.base.ctrl_mode.description()],
-              ["ip地址",self.communication.ip],["程序版本",self.version.get()],["机器人时间",check_time_info(self.robot_time)]]
+              ["当前位置(cm)",self.position.path_pos],["总里程(m)",self.drive.mileage],["控制模式",self.base.ctrl_mode.string],
+              ["ip地址",self.connect.ip],["程序版本",self.version.get()],["机器人时间",check_time_info(self.robot_time)]]
         return robot_info
 
     #获取任务信息参数列表
     def task_info(self):
-        task_info = [["状态",self.task.state.description()],["开始时间",check_time_info(self.task.start_time)],["工作时长",self.task.time_worked],["行驶里程(m)    ",self.task.mileage_driven],
+        task_info = [["状态",self.task.state.string],["开始时间",check_time_info(self.task.start_time)],["工作时长",self.task.time_worked],["行驶里程(m)    ",self.task.mileage_driven],
                    ["清扫数量",self.task.count_cleaned],["加水次数",self.task.count_add_water],["充电次数",self.task.count_charged],
                    ["结束时间",check_time_info(self.task.stop_time)]]            
         return task_info
@@ -439,10 +433,16 @@ class Robot(QObject):
     #解析读取数据
     def parse_readonly_data(self):
         self.unique_id=self.protocol.robot_id.value
+
+        #有符号转为无符号
+        print(f"{self.protocol.robot_state.value:016b}")
+        self.protocol.robot_state.value=struct.unpack('>H', struct.pack('>h', self.protocol.robot_state.value))[0]
+        print(f"{self.protocol.robot_state.value:016b}")
+
         self.get_run_state()
         self.get_ctrl_mode()
         self.version.patch=self.protocol.soft_version.value
-        self.communication.heartbeat=self.protocol.heartbeat.value
+        self.connect.heartbeat=self.protocol.heartbeat.value
         self.battery.soc = self.protocol.bat_soc.value
         self.battery.soh = self.protocol.bat_soh.value
         self.battery.voltage= self.protocol.bat_voltage.value
@@ -450,7 +450,7 @@ class Robot(QObject):
         self.drive.steer_angle = self.protocol.steer_angle.value
         self.position.path_pos=self.protocol.position_path.value
 
-        import struct
+        #有符号转为无符号
         self.protocol.mileage_lo.value=struct.unpack('>H', struct.pack('>h', self.protocol.mileage_lo.value))[0]
         self.drive.mileage = join_byte_hi_lo(self.protocol.mileage_hi.value,self.protocol.mileage_lo.value,16)/1000
         
@@ -468,20 +468,26 @@ class Robot(QObject):
         self.task.time_worked = self.protocol.clean_time_s.value                
 
     def get_run_state(self):
-        if test_bit(self.protocol.robot_state.value,4):
-            self.base.run_state.value = 1
-        if test_bit(self.protocol.robot_state.value,6):
-            self.base.run_state.value = 2
-        if test_bit(self.protocol.robot_state.value,3):
-            self.base.run_state.value = 5
+        #if test_bit(self.protocol.robot_state.value,4):
+        #    self.base.run_state.value = 1
+        #if test_bit(self.protocol.robot_state.value,6):
+        #    self.base.run_state.value = 2
+        #if test_bit(self.protocol.robot_state.value,3):
+        #    self.base.run_state.value = 5
+        #print(f'{self.protocol.robot_state.value:#016b}')
+        #self.base.ctrl_mode.value = get_bits(self.protocol.robot_state.value,0,1)
+        #self.base.run_state=RunState(get_bits(self.protocol.robot_state.value,0,1))
+        self.base.ctrl_mode = CtrlMode(get_bits(self.protocol.robot_state.value,0,1))
+        #print(f'{self.base.ctrl_mode.value:#016b}')
+        #self.base.run_state.value=struct.unpack('>H', struct.pack('>h', self.base.run_state.value))[0]
 
     def get_ctrl_mode(self):
-        if test_bit(self.protocol.robot_state.value,0):
-            self.base.ctrl_mode.value = 0
-        if test_bit(self.protocol.robot_state.value,1):
-            self.base.ctrl_mode.value = 1
-        if test_bit(self.protocol.robot_state.value,2):
-            self.base.ctrl_mode.value = 2
+        #if test_bit(self.protocol.robot_state.value,0):
+        #    self.base.ctrl_mode.value = 0
+        #if test_bit(self.protocol.robot_state.value,1):
+        #    self.base.ctrl_mode.value = 1
+        #if test_bit(self.protocol.robot_state.value,2):
+        #    self.base.ctrl_mode.value = 2
         pass
     def get_avoide_state(self):
         if test_bit(self.protocol.chassis_state.value,9):
@@ -497,7 +503,7 @@ class Robot(QObject):
         #如何定义？
         pass
     def get_task_state(self):        
-        self.task.state.value = self.protocol.clean_state.value
+        self.task.state = CleanTaskState(self.protocol.clean_state.value)
         pass
     
     #同步时间

@@ -37,6 +37,18 @@ def test_bit(int_type, offset):
 #组合高低字节
 def join_byte_hi_lo(hi,lo,bit_count):
     return (hi<<bit_count) | lo
+#取其中连续几位
+def get_bits(int_type, get_low_bit,get_hi_bit):
+    mask=0
+    for i in range(get_hi_bit-get_low_bit+1):
+        mask=mask<<1
+        mask=mask|1
+    int_type=int_type>>get_low_bit
+    return (int_type & mask)
+
+    #n=int_type<<(15-get_hi_bit)
+    #n=n>>get_low_bit
+    #return n
 
 #时间相关###################################################################
 #时间显示格式
@@ -106,7 +118,7 @@ class LogEvent(object):
         self.event=""
 
 
-class LogState(object):
+class Log(object):
     def __init__(self):
         #LogEvent列表
         self.log_list=[]
