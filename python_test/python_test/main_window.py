@@ -62,6 +62,8 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             self.resize_camera_show()
 
+        #print(self.svgWidget.size())
+
     def resize_camera_show(self):
         camera_ratio = robots.current.camera.ratio_w_h
         camrea_show_height = self.groupBox_map.height()
@@ -353,9 +355,21 @@ class Window(QMainWindow, Ui_MainWindow):
 
     #加载地图
     def load_map(self):
-        self.svgWidget = QtSvg.QSvgWidget()
+        
+        self.svgWidget = QtSvg.QSvgWidget()       
+        
         self.scrollArea_map.setWidget(self.svgWidget)
+        self.hbox = QHBoxLayout()
+        #hbox.addStretch(1)
+        self.hbox.addWidget(self.svgWidget)
+
+        #self.svgWidget.resize( QSize(800,600)) #固定大小，有滚动条
+        self.scrollArea_map.setLayout(self.hbox) #自适应大小，无滚动条
+
         self.svgWidget.load(svg_map.doc.toByteArray())
+
+        self.svgWidget.renderer().setAspectRatioMode(Qt.KeepAspectRatio)
+        
 
     #更新地图
     def update_ui_map(self):

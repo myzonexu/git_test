@@ -105,7 +105,7 @@
                 <enum>QAbstractScrollArea::AdjustIgnored</enum>
                </property>
                <property name="widgetResizable">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
                <widget class="QWidget" name="scrollAreaWidgetContents_2">
                 <property name="geometry">
@@ -115,6 +115,9 @@
                   <width>500</width>
                   <height>318</height>
                  </rect>
+                </property>
+                <property name="acceptDrops">
+                 <bool>true</bool>
                 </property>
                </widget>
               </widget>
@@ -1524,8 +1527,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>100</width>
-             <height>30</height>
+             <width>982</width>
+             <height>594</height>
             </rect>
            </property>
           </widget>

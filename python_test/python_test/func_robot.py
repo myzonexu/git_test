@@ -100,7 +100,7 @@ class Positon:
     localizationScore : float = 1.0    
     deviation_range :float = 0.0
     x:float=0.0
-    x:float=0.0
+    y:float=0.0
     theta:float=0.0
     map_id:str=""
     map_discription:str=""
