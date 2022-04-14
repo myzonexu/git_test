@@ -106,6 +106,13 @@ class Positon:
     map_discription:str=""
     path_pos:float=0.0
 
+#RFID状态
+class Rfid(object):
+    def __init__(self):
+        self.id = 0
+        self.info = RfidInfo.NONE
+
+
 #导航
 @dataclass(init=True)
 class NaviState:
@@ -355,6 +362,7 @@ class Robot(QObject):
         self.battery = Battery()
         self.drive = Drive()
         self.position=Positon()
+        self.rfid=Rfid()
         self.navi = NaviState()
         self.cleaner = Cleaner()
         self.arm = Arm()
@@ -400,7 +408,7 @@ class Robot(QObject):
     def robot_info(self):
         robot_info = [["ID编号",self.unique_id],["连接状态",self.connect.state.string],["运行状态",self.base.run_state.string],
               ["速度(mm/s)    ",self.drive.speed],["转角(°)",self.drive.steer_angle],["电量(%)",self.battery.soc],["水位(%)",self.cleaner.water_level],
-              ["当前位置(cm)",self.position.path_pos],["总里程(m)",self.drive.mileage],["控制模式",self.base.ctrl_mode.string],
+              ["当前位置(cm)",self.position.path_pos],["RFID功能",self.rfid.info.string],["总里程(m)",self.drive.mileage],["控制模式",self.base.ctrl_mode.string],
               ["ip地址",self.connect.ip],["程序版本",self.version.get()],["机器人时间",check_time_info(self.robot_time)]]
         return robot_info
 
@@ -446,6 +454,7 @@ class Robot(QObject):
         self.drive.speed = self.protocol.robot_speed.value
         self.drive.steer_angle = self.protocol.steer_angle.value
         self.position.path_pos=self.protocol.position_path.value
+        self.rfid.info=RfidInfo(self.protocol.rfid.value)
 
         #有符号转为无符号
         self.protocol.mileage_lo.value=struct.unpack('>H', struct.pack('>h', self.protocol.mileage_lo.value))[0]
@@ -453,7 +462,7 @@ class Robot(QObject):
         
 
         self.get_avoide_state()
-        self.navi.position=self.protocol.position_mark.value
+        
         self.cleaner.water_level=self.protocol.water_level.value
         self.cleaner.is_open=(self.protocol.clean_state.value > 0)
         self.arm.position = self.protocol.clean_state.value
@@ -468,7 +477,7 @@ class Robot(QObject):
         state_1=get_bits(self.protocol.robot_state.value,0,1)
         state_2=get_bits(self.protocol.robot_state.value,2,5)
         state_3=get_bits(self.protocol.robot_state.value,6,9)
-        print(state_1,state_2,state_3)
+        #print(state_1,state_2,state_3)
         if state_2==2:
             self.base.run_state=RunState.WORK
         elif state_2==3:

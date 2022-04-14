@@ -103,4 +103,15 @@ class ErrLevel(EnumDef):
     LIGHT = (2, '轻微故障')
     SERIOUS = (3, '严重故障')
 
-
+@unique
+class RfidInfo(EnumDef):
+    """枚举类：RFID信息."""
+    NONE = (0, '无')
+    WATER = (1, '加水点')
+    CHARGE = (2, '充电点')
+    ARM_CLOSE = (3, '手臂缩回')
+    ARM_OPEN = (4, '手臂伸出')
+    IN_BACK = (11, '内弯后退')
+    OUT_BACK = (12, '外弯后退')
+    START = (21, '起点')
+    END = (22, '终点')
