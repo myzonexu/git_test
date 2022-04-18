@@ -115,3 +115,4 @@ class RfidInfo(EnumDef):
     OUT_BACK = (12, '外弯后退')
     START = (21, '起点')
     END = (22, '终点')
+

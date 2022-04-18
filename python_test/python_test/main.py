@@ -23,7 +23,6 @@ from main_window import *
 #导入线程管理
 from thread_manage import *
 
-
 if __name__ == '__main__':    
     app = QApplication(sys.argv)
     window_main = Window()

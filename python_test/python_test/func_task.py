@@ -18,7 +18,7 @@ from enum import Enum,unique
 from PyQt5.QtCore import QTime,QDate
 import random
 from func_common import *
-
+#from func_robot import *
 
 #classes#######################################################################
 @unique
@@ -26,12 +26,14 @@ class PlanType(Enum):
     Cycle = 0 
     Once = 1
     Ignore = 2
+    NONE=3
 
 @unique
 class CycleType(Enum):
     Nday = 0 
     Weekday = 1
     Monthday = 2
+    NONE=3
 
 class TaskPlan(object):
     """计划任务类."""
@@ -50,25 +52,31 @@ class TaskPlan(object):
         self.enable = False
         self.name = ""
         #PlanType枚举
-        self.plan_type = None
-        #self.datetime_set=datetime_set
+        self.plan_type = PlanType.NONE
         #CycleType枚举
-        self.cycle_type = None
+        self.cycle_type = CycleType.NONE
         self.cycle_value = 0
         self.do_time = QTime()
         self.start_date = QDate()
         self.end_date = QDate()
         self.str_plan_time = ""
 
-        self.assign = [1,2,3]
-        self.received = [1]
-        self.not_received = [2,3]
+        self.assign = set([1,2,3])
+        #self.received = set([])
+        self.not_received = set([1,2,3])
         self.received_progress = 0.0
         self.add_time = None
+        self.message_frame = []
+        self.is_checked = True
+        self.checkbox=None
+        self.info_output = ""
     
     def init_id(self):
-        """初始化id,1~65530随机数."""
-        self.id = random.randint(1,65530)
+        """初始化id,1~32760随机数."""
+        if self.id is 0:
+            self.id = random.randint(1,32760)
+        else:
+            pass
         return self.id
 
     def plan_time_str(self):        
@@ -92,7 +100,7 @@ class TaskPlan(object):
                 cycle_str = f'每{self.cycle_value}天'
             elif self.cycle_type is CycleType.Weekday:
                 _weekday_str_list = ["一","二","三","四","五","六","日"]
-                cycle_str = f'每周{_weekday_str_list[self.cycle_value]}'
+                cycle_str = f'每周{_weekday_str_list[self.cycle_value-1]}'
             elif self.cycle_type is CycleType.Monthday:
                 cycle_str = f'每月{self.cycle_value}日'
 
@@ -132,6 +140,24 @@ class TaskPlan(object):
                 return True
             else:
                 return False
+
+    
+    def get_message_frame(self,frame_len=20):
+        """
+        生成通讯数据.
+    
+        :param len: int 数据长度
+        :returns: 通讯数据数组
+        :raises: no exception
+        """
+        self.message_frame = [self.id,int(self.enable),self.plan_type.value,self.cycle_type.value,self.cycle_value,\
+            self.do_time.hour(),self.do_time.minute(),\
+            self.start_date.year(),self.start_date.month(),self.start_date.day(),\
+            self.end_date.year(),self.end_date.month(),self.end_date.day()]
+        for i in range(frame_len - len(self.message_frame)):
+            self.message_frame.append(0)
+        #print(self.message_frame)
+        return self.message_frame
     
     def is_plan_date(self,date):
         """
@@ -170,28 +196,58 @@ class TaskPlan(object):
                 return 2
             else:
                 return 0
-
-
-class TaskPlans(object):
-    """计划任务列表类."""
     
+    def output_info(self):
+        """
+        输出下发信息.
+    
+        :returns: str,信息内容
+        :raises: no exception
+        """
+        self.info_output=""
+        return self.info_output
+
+    
+
+
+class TaskPlans(QObject):
+    """计划任务列表类."""
+    #current_inited=pyqtSignal()
+    current_changed = pyqtSignal()
+
     def __init__(self):
         """初始化."""
+        super().__init__()
         self.new_plan = TaskPlan()
-        self.plan_list = []
+        #self.plan_list = []
+        self.all = {}
+        self.current = None
+
+    def set_current(self,id):        
+        if id in self.plans:        
+            self.current = self.all.get(id)
+            self.current_changed.emit(id)
+            print("当前id为：",id)
+            return self.current
+            
+        else:
+            print("无法找到id")
+            return None
 
     def list_info(self):
         list_info = []
         str_plan_type = ["周期执行","指定时间执行","指定时间不执行"]
-        if self.plan_list == []:
+        if self.all == {}:
+            #print("no info")
             pass
-        else:               
-            for plan in self.plan_list:
-                list_info.append([plan.id,plan.name,str_plan_type[plan.plan_type.value],plan.plan_time_str(),\
-                    all_list_str(plan.assign),all_list_str(plan.received),plan.received_progress,\
-                    plan.add_time.strftime("%Y-%m-%d %H:%M:%S")])
+        else:
+            count = len(self.all)       
+            for id,item in self.all.items():
+                list_info.append([f'{id:>10}',item.enable,item.name,str_plan_type[item.plan_type.value],item.plan_time_str(),\
+                    all_list_str(item.assign),all_list_str(item.not_received),f'{item.received_progress:.0%}',item.info_output,\
+                    item.add_time.strftime("%Y-%m-%d %H:%M:%S")])
+                    
         return list_info
-
 #functions#####################################################################
 def set_calendar_date_format(calendar,date,color,tooltip=""):
     """
@@ -248,6 +304,32 @@ def mark_calendar_plan_date(calendar,task_plan,clear_old_format=True):
         elif task_plan.is_plan_date(date) == 2:
             set_calendar_date_format(calendar,date,"yellow")
 
+def mark_calendar_plans_date(calendar,task_plans,clear_old_format=True):
+    """
+    标记日历中多个计划执行日期.
+     
+    :param calendar: QCalendar(),日历部件
+    :param task_plans: dict,多个计划任务
+    :param clear_old_format: True:清除日历原有格式；False:保留日历原有格式
+    :returns: no return
+    :raises: no exception
+    """
+
+    date_1 = QDate(calendar.yearShown(),calendar.monthShown(),1)
+    for i in range(-7,38):
+        date = date_1.addDays(i)
+        if clear_old_format is True:
+            calendar.setDateTextFormat(date,QTextCharFormat()) 
+        else:
+            pass
+        for id,item in task_plans.items():
+            if item.is_checked and item.enable:
+                if item.is_plan_date(date) == 2:
+                    set_calendar_date_format(calendar,date,"yellow")
+                    break
+                elif item.is_plan_date(date) == 1:
+                    set_calendar_date_format(calendar,date,"green",item.do_time.toString("hh:mm"))
+        
 
 
 task_plans = TaskPlans()

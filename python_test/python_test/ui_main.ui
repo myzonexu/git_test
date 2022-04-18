@@ -45,7 +45,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab_ctrl">
        <attribute name="title">
@@ -1564,7 +1564,7 @@
              </size>
             </property>
             <property name="title">
-             <string>添加计划任务</string>
+             <string>计划任务设定</string>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_26">
              <item>
@@ -1710,7 +1710,7 @@
                               <number>250</number>
                              </property>
                              <property name="value">
-                              <number>1</number>
+                              <number>3</number>
                              </property>
                             </widget>
                            </item>
@@ -1931,24 +1931,10 @@
                    </item>
                    <item>
                     <layout class="QGridLayout" name="gridLayout_6">
-                     <item row="0" column="6">
-                      <widget class="QDateEdit" name="dateEdit_task_cycle_end_time">
-                       <property name="enabled">
-                        <bool>false</bool>
-                       </property>
-                      </widget>
-                     </item>
                      <item row="0" column="1">
                       <widget class="QLabel" name="label_5">
                        <property name="text">
                         <string>起始时间：</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="5">
-                      <widget class="QRadioButton" name="radioButton_task_cycle_stop_time">
-                       <property name="text">
-                        <string>截止时间</string>
                        </property>
                       </widget>
                      </item>
@@ -1959,8 +1945,12 @@
                        </property>
                       </widget>
                      </item>
-                     <item row="0" column="2">
-                      <widget class="QDateEdit" name="dateEdit_task_cycle_start_time"/>
+                     <item row="0" column="6">
+                      <widget class="QDateEdit" name="dateEdit_task_cycle_end_time">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
                      </item>
                      <item row="0" column="8">
                       <spacer name="horizontalSpacer_5">
@@ -1975,6 +1965,9 @@
                        </property>
                       </spacer>
                      </item>
+                     <item row="0" column="2">
+                      <widget class="QDateEdit" name="dateEdit_task_cycle_start_time"/>
+                     </item>
                      <item row="0" column="4">
                       <widget class="QRadioButton" name="radioButton_task_cycle_no_stop">
                        <property name="text">
@@ -1982,6 +1975,13 @@
                        </property>
                        <property name="checked">
                         <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="5">
+                      <widget class="QRadioButton" name="radioButton_task_cycle_stop_time">
+                       <property name="text">
+                        <string>截止时间</string>
                        </property>
                       </widget>
                      </item>
@@ -2146,12 +2146,6 @@
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;任务ID：&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;任务名称：&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;任务执行时间：&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
               </widget>
@@ -2194,11 +2188,95 @@ p, li { white-space: pre-wrap; }
           <property name="title">
            <string>计划任务列表</string>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_7" stretch="0">
+          <layout class="QVBoxLayout" name="verticalLayout_7">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_30">
+             <item>
+              <widget class="QPushButton" name="pushButton_task_plan_add_checkbox">
+               <property name="text">
+                <string>选择</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="checkBox_select_task_plan_all">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string> 全部</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_6">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_preview_plans_checked">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>预览多任务</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_enable_plans_checked">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>开启任务</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_disable_plans_checked">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>关闭任务</string>
+               </property>
+               <property name="checkable">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_del_plans_checked">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>删除任务</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_send_task_plan">
+               <property name="text">
+                <string>下发任务</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
            <item>
             <widget class="QTableWidget" name="tableWidget_task_plan_list">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
+              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
@@ -2215,6 +2293,11 @@ p, li { white-space: pre-wrap; }
              <column>
               <property name="text">
                <string>任务ID</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>任务使能</string>
               </property>
              </column>
              <column>
@@ -2239,12 +2322,17 @@ p, li { white-space: pre-wrap; }
              </column>
              <column>
               <property name="text">
-               <string>已下发机器人</string>
+               <string>待下发机器人</string>
               </property>
              </column>
              <column>
               <property name="text">
                <string>任务下发进度</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>信息</string>
               </property>
              </column>
              <column>

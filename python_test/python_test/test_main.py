@@ -1,10 +1,16 @@
+from func_task import *
+
+print(task_plans.new_plan.is_plan_date.__doc__)
+
+
+'''
 #测试枚举
 from func_defines import *
 
 print(RunState['WORK'])
 print(CtrlMode.MANUAL.string)
 print(RunState(1).string)
-
+'''
 '''
 #测试位操作运算
 from func_common import *

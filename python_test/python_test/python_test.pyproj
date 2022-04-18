@@ -22,6 +22,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="dialog_select_robot.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="example.py">
       <SubType>Code</SubType>
     </Compile>

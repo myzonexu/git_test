@@ -8,6 +8,7 @@ from func_common import *
 from func_camera import *
 from func_modbus_tcp import *
 from func_defines import *
+from func_task import *
 import struct
 
 #常量定义
@@ -239,6 +240,17 @@ class CleanTask(object):
         self.time_estimate = 0
         self.time_remain = 0
 
+#class Plan(object):
+#    """计划类."""
+#    def __init__(self):
+#        self.all = set([])
+#        self.have_send=set([])
+        
+#    def send(self):
+#        #self.not_send=self.all-self.have_send
+#        for id in self.all:
+#            pass
+
   
 #机器人集合
 class RobotGroup(QObject):
@@ -370,6 +382,7 @@ class Robot(QObject):
         self.error_chassis = Error()
         self.error_arm = Error()
         self.task = CleanTask()
+        self.task_plans=set([])
         self.master = SpnTcpMaster(host=ip,port=port)
         #self.camera = CameraRtsp(pc_test=True)
         self.camera = CameraRtsp()
@@ -414,7 +427,7 @@ class Robot(QObject):
 
     #获取任务信息参数列表
     def task_info(self):
-        task_info = [["状态",self.task.state.string],["开始时间",check_time_info(self.task.start_time)],["工作时长",self.task.time_worked],["行驶里程(m)    ",self.task.mileage_driven],
+        task_info = [["执行任务id",all_list_str(self.task_plans)],["状态",self.task.state.string],["开始时间",check_time_info(self.task.start_time)],["工作时长",self.task.time_worked],["行驶里程(m)    ",self.task.mileage_driven],
                    ["清扫数量",self.task.count_cleaned],["加水次数",self.task.count_add_water],["充电次数",self.task.count_charged],
                    ["结束时间",check_time_info(self.task.stop_time)]]            
         return task_info
@@ -648,7 +661,25 @@ class Robot(QObject):
     def arm_ctrl_position(self,position):
         self.master.write(self.protocol.ctrl_mode,1)
         self.master.write(self.protocol.arm_ctrl,position)
+    #发送计划任务
     
+    def send_plan(self):
+        """
+        发送计划任务.
+    
+        :returns: no return
+        :raises: no exception
+        """
+        addr_start=3000
+        self.master.write_multiple(addr_start,[0 for x in range(0, 40)])
+
+        for id in self.task_plans:
+            datas=task_plans.all.get(id).get_message_frame()
+            self.master.write_multiple(addr_start,datas)
+            addr_start=addr_start+len(datas)
+        self.master.write_multiple(addr_start,[-1])
+
+
 #变量定义
 f=None
 try:

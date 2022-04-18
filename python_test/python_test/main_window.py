@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
+import copy
 from PyQt5.Qt import QMainWindow
 #from PyQt5.QtGui import QImage,QPixmap
 #from PyQt5.QtWebEngineWidgets import *
@@ -19,10 +20,14 @@ from svg.path import Path, Line, Arc, CubicBezier, QuadraticBezier, Close
 from svg.path import parse_path
 
 from ui_main import Ui_MainWindow
+from dialog_select_robot import *
+
 #from func_main import *
+from func_task import *
 from func_robot import *
 from func_svg import *
-from func_task import *
+
+from func_defines import *
 
 class Window(QMainWindow, Ui_MainWindow):
     camera_offlined = pyqtSignal()
@@ -38,6 +43,9 @@ class Window(QMainWindow, Ui_MainWindow):
         self.load_map()
         
         self.thread_manage()
+        
+
+
         #self.ui_set_shortcut()
         #self.setup_timer()
 
@@ -204,17 +212,74 @@ class Window(QMainWindow, Ui_MainWindow):
         if task_plans.new_plan.name is "":
             QMessageBox.information(self,'提示','计划任务名称不能为空!请填写。',QMessageBox.Ok)
         else:
+            task_plans.new_plan.init_id()
+            task_plans.new_plan.enable=True
             self.preview_task_plan(task_plans.new_plan)        
-            task_plans.new_plan.add_time=datetime.now() 
+            task_plans.new_plan.add_time=datetime.now()
             #task_plans.new_plan.add_time=QDateTime.currentDateTime()
-            task_plans.plan_list.append(task_plans.new_plan)
-            table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info())
 
+            task_plans.all[task_plans.new_plan.id]=copy.deepcopy(task_plans.new_plan)
+          
+            table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info())
+            
             #清空新任务信息
             self.lineEdit_add_task_name.setText("")
             task_plans.new_plan.__init__()
             self.preview_task_plan(task_plans.new_plan)
-    
+
+    @pyqtSlot()
+    def on_pushButton_task_plan_add_checkbox_clicked(self):
+        """任务表格增加复选框."""
+        
+        if self.table_task_plan_is_checkable is False:
+            self.pushButton_preview_plans_checked.setEnabled(True)
+            self.pushButton_enable_plans_checked.setEnabled(True)
+            self.pushButton_disable_plans_checked.setEnabled(True)
+            self.pushButton_del_plans_checked.setEnabled(True)
+            self.checkBox_select_task_plan_all.setEnabled(True)
+
+        elif self.table_task_plan_is_checkable is True:
+            self.pushButton_preview_plans_checked.setEnabled(False)
+            self.pushButton_enable_plans_checked.setEnabled(False)
+            self.pushButton_disable_plans_checked.setEnabled(False)
+            self.pushButton_del_plans_checked.setEnabled(False)
+            self.checkBox_select_task_plan_all.setEnabled(False)
+
+        self.table_task_plan_is_checkable=not self.table_task_plan_is_checkable
+
+    #计划任务列表选择
+    @pyqtSlot(int,int)
+    def on_tableWidget_task_plan_list_cellClicked(self, row, col):
+        id = int(self.tableWidget_task_plan_list.item(row,0).text())
+        #self.preview_task_plan(task_plans.all.get(id))
+        self.preview_task_plans(task_plans.all)
+        ##选择ID
+        #if col is 0:            
+        #    pass
+    #计划任务机器人选择
+    @pyqtSlot(int,int)
+    def on_tableWidget_task_plan_list_cellDoubleClicked(self, row, col):
+        id = int(self.tableWidget_task_plan_list.item(row,0).text())
+        if col==4:
+            self.dialog_select_robot=Dialog()
+            self.dialog_select_robot.show() 
+
+    @pyqtSlot()
+    def on_pushButton_send_task_plan_clicked(self):
+        """计划任务下发."""
+        for plan_id,item in task_plans.all.items():
+            for robot_id in item.assign:
+                if plan_id in robots.current.task_plans:
+                    pass
+                else:
+                    robots.current.task_plans.add(plan_id)
+
+        #下发当前机器人
+        robots.current.send_plan()
+
+
+
+
 
     #方法######################################################################################
     #UI额外设置
@@ -225,7 +290,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.setup_ui_statusbar()
         self.setup_ui_shortcut()
         self.camera_offlined.connect(self.update_ui_camera_offline)
-        self.calendarWidget_task_preview.currentPageChanged.connect(self.preview_new_task_plan)
+        self.calendarWidget_task_preview.currentPageChanged.connect(lambda:self.preview_task_plans(task_plans.all))
+        self.table_task_plan_is_checkable=False
         
         
 
@@ -274,7 +340,7 @@ class Window(QMainWindow, Ui_MainWindow):
         for j in range(0,2):
             self.tableWidget_error.horizontalHeader().setSectionResizeMode(j,QHeaderView.ResizeToContents)
 
-        for j in range(0,4):
+        for j in [0,1,2,3,4,7,9]:
             self.tableWidget_task_plan_list.horizontalHeader().setSectionResizeMode(j,QHeaderView.ResizeToContents)
 
 
@@ -442,13 +508,28 @@ class Window(QMainWindow, Ui_MainWindow):
             pass
  
     def preview_task_plan(self,task_plan):
-        """任务预览."""
+        """预览单个任务."""
         
         nl = '\n'
-        self.textBrowser_task_plan_preview.setText(f'任务ID： {task_plan.id}{nl}{nl}任务名称： {task_plan.name}{nl}{nl}任务执行时间：{nl}{task_plan.plan_time_str()}')
+        #self.textBrowser_task_plan_preview.setText(f'任务ID： {task_plan.id}{nl}{nl}任务名称： {task_plan.name}{nl}{nl}任务执行时间：{nl}{task_plan.plan_time_str()}')
+        self.textBrowser_task_plan_preview.setText(f'任务名称： {task_plan.name}{nl}{nl}任务执行时间：{nl}{task_plan.plan_time_str()}')
         mark_calendar_plan_date(self.calendarWidget_task_preview,task_plan)
+        #task_plan.get_message_frame()
 
-    
+    def preview_task_plans(self,task_plans):
+        """预览选中的多个任务."""
+        ids=[]
+        names=[]
+        
+        nl = '\n'
+        for id,item in task_plans.items():
+            if item.is_checked is True:
+                ids.append(id)
+                names.append(item.name)
+        self.textBrowser_task_plan_preview.setText(f'任务ID： {all_list_str(ids)}{nl}{nl}任务名称： {all_list_str(names)}')
+        mark_calendar_plans_date(self.calendarWidget_task_preview,task_plans)
+        #mark_calendar_plan_date(self.calendarWidget_task_preview,task_plan)
+   
     def preview_new_task_plan(self):
         """预览新增任务."""
         self.set_new_task_plan()

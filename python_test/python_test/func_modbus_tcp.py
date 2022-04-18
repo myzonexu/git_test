@@ -183,6 +183,35 @@ class SpnTcpMaster(QObject,modbus_tk.modbus_tcp.TcpMaster):
         finally:
             pass
 
+    
+    def write_multiple(self,addr_start,datas,slave_id=1):
+        """
+        写多个连续数据.
+         
+        :param addr_start: int,写入数据起始地址
+        :param datas: list,写入数据
+        :param slave_id: int,slave_id
+        :returns: no return
+        :raises: no exception
+        """
+
+        try:
+            self.execute(slave_id, cst.WRITE_MULTIPLE_REGISTERS, addr_start, output_value=datas,data_format=('>'+len(datas)*'h'))
+            
+        except modbus_tk.modbus.ModbusError as exc:
+            self._is_opened=False
+            self.offlined.emit()
+            self._is_reconnect=True
+            print("%s- Code=%d", exc, exc.get_exception_code())
+        except modbus_tk.modbus_tcp.socket.error as e:
+            self._is_opened=False
+            self.offlined.emit()
+            self._is_reconnect=True
+            print("连接网络: ",self._host," 失败，错误：",str(e))
+        else:
+            pass
+        finally:
+            pass
 
 #通讯矩阵
 class CommunicationProtocol(object):
@@ -230,7 +259,22 @@ class CommunicationProtocol(object):
         self.time_weekday    = SpnData(name = "time_weekday",addr = 2014,length = 1,rate = 1,offset = 0,rw="rw")
         self.steer_angle_set = SpnData(name = "steer_angle_set",addr = 2015,length = 1,rate = 0.0573,offset = 0,rw="rw")
         self.robot_speed_set = SpnData(name = "robot_speed_set",addr = 2016,length = 1,rate = 1,offset = 0,rw="rw")
-    
+
+
+        self.task_id = SpnData(name = "task_id",addr = 3000,length = 1,rate = 1,offset = 0,rw="rw")
+        self.task_enable   = SpnData(name = "task_enable",addr = 3001,length = 1,rate = 1,offset = 0,rw="rw")
+        self.task_type   = SpnData(name = "task_type",addr = 3002,length = 1,rate = 1,offset = 0,rw="rw")
+        self.task_cycle_type   = SpnData(name = "task_cycle_type",addr = 3003,length = 1,rate = 1,offset = 0,rw="rw")
+        self.task_cycle_value   = SpnData(name = "task_cycle_value",addr = 3004,length = 1,rate = 1,offset = 0,rw="rw")
+        self.task_do_time_hour    = SpnData(name = "task_do_time_hour",addr = 3005,length = 1,rate = 1,offset = 0,rw="rw")
+        self.task_do_time_min    = SpnData(name = "task_do_time_min",addr = 3006,length = 1,rate = 1,offset = 0,rw="rw")
+        self.task_start_date_year    = SpnData(name = "task_start_date_year",addr = 3007,length = 1,rate = 1,offset = 0,rw="rw")
+        self.task_start_date_month    = SpnData(name = "task_start_date_month",addr = 3008,length = 1,rate = 1,offset = 0,rw="rw")
+        self.task_start_date_day    = SpnData(name = "task_start_date_day",addr = 3009,length = 1,rate = 1,offset = 0,rw="rw")
+        self.task_end_date_year    = SpnData(name = "task_end_date_year",addr = 3010,length = 1,rate = 1,offset = 0,rw="rw")
+        self.task_end_date_month    = SpnData(name = "task_end_date_month",addr = 3011,length = 1,rate = 1,offset = 0,rw="rw")
+        self.task_end_date_day    = SpnData(name = "task_end_date_day",addr = 3012,length = 1,rate = 1,offset = 0,rw="rw")
+        
         self.get_attrs_readonly()
         self.get_addr_readonly()
         
