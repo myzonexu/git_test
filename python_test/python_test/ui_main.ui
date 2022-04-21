@@ -45,7 +45,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="tab_ctrl">
        <attribute name="title">
@@ -1459,6 +1459,11 @@
                 </column>
                 <column>
                  <property name="text">
+                  <string>监控ip</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
                   <string>通讯状态</string>
                  </property>
                 </column>
@@ -1496,11 +1501,213 @@
        <attribute name="title">
         <string>机器人</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_50">
+       <layout class="QVBoxLayout" name="verticalLayout_52">
+        <item>
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>添加</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_50">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_63">
+             <item>
+              <widget class="QLabel" name="label_58">
+               <property name="text">
+                <string>机器人ID</string>
+               </property>
+               <property name="buddy">
+                <cstring>lineEdit_add_robot_ip</cstring>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEdit_add_robot_id">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>100</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>100</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>ID编号</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_38">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>10</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_4">
+               <property name="text">
+                <string>机器人ip地址</string>
+               </property>
+               <property name="buddy">
+                <cstring>lineEdit_add_robot_ip</cstring>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEdit_add_robot_ip">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>150</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>150</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;例：192.168.1.100&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_39">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>10</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_57">
+               <property name="text">
+                <string>监控ip地址</string>
+               </property>
+               <property name="buddy">
+                <cstring>lineEdit_add_robot_ip</cstring>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEdit_add_camera_ip">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>150</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>150</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>例：192.168.1.64</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_40">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>10</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_add_robot">
+               <property name="text">
+                <string>添加</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_37">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_import_robot">
+               <property name="text">
+                <string>导入</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_61">
           <item>
-           <widget class="QCheckBox" name="checkBox_robot">
+           <widget class="QCheckBox" name="checkBox_robot_all">
             <property name="text">
              <string>选择</string>
             </property>
@@ -1520,23 +1727,9 @@
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_add_robot">
-            <property name="text">
-             <string>添加</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QPushButton" name="pushButton_del_robot">
             <property name="text">
              <string>删除</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_import_robot">
-            <property name="text">
-             <string>导入</string>
             </property>
            </widget>
           </item>
@@ -1546,12 +1739,17 @@
          <widget class="QTableWidget" name="tableWidget_robot_all">
           <column>
            <property name="text">
-            <string>机器人ID</string>
+            <string>   机器人ID   </string>
            </property>
           </column>
           <column>
            <property name="text">
-            <string>ip地址</string>
+            <string>机器人ip</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>监控ip</string>
            </property>
           </column>
           <column>
@@ -1567,11 +1765,6 @@
           <column>
            <property name="text">
             <string>任务状态</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>计划清扫时间</string>
            </property>
           </column>
           <column>
@@ -2271,19 +2464,12 @@ p, li { white-space: pre-wrap; }
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_30">
              <item>
-              <widget class="QPushButton" name="pushButton_task_plan_add_checkbox">
-               <property name="text">
-                <string>选择</string>
-               </property>
-              </widget>
-             </item>
-             <item>
               <widget class="QCheckBox" name="checkBox_select_task_plan_all">
                <property name="enabled">
-                <bool>false</bool>
+                <bool>true</bool>
                </property>
                <property name="text">
-                <string> 全部</string>
+                <string>选择</string>
                </property>
               </widget>
              </item>
@@ -2303,7 +2489,7 @@ p, li { white-space: pre-wrap; }
              <item>
               <widget class="QPushButton" name="pushButton_preview_plans_checked">
                <property name="enabled">
-                <bool>false</bool>
+                <bool>true</bool>
                </property>
                <property name="text">
                 <string>预览多任务</string>
@@ -2313,7 +2499,7 @@ p, li { white-space: pre-wrap; }
              <item>
               <widget class="QPushButton" name="pushButton_enable_plans_checked">
                <property name="enabled">
-                <bool>false</bool>
+                <bool>true</bool>
                </property>
                <property name="text">
                 <string>开启任务</string>
@@ -2323,7 +2509,7 @@ p, li { white-space: pre-wrap; }
              <item>
               <widget class="QPushButton" name="pushButton_disable_plans_checked">
                <property name="enabled">
-                <bool>false</bool>
+                <bool>true</bool>
                </property>
                <property name="text">
                 <string>关闭任务</string>
@@ -2334,9 +2520,9 @@ p, li { white-space: pre-wrap; }
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_del_plans_checked">
+              <widget class="QPushButton" name="pushButton_del_plan">
                <property name="enabled">
-                <bool>false</bool>
+                <bool>true</bool>
                </property>
                <property name="text">
                 <string>删除任务</string>
@@ -2446,6 +2632,13 @@ p, li { white-space: pre-wrap; }
            </widget>
           </item>
           <item>
+           <widget class="QPushButton" name="pushButton_del_robot_2">
+            <property name="text">
+             <string>删除</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="horizontalSpacer_36">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -2459,9 +2652,9 @@ p, li { white-space: pre-wrap; }
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_del_robot_2">
+           <widget class="QPushButton" name="pushButton_log_refresh">
             <property name="text">
-             <string>删除</string>
+             <string>刷新</string>
             </property>
            </widget>
           </item>
@@ -2525,107 +2718,6 @@ p, li { white-space: pre-wrap; }
         <string>配置</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_6">
-        <item>
-         <widget class="QGroupBox" name="groupBox_8">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>100</height>
-           </size>
-          </property>
-          <property name="title">
-           <string>机器人配置</string>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_12">
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_14">
-             <item>
-              <widget class="QLabel" name="label_4">
-               <property name="text">
-                <string>机器人网络地址</string>
-               </property>
-               <property name="buddy">
-                <cstring>lineEdit_ip_addr</cstring>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="lineEdit_ip_addr">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>150</width>
-                 <height>20</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>150</width>
-                 <height>20</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>127.0.0.1</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_tcp_connect">
-               <property name="text">
-                <string>连接</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_tcp_disconnect">
-               <property name="text">
-                <string>断开</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_12">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_connect_info">
-             <property name="text">
-              <string>网络未连接</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_robo_info">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_23">
           <item>
@@ -2790,12 +2882,12 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>93</x>
-     <y>487</y>
+     <x>133</x>
+     <y>553</y>
     </hint>
     <hint type="destinationlabel">
-     <x>67</x>
-     <y>471</y>
+     <x>105</x>
+     <y>582</y>
     </hint>
    </hints>
   </connection>
@@ -2806,12 +2898,12 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>67</x>
-     <y>471</y>
+     <x>105</x>
+     <y>582</y>
     </hint>
     <hint type="destinationlabel">
-     <x>93</x>
-     <y>487</y>
+     <x>133</x>
+     <y>553</y>
     </hint>
    </hints>
   </connection>
@@ -2822,8 +2914,8 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>66</x>
-     <y>464</y>
+     <x>111</x>
+     <y>510</y>
     </hint>
     <hint type="destinationlabel">
      <x>87</x>
@@ -2842,8 +2934,8 @@ p, li { white-space: pre-wrap; }
      <y>480</y>
     </hint>
     <hint type="destinationlabel">
-     <x>66</x>
-     <y>464</y>
+     <x>111</x>
+     <y>510</y>
     </hint>
    </hints>
   </connection>

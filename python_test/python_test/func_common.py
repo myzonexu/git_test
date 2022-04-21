@@ -137,7 +137,7 @@ def get_run_time(func):
 
 #表格操作####################################################################
 #表格填充数据-二维数组
-def table_fill_data_list_2d(table_widget,list_2d,decimal_places=2,fill="new"):
+def table_fill_data_list_2d(table_widget,list_2d,decimal_places=2,fill="new",checkable=False):
     if fill=="new":
         start_row=0
     elif fill=="append":
@@ -145,6 +145,11 @@ def table_fill_data_list_2d(table_widget,list_2d,decimal_places=2,fill="new"):
 
     if list_2d==[]:
         table_widget.clearContents()
+        table_widget.setRowCount(0)
+    elif list_2d==[[]]:
+        table_widget.clearContents()
+        table_widget.setRowCount(0)
+
     else:
         len_row=len(list_2d)
         len_col=len(list_2d[0])
@@ -157,7 +162,20 @@ def table_fill_data_list_2d(table_widget,list_2d,decimal_places=2,fill="new"):
                     data=round(data,decimal_places)
                 item=QTableWidgetItem(str(data))
                 table_widget.setItem(start_row+row,col,item)
+        if checkable is True:
+            for row in range(len_row):
+                    table_widget.item(row,0).setCheckState(Qt.Unchecked)
+        else:
+            pass
     table_widget.viewport().update()
+
+def set_table_check_state(table,state,col=0):
+        """设置表格全选全不选."""
+        for row in range(table.rowCount()):
+            if table.item(row,col):
+                table.item(row,col).setCheckState(state)
+
+
 
 #list所有元素组合为字符串
 def all_list_str(list,str_join=","):    

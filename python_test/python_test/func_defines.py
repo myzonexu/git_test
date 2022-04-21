@@ -94,6 +94,7 @@ class CleanTaskState(EnumDef):
     RECHARGE = (6, '中途充电')
     ADDWATER = (7, '中途加水')
     STANDBY = (8, '等待下次任务')
+    FINISH = (9, '完成任务')
 
 @unique
 class ErrLevel(EnumDef):

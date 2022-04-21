@@ -224,6 +224,7 @@ class Error(object):
 #清扫任务
 class CleanTask(object):
     def __init__(self):
+        self.id=0
         self.state = CleanTaskState.NONE #ValueDescriptionSet(clean_task_state)
         self.start_time = None
         self.stop_time = None
@@ -239,6 +240,22 @@ class CleanTask(object):
         self.time_total = 0
         self.time_estimate = 0
         self.time_remain = 0
+
+class CleanTaskLog(object):
+    def __init__(self):
+        self.all=[]
+
+    def list_info(self):
+        list_info = []
+        for task in self.all:
+            if task.id==-1:
+                str_task_id="手动任务"
+            elif task.id>0:
+                str_task_id=str(task.id)
+            list_info.append([str_task_id,task.start_time.strftime("%Y-%m-%d %H:%M:%S"),task.stop_time.strftime("%Y-%m-%d %H:%M:%S"),\
+                str(task.count_cleaned),str(task.count_add_water),str(task.count_charged)])       
+                    
+        return list_info
 
 #class Plan(object):
 #    """计划类."""
@@ -355,16 +372,19 @@ class RobotGroup(QObject):
             pass
         else:
             count = len(self.robots)       
-            for id in self.robots:
-                list_info.append([self.robots.get(id).unique_id,self.robots.get(id).connect.ip,self.robots.get(id).connect.state.string,
-                                  self.robots.get(id).base.run_state.string,self.robots.get(id).task.state.string,self.robots.get(id).err_count(),self.robots.get(id).warning_count()])
-
+            #for id in self.robots:
+            #    list_info.append([self.robots.get(id).unique_id,self.robots.get(id).connect.ip,self.robots.get(id).connect.state.string,
+            #                      self.robots.get(id).base.run_state.string,self.robots.get(id).task.state.string,self.robots.get(id).err_count(),self.robots.get(id).warning_count()])
+            for id,item in self.robots.items():
+                list_info.append([item.unique_id,item.connect.ip,item.camera.ip,item.connect.state.string,
+                                  item.base.run_state.string,item.task.state.string,item.err_count(),item.warning_count()])
+           
         return list_info
 
 #机器人
 class Robot(QObject):
     state_updated=pyqtSignal()
-    def __init__(self,ip="127.0.0.1",port=502):
+    def __init__(self,ip="127.0.0.1",camera_ip="192.168.0.64",port=502):
         super().__init__()
         self.unique_id = None
         self.base = Base()
@@ -385,7 +405,8 @@ class Robot(QObject):
         self.task_plans=set([])
         self.master = SpnTcpMaster(host=ip,port=port)
         #self.camera = CameraRtsp(pc_test=True)
-        self.camera = CameraRtsp()
+        self.camera = CameraRtsp(ip=camera_ip)
+        self.clean_log=CleanTaskLog()
         self.log=Log()
         #self.init(ip)
 

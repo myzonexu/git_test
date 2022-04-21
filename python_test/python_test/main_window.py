@@ -90,10 +90,13 @@ class Window(QMainWindow, Ui_MainWindow):
         robots.current.clean_task_start()
         robots.current.task.start_time = datetime.now()
         robots.current.task.stop_time = None
+        robots.current.task.id=-1
     @pyqtSlot()
     def on_pushButton_autorun_stop_clicked(self):
         robots.current.clean_task_stop()
         robots.current.task.stop_time = datetime.now()
+        robots.current.clean_log.all.append(copy.deepcopy(robots.current.task))
+        robots.current.task.__init__()
     @pyqtSlot()
     def on_pushButton_autorun_charge_clicked(self):
         robots.current.charge_battery()
@@ -220,35 +223,14 @@ class Window(QMainWindow, Ui_MainWindow):
 
             task_plans.all[task_plans.new_plan.id]=copy.deepcopy(task_plans.new_plan)
           
-            table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info())
+            table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info(),checkable=True)
             
             #清空新任务信息
             self.lineEdit_add_task_name.setText("")
             task_plans.new_plan.__init__()
             self.preview_task_plan(task_plans.new_plan)
 
-    @pyqtSlot()
-    def on_pushButton_task_plan_add_checkbox_clicked(self):
-        """任务表格增加复选框."""
-        
-        if self.table_task_plan_is_checkable is False:
-            self.pushButton_preview_plans_checked.setEnabled(True)
-            self.pushButton_enable_plans_checked.setEnabled(True)
-            self.pushButton_disable_plans_checked.setEnabled(True)
-            self.pushButton_del_plans_checked.setEnabled(True)
-            self.checkBox_select_task_plan_all.setEnabled(True)
-            for row in range(self.tableWidget_task_plan_list.rowCount()):
-                self.tableWidget_task_plan_list.item(row,0).setCheckState(Qt.Unchecked)
-                
-        elif self.table_task_plan_is_checkable is True:
-            self.pushButton_preview_plans_checked.setEnabled(False)
-            self.pushButton_enable_plans_checked.setEnabled(False)
-            self.pushButton_disable_plans_checked.setEnabled(False)
-            self.pushButton_del_plans_checked.setEnabled(False)
-            self.checkBox_select_task_plan_all.setEnabled(False)
-
-        self.table_task_plan_is_checkable=not self.table_task_plan_is_checkable
-
+    
     #计划任务列表选择
     @pyqtSlot(int,int)
     def on_tableWidget_task_plan_list_cellClicked(self, row, col):
@@ -266,6 +248,23 @@ class Window(QMainWindow, Ui_MainWindow):
             self.dialog_select_robot=Dialog()
             self.dialog_select_robot.show() 
 
+    @pyqtSlot(int)
+    def on_checkBox_select_task_plan_all_stateChanged(self,state):
+        """全选，全不选计划."""
+        set_table_check_state(self.tableWidget_task_plan_list,state)
+
+    @pyqtSlot()
+    def on_pushButton_del_plan_clicked(self):
+        """删除所选计划."""
+        
+        for row in range(self.tableWidget_task_plan_list.rowCount()):
+            if self.tableWidget_task_plan_list.item(row,0).checkState() == Qt.Checked:
+                print(int(self.tableWidget_task_plan_list.item(row,0).text()))
+                task_plans.all.pop(int(self.tableWidget_task_plan_list.item(row,0).text()))
+        table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info(),checkable=True)
+        self.checkBox_select_task_plan_all.setCheckState(Qt.Unchecked)
+        
+
     @pyqtSlot()
     def on_pushButton_send_task_plan_clicked(self):
         """计划任务下发."""
@@ -279,8 +278,34 @@ class Window(QMainWindow, Ui_MainWindow):
         #下发当前机器人
         robots.current.send_plan()
 
+    @pyqtSlot()
+    def on_pushButton_add_robot_clicked(self):
+        """添加机器人."""
+        robots.robots[int(self.lineEdit_add_robot_id.text())]=Robot(ip=self.lineEdit_add_robot_ip.text(),camera_ip=self.lineEdit_add_camera_ip.text())
 
+    @pyqtSlot(int)
+    def on_checkBox_robot_all_stateChanged(self,state):
+        """全选，全不选机器人."""
+        set_table_check_state(self.tableWidget_robot_all,state)
 
+    @pyqtSlot()
+    def on_pushButton_del_robot_clicked(self):
+        """删除所选机器人."""
+        for row in range(self.tableWidget_robot_all.rowCount()):
+            if self.tableWidget_robot_all.item(row,0).checkState() == Qt.Checked:
+                robots.robots.pop(int(self.tableWidget_robot_all.item(row,0).text()))
+        table_fill_data_list_2d(self.tableWidget_robot_all,robots.list_info(),checkable=True)
+        self.checkBox_robot_all.setCheckState(Qt.Unchecked)
+
+    @pyqtSlot()
+    def on_pushButton_log_refresh_clicked(self):
+        """刷新清扫日志."""
+        for id,item in robots.robots.items():
+            clean_info=item.clean_log.list_info()
+            for info in clean_info:
+                info.insert(0,str(id))
+                
+        table_fill_data_list_2d(self.tableWidget_log_all,clean_info,checkable=True)
 
 
     #方法######################################################################################
@@ -360,7 +385,8 @@ class Window(QMainWindow, Ui_MainWindow):
 
     #更新表格显示
     def update_ui_table(self):
-        table_fill_data_list_2d(self.tableWidget_robot_list,robots.list_info())      
+        table_fill_data_list_2d(self.tableWidget_robot_list,robots.list_info())  
+        table_fill_data_list_2d(self.tableWidget_robot_all,robots.list_info(),checkable=True)
         if robots.current == None:
             pass
         else:
@@ -541,6 +567,9 @@ class Window(QMainWindow, Ui_MainWindow):
         """预览新增任务."""
         self.set_new_task_plan()
         self.preview_task_plan(task_plans.new_plan)
+
+    
+
 
     #多线程函数##############################################################################################
     def get_camera_frame(self):
