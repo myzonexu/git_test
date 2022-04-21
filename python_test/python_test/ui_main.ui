@@ -45,7 +45,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_ctrl">
        <attribute name="title">
@@ -1176,7 +1176,7 @@
                  <enum>QFrame::NoFrame</enum>
                 </property>
                 <property name="currentIndex">
-                 <number>1</number>
+                 <number>0</number>
                 </property>
                 <widget class="QWidget" name="page_15">
                  <layout class="QVBoxLayout" name="verticalLayout_23">
@@ -1195,11 +1195,6 @@
                     <column>
                      <property name="text">
                       <string>执行时间</string>
-                     </property>
-                    </column>
-                    <column>
-                     <property name="text">
-                      <string>添加时间</string>
                      </property>
                     </column>
                    </widget>
@@ -1448,13 +1443,6 @@
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_19">
               <item>
-               <widget class="QLabel" name="label_info_robots">
-                <property name="text">
-                 <string>自动扫描中……</string>
-                </property>
-               </widget>
-              </item>
-              <item>
                <widget class="QTableWidget" name="tableWidget_robot_list">
                 <attribute name="horizontalHeaderCascadingSectionResizes">
                  <bool>true</bool>
@@ -1494,11 +1482,6 @@
                   <string>报警</string>
                  </property>
                 </column>
-                <column>
-                 <property name="text">
-                  <string>操作</string>
-                 </property>
-                </column>
                </widget>
               </item>
              </layout>
@@ -1506,6 +1489,102 @@
            </widget>
           </item>
          </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_robot">
+       <attribute name="title">
+        <string>机器人</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_50">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_61">
+          <item>
+           <widget class="QCheckBox" name="checkBox_robot">
+            <property name="text">
+             <string>选择</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_35">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_add_robot">
+            <property name="text">
+             <string>添加</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_del_robot">
+            <property name="text">
+             <string>删除</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_import_robot">
+            <property name="text">
+             <string>导入</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tableWidget_robot_all">
+          <column>
+           <property name="text">
+            <string>机器人ID</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>ip地址</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>通讯状态</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>运行状态</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>任务状态</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>计划清扫时间</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>故障</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>警告</string>
+           </property>
+          </column>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -2292,7 +2371,7 @@ p, li { white-space: pre-wrap; }
              </property>
              <column>
               <property name="text">
-               <string>任务ID</string>
+               <string>     任务ID     </string>
               </property>
              </column>
              <column>
@@ -2348,6 +2427,95 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
           </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_log">
+       <attribute name="title">
+        <string>日志</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_51">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_62">
+          <item>
+           <widget class="QCheckBox" name="checkBox_log">
+            <property name="text">
+             <string>选择</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_36">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_del_robot_2">
+            <property name="text">
+             <string>删除</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_import_robot_2">
+            <property name="text">
+             <string>导出</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tableWidget_log_all">
+          <column>
+           <property name="text">
+            <string>机器人ID</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>任务ID</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>开始时间</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>结束时间</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>行驶里程</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>清扫数量</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>加水次数</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>充电次数</string>
+           </property>
+          </column>
          </widget>
         </item>
        </layout>

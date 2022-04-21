@@ -330,7 +330,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def init_table_group(self):
         self.tableWidget_group_show = [self.tableWidget_robot_list,self.tableWidget_robot_info,self.tableWidget_task_info ,
                                         self.tableWidget_error ,self.tableWidget_warning,self.tableWidget_log_info ,
-                                        self.tableWidget_task_plan_list ]
+                                        self.tableWidget_task_plan_list,self.tableWidget_robot_all,self.tableWidget_log_all ]
     def setup_ui_tablewidget(self):
         for table_widget in self.tableWidget_group_show:
             table_widget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
@@ -344,6 +344,10 @@ class Window(QMainWindow, Ui_MainWindow):
 
         for j in [0,1,2,3,4,7,9]:
             self.tableWidget_task_plan_list.horizontalHeader().setSectionResizeMode(j,QHeaderView.ResizeToContents)
+        #for j in range(0,2):
+        #    self.tableWidget_robot_all.horizontalHeader().setSectionResizeMode(j,QHeaderView.ResizeToContents)
+        #for j in range(0,2):
+        #    self.tableWidget_log_all.horizontalHeader().setSectionResizeMode(j,QHeaderView.ResizeToContents)
 
 
     #UI更新
@@ -382,7 +386,7 @@ class Window(QMainWindow, Ui_MainWindow):
     #更新控件使能
     def update_ui_widget_enbaled(self):
         #if master.is_opened() and master.is_reconnect()==False :
-        self.tabWidget_main.setTabEnabled(3,False)
+        #self.tabWidget_main.setTabEnabled(3,False)
         if robots.current == None:
             self.tabWidget_robo_ctrl.setEnabled(False)
         else:
