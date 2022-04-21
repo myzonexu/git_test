@@ -20,6 +20,62 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
+#classes#######################################################################
+class IdItems(QObject):
+    """ID项目组类."""
+    #current_inited=pyqtSignal()
+    current_changed = pyqtSignal()
+
+    def __init__(self):
+        """初始化."""
+        super().__init__()
+        self.all = {}
+        self.new = None
+        self.current = None
+
+    def set_current(self,id):        
+        if id in self.all:        
+            self.current = self.all.get(id)
+            self.current_changed.emit(id)
+            print("当前id为：",id)
+            return self.current            
+        else:
+            print("无法找到id")
+            return None
+
+    
+    def add(self,item):
+        """
+        增加项目成员.
+     
+        :param item: 要增加的项目成员
+        :returns: no return
+        :raises: no exception
+        """
+        pass
+    
+    def delete(self,id):
+        """
+        删除项目成员.
+     
+        :param item: 要删除的项目成员id
+        :returns: no return
+        :raises: no exception
+        """
+        pass
+
+    def list_info(self):
+        list_info = []
+        if self.all == {}:
+            #print("no info")
+            pass
+        else:
+            for id,item in self.all.items():
+                list_info.append([f'{id:>10}'])
+                    
+        return list_info
+
+
 #位操作######################################################################
 #offset从0开始
 #将某一位置为1

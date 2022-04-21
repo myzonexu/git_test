@@ -15,7 +15,7 @@ __author__ = 'simon'
 
 
 from ui_select_robot import Ui_Dialog_select_robot
-from PyQt5.Qt import QDialog
+from PyQt5.Qt import *
 
 class Dialog(QDialog,Ui_Dialog_select_robot):
     #初始化###################################################################################################
@@ -28,3 +28,4 @@ class Dialog(QDialog,Ui_Dialog_select_robot):
         pass
 
 #dialog_select_robot=Dialog()
+

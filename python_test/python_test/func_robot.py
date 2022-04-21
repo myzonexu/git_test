@@ -676,7 +676,9 @@ class Robot(QObject):
         for id in self.task_plans:
             datas=task_plans.all.get(id).get_message_frame()
             self.master.write_multiple(addr_start,datas)
+            print(addr_start,datas)
             addr_start=addr_start+len(datas)
+            
         self.master.write_multiple(addr_start,[-1])
 
 

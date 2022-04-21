@@ -237,7 +237,9 @@ class Window(QMainWindow, Ui_MainWindow):
             self.pushButton_disable_plans_checked.setEnabled(True)
             self.pushButton_del_plans_checked.setEnabled(True)
             self.checkBox_select_task_plan_all.setEnabled(True)
-
+            for row in range(self.tableWidget_task_plan_list.rowCount()):
+                self.tableWidget_task_plan_list.item(row,0).setCheckState(Qt.Unchecked)
+                
         elif self.table_task_plan_is_checkable is True:
             self.pushButton_preview_plans_checked.setEnabled(False)
             self.pushButton_enable_plans_checked.setEnabled(False)
@@ -423,11 +425,12 @@ class Window(QMainWindow, Ui_MainWindow):
     def load_map(self):
         
         self.svgWidget = QtSvg.QSvgWidget()       
-        
+        #self.svgWidget.renderer().setAspectRatioMode(Qt.KeepAspectRatio)
         self.scrollArea_map.setWidget(self.svgWidget)
         self.hbox = QHBoxLayout()
         #hbox.addStretch(1)
         self.hbox.addWidget(self.svgWidget)
+
 
         #self.svgWidget.resize( QSize(800,600)) #固定大小，有滚动条
         self.scrollArea_map.setLayout(self.hbox) #自适应大小，无滚动条

@@ -224,7 +224,7 @@ class TaskPlans(QObject):
         self.current = None
 
     def set_current(self,id):        
-        if id in self.plans:        
+        if id in self.all:        
             self.current = self.all.get(id)
             self.current_changed.emit(id)
             print("当前id为：",id)
@@ -243,7 +243,7 @@ class TaskPlans(QObject):
         else:
             count = len(self.all)       
             for id,item in self.all.items():
-                list_info.append([f'{id:>10}',item.enable,item.name,str_plan_type[item.plan_type.value],item.plan_time_str(),\
+                list_info.append([f'{id}',item.enable,item.name,str_plan_type[item.plan_type.value],item.plan_time_str(),\
                     all_list_str(item.assign),all_list_str(item.not_received),f'{item.received_progress:.0%}',item.info_output,\
                     item.add_time.strftime("%Y-%m-%d %H:%M:%S")])
                     
