@@ -192,25 +192,63 @@ class Window(QMainWindow, Ui_MainWindow):
 
     @pyqtSlot(int)
     def on_tabWidget_main_currentChanged(self,index):
+        #控制
         if index is 0:
             robots.current.camera.enable_capture()
             pass
+        #机器人
         elif index is 1:
+            
+            pass
+        #监控
+        elif index is 2:
             self.setup_ui_camera_web()
+            pass
+        #计划任务
+        elif index is 3:
+            #刷新任务
+            table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info(),checkable=True)
+            pass
+        #日志
+        elif index is 4:
+            #刷新日志
+            self.refresh_clean_log()
             pass
         else:
             robots.current.camera.disable_capture()
             #robots.current.camera.close()
             print("关闭相机捕获")
 
-    #计划任务预览
+    @pyqtSlot(int)
+    def on_tabWidget_robo_ctrl_currentChanged(self,index):
+        """机器人控制方式tab页切换."""
+        #轨道行走
+        if index is 0:
+            
+            pass
+        #自由行走
+        elif index is 1:
+            QMessageBox.warning(self,'警告','当机器人与轨道连接时慎用，可能导致机器人与轨道卡死或其他意外！\n仅限自由场地或特殊情况下使用！',QMessageBox.Ok)
+            pass
+        #机械臂
+        elif index is 2:
+
+            pass
+
+        else:
+            pass
+
+
+
     @pyqtSlot()
     def on_pushButton_add_task_preview_clicked(self):
+        """预览新增计划任务."""
+        task_plans.new_plan.check_state=True
         self.preview_new_task_plan()
             
-    #计划任务添加
     @pyqtSlot()
     def on_pushButton_add_task_clicked(self):
+        """添加新增计划任务."""
         self.set_new_task_plan()
         if task_plans.new_plan.name is "":
             QMessageBox.information(self,'提示','计划任务名称不能为空!请填写。',QMessageBox.Ok)
@@ -235,11 +273,8 @@ class Window(QMainWindow, Ui_MainWindow):
     @pyqtSlot(int,int)
     def on_tableWidget_task_plan_list_cellClicked(self, row, col):
         id = int(self.tableWidget_task_plan_list.item(row,0).text())
-        #self.preview_task_plan(task_plans.all.get(id))
-        self.preview_task_plans(task_plans.all)
-        ##选择ID
-        #if col is 0:            
-        #    pass
+       
+    
     #计划任务机器人选择
     @pyqtSlot(int,int)
     def on_tableWidget_task_plan_list_cellDoubleClicked(self, row, col):
@@ -256,14 +291,43 @@ class Window(QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_pushButton_del_plan_clicked(self):
         """删除所选计划."""
-        
-        for row in range(self.tableWidget_task_plan_list.rowCount()):
-            if self.tableWidget_task_plan_list.item(row,0).checkState() == Qt.Checked:
-                print(int(self.tableWidget_task_plan_list.item(row,0).text()))
-                task_plans.all.pop(int(self.tableWidget_task_plan_list.item(row,0).text()))
+        self.get_plan_check_state()
+        task_plans.del_checked()
         table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info(),checkable=True)
         self.checkBox_select_task_plan_all.setCheckState(Qt.Unchecked)
-        
+
+    @pyqtSlot()
+    def on_pushButton_enable_plans_checked_clicked(self):
+        """开启所选计划."""
+        self.get_plan_check_state()
+        task_plans.enable_checked(True)
+        table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info(),checkable=True)
+        self.checkBox_select_task_plan_all.setCheckState(Qt.Unchecked)
+
+    @pyqtSlot()
+    def on_pushButton_disable_plans_checked_clicked(self):
+        """关闭所选计划."""
+        self.get_plan_check_state()
+        task_plans.enable_checked(False)        
+        table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info(),checkable=True)
+        self.checkBox_select_task_plan_all.setCheckState(Qt.Unchecked)
+    @pyqtSlot()
+    def on_pushButton_preview_plans_checked_clicked(self):
+        """预览所选计划."""
+        task_plans.new_plan.check_state=False
+        self.get_plan_check_state()
+        self.preview_task_plans()
+        #table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info(),checkable=True)
+        #self.checkBox_select_task_plan_all.setCheckState(Qt.Unchecked)
+    @pyqtSlot(int,int)
+    def on_calendarWidget_task_preview_currentPageChanged(self,year,month):
+        """日历翻页预览所选计划."""
+        if task_plans.new_plan.check_state is True:
+            self.preview_new_task_plan()
+        else:
+            self.get_plan_check_state()
+            self.preview_task_plans()
+
 
     @pyqtSlot()
     def on_pushButton_send_task_plan_clicked(self):
@@ -300,13 +364,7 @@ class Window(QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_pushButton_log_refresh_clicked(self):
         """刷新清扫日志."""
-        for id,item in robots.robots.items():
-            clean_info=item.clean_log.list_info()
-            for info in clean_info:
-                info.insert(0,str(id))
-                
-        table_fill_data_list_2d(self.tableWidget_log_all,clean_info,checkable=True)
-
+        self.refresh_clean_log()
 
     #方法######################################################################################
     #UI额外设置
@@ -317,7 +375,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.setup_ui_statusbar()
         self.setup_ui_shortcut()
         self.camera_offlined.connect(self.update_ui_camera_offline)
-        self.calendarWidget_task_preview.currentPageChanged.connect(lambda:self.preview_task_plans(task_plans.all))
+        #self.calendarWidget_task_preview.currentPageChanged.connect(lambda:self.preview_task_plans(task_plans.all))
         self.table_task_plan_is_checkable=False
         
         
@@ -549,26 +607,43 @@ class Window(QMainWindow, Ui_MainWindow):
         mark_calendar_plan_date(self.calendarWidget_task_preview,task_plan)
         #task_plan.get_message_frame()
 
-    def preview_task_plans(self,task_plans):
+    def preview_task_plans(self):
         """预览选中的多个任务."""
         ids=[]
         names=[]
         
         nl = '\n'
-        for id,item in task_plans.items():
-            if item.is_checked is True:
+        for id,item in task_plans.all.items():
+            if item.check_state is True:
                 ids.append(id)
                 names.append(item.name)
         self.textBrowser_task_plan_preview.setText(f'任务ID： {all_list_str(ids)}{nl}{nl}任务名称： {all_list_str(names)}')
-        mark_calendar_plans_date(self.calendarWidget_task_preview,task_plans)
-        #mark_calendar_plan_date(self.calendarWidget_task_preview,task_plan)
+        mark_calendar_plans_date(self.calendarWidget_task_preview,task_plans.all)
    
     def preview_new_task_plan(self):
         """预览新增任务."""
         self.set_new_task_plan()
         self.preview_task_plan(task_plans.new_plan)
 
-    
+    def get_plan_check_state(self):
+        """获取计划任务选中状态."""
+        for row in range(self.tableWidget_task_plan_list.rowCount()):
+            check_state=self.tableWidget_task_plan_list.item(row,0).checkState()
+            id=int(self.tableWidget_task_plan_list.item(row,0).text())
+            if check_state == Qt.Checked:
+                task_plans.all.get(id).check_state=True
+            elif check_state == Qt.Unchecked:
+                task_plans.all.get(id).check_state=False
+            else:
+                pass
+    def refresh_clean_log(self):
+        """刷新清扫日志."""
+        for id,item in robots.robots.items():
+            clean_info=item.clean_log.list_info()
+            for info in clean_info:
+                info.insert(0,str(id))
+                
+        table_fill_data_list_2d(self.tableWidget_log_all,clean_info,checkable=True)
 
 
     #多线程函数##############################################################################################

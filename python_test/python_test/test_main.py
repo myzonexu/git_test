@@ -1,4 +1,7 @@
 
+
+
+#str_join.join('%s' %e for e in list)
 '''
 from func_task import *
 

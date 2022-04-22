@@ -61,14 +61,14 @@ class TaskPlan(object):
         self.end_date = QDate()
         self.str_plan_time = ""
 
-        self.assign = set([1,2,3])
+        self.assign = set([])
         #self.received = set([])
-        self.not_received = set([1,2,3])
+        self.not_received = set([])
         self.received_progress = 0.0
         self.add_time = None
         self.message_frame = []
-        self.is_checked = True
-        self.checkbox=None
+        self.check_state = False
+
         self.info_output = ""
     
     def init_id(self):
@@ -116,6 +116,20 @@ class TaskPlan(object):
             pass
 
         return self.str_plan_time
+    
+    def get_received_progress(self):
+        """
+        获取下发进度.
+    
+        :returns: float,下发进度百分比
+        :raises: no exception
+        """
+        if len(self.assign)==0:
+            self.received_progress=0.0
+        else:
+            self.received_progress=1-len(self.not_received)/len(self.assign)
+
+        return self.received_progress
     
     def is_cycle_day(self,date):
         """
@@ -234,6 +248,35 @@ class TaskPlans(QObject):
             print("无法找到id")
             return None
 
+    
+    
+    def enable_checked(self,enable):
+        """
+        开启、关闭选中任务.
+     
+        :param enable: bool,开启、关闭
+        :returns: no return
+        :raises: no exception
+        """
+        for id,item in self.all.items():
+            if item.check_state is True:
+                item.enable=enable
+            else:
+                pass
+    
+    def del_checked(self):
+        """
+        删除选中任务.
+    
+        :returns: no return
+        :raises: no exception
+        """
+        for id in list(self.all.keys()):
+            if self.all.get(id).check_state is True:
+                self.all.pop(id)
+            else:
+                pass
+
     def list_info(self):
         list_info = []
         str_plan_type = ["周期执行","指定时间执行","指定时间不执行"]
@@ -244,7 +287,7 @@ class TaskPlans(QObject):
             count = len(self.all)       
             for id,item in self.all.items():
                 list_info.append([f'{id}',item.enable,item.name,str_plan_type[item.plan_type.value],item.plan_time_str(),\
-                    all_list_str(item.assign),all_list_str(item.not_received),f'{item.received_progress:.0%}',item.info_output,\
+                    all_list_str(item.assign),all_list_str(item.not_received),f'{item.get_received_progress():.0%}',item.info_output,\
                     item.add_time.strftime("%Y-%m-%d %H:%M:%S")])
                     
         return list_info
@@ -323,7 +366,7 @@ def mark_calendar_plans_date(calendar,task_plans,clear_old_format=True):
         else:
             pass
         for id,item in task_plans.items():
-            if item.is_checked and item.enable:
+            if item.check_state and item.enable:
                 if item.is_plan_date(date) == 2:
                     set_calendar_date_format(calendar,date,"yellow")
                     break
