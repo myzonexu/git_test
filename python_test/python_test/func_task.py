@@ -62,7 +62,7 @@ class TaskPlan(object):
         self.str_plan_time = ""
 
         self.assign = set([])
-        #self.received = set([])
+        self.received = set([])
         self.not_received = set([])
         self.received_progress = 0.0
         self.add_time = None
@@ -127,9 +127,18 @@ class TaskPlan(object):
         if len(self.assign)==0:
             self.received_progress=0.0
         else:
-            self.received_progress=1-len(self.not_received)/len(self.assign)
-
+            self.received_progress=len(self.received)/len(self.assign)
         return self.received_progress
+    
+    def get_not_received(self):
+        """
+        获取未下发机器人.
+    
+        :returns: set,未下发机器人
+        :raises: no exception
+        """
+        self.not_received=self.assign-self.received
+        return self.not_received
     
     def is_cycle_day(self,date):
         """
@@ -287,7 +296,7 @@ class TaskPlans(QObject):
             count = len(self.all)       
             for id,item in self.all.items():
                 list_info.append([f'{id}',item.enable,item.name,str_plan_type[item.plan_type.value],item.plan_time_str(),\
-                    all_list_str(item.assign),all_list_str(item.not_received),f'{item.get_received_progress():.0%}',item.info_output,\
+                    all_list_str(item.assign),all_list_str(item.get_not_received()),f'{item.get_received_progress():.0%}',item.info_output,\
                     item.add_time.strftime("%Y-%m-%d %H:%M:%S")])
                     
         return list_info

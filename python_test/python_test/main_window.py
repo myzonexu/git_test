@@ -26,7 +26,7 @@ from dialog_select_robot import *
 from func_task import *
 from func_robot import *
 from func_svg import *
-
+from func_config import *
 from func_defines import *
 
 class Window(QMainWindow, Ui_MainWindow):
@@ -207,7 +207,7 @@ class Window(QMainWindow, Ui_MainWindow):
         #计划任务
         elif index is 3:
             #刷新任务
-            table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info(),checkable=True)
+            self.refresh_task_plan()
             pass
         #日志
         elif index is 4:
@@ -255,13 +255,14 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             task_plans.new_plan.init_id()
             task_plans.new_plan.enable=True
+            task_plans.new_plan.assign=task_plans.new_plan.assign | set(list(robots.robots.keys()))
             self.preview_task_plan(task_plans.new_plan)        
             task_plans.new_plan.add_time=datetime.now()
             #task_plans.new_plan.add_time=QDateTime.currentDateTime()
 
             task_plans.all[task_plans.new_plan.id]=copy.deepcopy(task_plans.new_plan)
-          
-            table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info(),checkable=True)
+         
+            self.refresh_task_plan()
             
             #清空新任务信息
             self.lineEdit_add_task_name.setText("")
@@ -293,7 +294,7 @@ class Window(QMainWindow, Ui_MainWindow):
         """删除所选计划."""
         self.get_plan_check_state()
         task_plans.del_checked()
-        table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info(),checkable=True)
+        self.refresh_task_plan()
         self.checkBox_select_task_plan_all.setCheckState(Qt.Unchecked)
 
     @pyqtSlot()
@@ -301,7 +302,7 @@ class Window(QMainWindow, Ui_MainWindow):
         """开启所选计划."""
         self.get_plan_check_state()
         task_plans.enable_checked(True)
-        table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info(),checkable=True)
+        self.refresh_task_plan()
         self.checkBox_select_task_plan_all.setCheckState(Qt.Unchecked)
 
     @pyqtSlot()
@@ -309,7 +310,7 @@ class Window(QMainWindow, Ui_MainWindow):
         """关闭所选计划."""
         self.get_plan_check_state()
         task_plans.enable_checked(False)        
-        table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info(),checkable=True)
+        self.refresh_task_plan()
         self.checkBox_select_task_plan_all.setCheckState(Qt.Unchecked)
     @pyqtSlot()
     def on_pushButton_preview_plans_checked_clicked(self):
@@ -317,7 +318,7 @@ class Window(QMainWindow, Ui_MainWindow):
         task_plans.new_plan.check_state=False
         self.get_plan_check_state()
         self.preview_task_plans()
-        #table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info(),checkable=True)
+        #self.refresh_task_plan()
         #self.checkBox_select_task_plan_all.setCheckState(Qt.Unchecked)
     @pyqtSlot(int,int)
     def on_calendarWidget_task_preview_currentPageChanged(self,year,month):
@@ -335,12 +336,18 @@ class Window(QMainWindow, Ui_MainWindow):
         for plan_id,item in task_plans.all.items():
             for robot_id in item.assign:
                 if plan_id in robots.current.task_plans:
+                    #item.received.add(robot_id)
                     pass
                 else:
                     robots.current.task_plans.add(plan_id)
+                item.received.add(robot_id)
+
+                self.refresh_task_plan()
 
         #下发当前机器人
         robots.current.send_plan()
+        
+       
 
     @pyqtSlot()
     def on_pushButton_add_robot_clicked(self):
@@ -365,6 +372,14 @@ class Window(QMainWindow, Ui_MainWindow):
     def on_pushButton_log_refresh_clicked(self):
         """刷新清扫日志."""
         self.refresh_clean_log()
+
+    @pyqtSlot()
+    def on_pushButton_import_log_clicked(self):
+        """导出清扫日志."""
+        rows=self.refresh_clean_log()
+        header=["机器人ID","任务ID","开始时间","结束时间","行驶里程","清扫数量","加水次数","充电次数"]
+        export_csv('./data/clean_log.csv',header,rows)
+
 
     #方法######################################################################################
     #UI额外设置
@@ -644,7 +659,12 @@ class Window(QMainWindow, Ui_MainWindow):
                 info.insert(0,str(id))
                 
         table_fill_data_list_2d(self.tableWidget_log_all,clean_info,checkable=True)
+        return clean_info
 
+    
+    def refresh_task_plan(self):
+        """刷新任务表格."""
+        table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info(),checkable=True)
 
     #多线程函数##############################################################################################
     def get_camera_frame(self):

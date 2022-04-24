@@ -112,6 +112,7 @@ class RfidInfo(EnumDef):
     CHARGE = (2, '充电点')
     ARM_CLOSE = (3, '手臂缩回')
     ARM_OPEN = (4, '手臂伸出')
+    OTHER = (5, '其他')
     IN_BACK = (11, '内弯后退')
     OUT_BACK = (12, '外弯后退')
     START = (21, '起点')

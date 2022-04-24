@@ -253,7 +253,7 @@ class CleanTaskLog(object):
             elif task.id>0:
                 str_task_id=str(task.id)
             list_info.append([str_task_id,task.start_time.strftime("%Y-%m-%d %H:%M:%S"),task.stop_time.strftime("%Y-%m-%d %H:%M:%S"),\
-                str(task.count_cleaned),str(task.count_add_water),str(task.count_charged)])       
+                str(task.mileage_driven),str(task.count_cleaned),str(task.count_add_water),str(task.count_charged)])       
                     
         return list_info
 

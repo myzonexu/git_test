@@ -2555,6 +2555,9 @@ p, li { white-space: pre-wrap; }
              <property name="gridStyle">
               <enum>Qt::SolidLine</enum>
              </property>
+             <property name="sortingEnabled">
+              <bool>true</bool>
+             </property>
              <column>
               <property name="text">
                <string>     任务ID     </string>
@@ -2659,7 +2662,7 @@ p, li { white-space: pre-wrap; }
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_import_robot_2">
+           <widget class="QPushButton" name="pushButton_import_log">
             <property name="text">
              <string>导出</string>
             </property>
@@ -2669,6 +2672,9 @@ p, li { white-space: pre-wrap; }
         </item>
         <item>
          <widget class="QTableWidget" name="tableWidget_log_all">
+          <property name="sortingEnabled">
+           <bool>true</bool>
+          </property>
           <column>
            <property name="text">
             <string>机器人ID</string>
