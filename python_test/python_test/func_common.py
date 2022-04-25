@@ -181,7 +181,27 @@ def set_table_check_state(table,state,col=0):
 def all_list_str(list,str_join=","):    
     return str_join.join('%s' %e for e in list)
 
+def obj_attr_to_json_dict(obj,attr_names):
+        """
+        对象属性导出json数据dict.
 
+        :param obj: 要导出的对象
+        :param attr_names: list,要导出的属性名列表
+        :returns: dict,数据字典
+        :raises: no exception
+        """
+        export_dict={}
+        for name in attr_names:
+            attr=getattr(obj, name,None)
+            if isinstance(attr,(QDate,)):
+                export_dict[name]=attr.toString("yyyy/MM/dd")
+            elif isinstance(attr,(QTime,)):
+                export_dict[name]=attr.toString("hh:mm")
+            elif isinstance(attr,(Enum,)):
+                export_dict[name]=attr.value
+            else:
+                export_dict[name]=obj.attr
+        return export_dict
 
 
 #日志

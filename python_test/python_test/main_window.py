@@ -8,6 +8,7 @@ from PyQt5.Qt import QMainWindow
 #from PyQt5.QtCore import QTimer
 #from PyQt5.QtCore import pyqtSlot
 import threading
+import json
 
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -380,6 +381,22 @@ class Window(QMainWindow, Ui_MainWindow):
         header=["机器人ID","任务ID","开始时间","结束时间","行驶里程","清扫数量","加水次数","充电次数"]
         export_csv('./data/clean_log.csv',header,rows)
 
+    @pyqtSlot()
+    def on_pushButton_export_plan_clicked(self):
+        """导出计划任务."""
+        task_plans.export_json_file('./data/task_plans.json')
+        #with open('./data/task_plans.json', 'w') as f:
+        #    json.dump(task_plans.export(),f,ensure_ascii=True, indent=4)
+        ##print(json.dumps(task_plans.export(),ensure_ascii=True, indent=4))
+    @pyqtSlot()
+    def on_pushButton_import_plan_clicked(self):
+        """导入计划任务."""
+        task_plans.import_json_file('./data/task_plans.json')
+        #with open('./data/task_plans.json', 'r') as f:
+        #    task_plans.import_json(json.load(f))
+        #    #json.load(f,object_hook=task_plans.import_json)
+        self.refresh_task_plan()
+
 
     #方法######################################################################################
     #UI额外设置
@@ -567,6 +584,9 @@ class Window(QMainWindow, Ui_MainWindow):
         self.dateEdit_task_ignore_start_time.setDate(QDate.currentDate())
         self.dateEdit_task_ignore_end_time.setDate(QDate.currentDate())
 
+        task_plans.import_json_file('./data/task_plans.json')
+        self.refresh_task_plan()
+
     
     def set_new_task_plan(self):
         """新建计划任务."""
@@ -665,6 +685,10 @@ class Window(QMainWindow, Ui_MainWindow):
     def refresh_task_plan(self):
         """刷新任务表格."""
         table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info(),checkable=True)
+
+        task_plans.export_json_file('./data/task_plans.json')
+
+
 
     #多线程函数##############################################################################################
     def get_camera_frame(self):

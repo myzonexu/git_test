@@ -19,6 +19,8 @@ from PyQt5.QtCore import QTime,QDate
 import random
 from func_common import *
 #from func_robot import *
+import copy
+import json
 
 #classes#######################################################################
 @unique
@@ -65,12 +67,14 @@ class TaskPlan(object):
         self.received = set([])
         self.not_received = set([])
         self.received_progress = 0.0
-        self.add_time = None
+        self.add_time = datetime.now()
         self.message_frame = []
         self.check_state = False
 
         self.info_output = ""
     
+        self.export_name=["id","enable","name","plan_type","cycle_type","cycle_value","do_time","start_date","end_date","assign","received","add_time"]
+
     def init_id(self):
         """初始化id,1~32760随机数."""
         if self.id is 0:
@@ -231,6 +235,36 @@ class TaskPlan(object):
         return self.info_output
 
     
+    def export(self):
+        """
+        导出数据.
+    
+        :returns: dict,数据字典
+        :raises: no exception
+        """
+        #export_name=["id","enable","name","plan_type","cycle_type","cycle_value","do_time","start_date","end_date","assign","received","add_time"]
+        export_dict={}
+        for name in self.export_name:
+            attr=getattr(self, name,None)
+            if isinstance(attr,(QDate,)):
+                export_dict[name]=attr.toString("yyyy/MM/dd")
+            elif isinstance(attr,(QTime,)):
+                export_dict[name]=attr.toString("hh:mm")
+            elif isinstance(attr,(datetime,)):
+                export_dict[name]=attr.strftime("%Y-%m-%d %H:%M:%S")
+            elif isinstance(attr,(Enum,)):
+                export_dict[name]=attr.value
+            elif isinstance(attr,(set,)):
+                export_dict[name]=list(attr)
+            else:
+                export_dict[name]=attr
+        return export_dict
+
+    @staticmethod
+    def json_hook(dct):
+        pass
+        
+        return None
 
 
 class TaskPlans(QObject):
@@ -300,6 +334,80 @@ class TaskPlans(QObject):
                     item.add_time.strftime("%Y-%m-%d %H:%M:%S")])
                     
         return list_info
+
+    
+    def export(self):
+        """
+        导出计划任务.
+    
+        :returns: dict,计划任务列表
+        :raises: no exception
+        """
+        plans=[]
+        dct={}
+        for id,item in self.all.items():
+            plans.append(item.export())
+        dct["task_plans"]=plans
+        return dct
+
+    def export_json_file(self,file):
+        """
+        导出json文件.
+     
+        :param file: str,json文件地址
+        :returns: no return
+        :raises: no exception
+        """
+        with open(file, 'w') as f:
+                json.dump(self.export(),f,ensure_ascii=True, indent=4)
+
+    #@staticmethod
+    def import_json(self,json_dict):
+        #print(json_dict)
+        plan_list=json_dict.get("task_plans")
+        #print(plan_list)
+        for dct in plan_list:
+            plan=TaskPlan()
+            for name in plan.export_name:                
+                attr=getattr(plan, name)
+                attr_json=dct.get(name)
+                if isinstance(attr,(QDate,)):
+                    setattr(plan,name,QDate.fromString(attr_json,"yyyy/MM/dd"))
+                                  
+                elif isinstance(attr,(QTime,)):
+                    setattr(plan,name,QTime.fromString(attr_json,"hh:mm"))
+                    
+                elif isinstance(attr,(datetime,)):
+                    setattr(plan,name,datetime.strptime(attr_json, '%Y-%m-%d %H:%M:%S'))
+                   
+                elif isinstance(attr,(PlanType,)):
+                    setattr(plan,name,PlanType(attr_json))
+                   
+                elif isinstance(attr,(CycleType,)):
+                    setattr(plan,name,CycleType(attr_json))
+                  
+                elif isinstance(attr,(set,)):
+                    setattr(plan,name,set(attr_json))
+                   
+                else:
+                    setattr(plan,name,attr_json)
+                
+            self.all[plan.id]=plan
+                   
+        #return None
+    
+    def import_json_file(self,file):
+        """
+        导入json文件.
+     
+        :param file: str,json文件地址
+        :returns: no return
+        :raises: no exception
+        """
+        with open(file, 'r') as f:
+            self.import_json(json.load(f))
+            print("导入计划json文件")
+
 #functions#####################################################################
 def set_calendar_date_format(calendar,date,color,tooltip=""):
     """

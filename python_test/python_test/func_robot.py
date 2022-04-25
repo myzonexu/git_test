@@ -702,6 +702,12 @@ class Robot(QObject):
             
         self.master.write_multiple(addr_start,[-1])
 
+    @staticmethod
+    def json_hook(dct):
+        robot=Robot(dct.get('ip'),dct.get('camera_ip'))
+        robot.unique_id=dct.get('unique_id')
+        return robot
+
 
 #变量定义
 f=None

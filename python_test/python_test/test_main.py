@@ -1,7 +1,37 @@
+import json
+from func_task import *
+
+with open('./data/task_plans.json', 'r') as f:
+    #test=json.load(f)
+    #print(test)
+    task_plans.import_json(json.load(f))
+    #json.load(f,object_hook=task_plans.import_json)
 
 
 
-#str_join.join('%s' %e for e in list)
+'''
+#json反序列化为类
+import json
+body='{"status":1,"info":"发布成功","data":{"id":"52","feed_id":"70"}}'
+
+class Response(object):
+
+    def __init__(self, status, info, data):
+        super().__init__()
+        self.status = status
+        self.info = info
+        self.data = data
+
+    @staticmethod
+    def object_hook(d):
+        return Response(d.get('status'),d.get('info'),d.get('data'))
+
+resp = json.loads(body, object_hook=Response.object_hook)
+print(resp.__dict__)
+
+'''
+
+
 '''
 from func_task import *
 
