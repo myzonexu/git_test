@@ -39,6 +39,7 @@ class CycleType(Enum):
 
 class TaskPlan(object):
     """计划任务类."""
+    export_name=["id","enable","name","plan_type","cycle_type","cycle_value","do_time","start_date","end_date","assign","received","add_time"]
     def __init__(self):
         """
         初始化.

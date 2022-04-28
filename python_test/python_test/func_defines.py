@@ -15,6 +15,7 @@ __author__ = 'simon'
 
 from enum import Enum,unique
 
+#classes#######################################################################
 #官方示例
 class Coordinate(bytes, Enum):
     """
@@ -33,8 +34,24 @@ class Coordinate(bytes, Enum):
         return obj
 
 
-class EnumDef(bytes, Enum):
-    """枚举定义类."""
+#class EnumDef(bytes, Enum):
+#    """枚举定义类."""
+#    def __new__(cls, value, string):
+#        """
+#        构造枚举对象.
+         
+#        :param value: int,值
+#        :param string: str,描述
+#        :returns: 枚举对象
+#        :raises: no exception
+#        """      
+#        obj = bytes.__new__(cls, [value])
+#        obj._value_ = value
+#        obj.string = string
+#        return obj
+
+class EnumDef(Enum):
+    """枚举自定义类."""
     def __new__(cls, value, string):
         """
         构造枚举对象.
@@ -44,11 +61,34 @@ class EnumDef(bytes, Enum):
         :returns: 枚举对象
         :raises: no exception
         """      
-        obj = bytes.__new__(cls, [value])
+      
+        obj = object.__new__(cls)
         obj._value_ = value
         obj.string = string
         return obj
 
+    @classmethod
+    def has_value(cls, value):
+        return value in cls._value2member_map_
+
+#有问题
+#class EnumDef(Enum):
+#    """枚举自定义类."""
+#    def __init__(self, value, string):
+#        """
+#        构造枚举对象.
+         
+#        :param value: int,值
+#        :param string: str,描述
+#        :returns: 枚举对象
+#        :raises: no exception
+#        """            
+#        self._value_ = value
+#        self.string = string
+
+#    @classmethod
+#    def has_value(cls, value):
+#        return value in cls._value2member_map_
 
 @unique
 class RunState(EnumDef):
@@ -94,7 +134,17 @@ class CleanTaskState(EnumDef):
     RECHARGE = (6, '中途充电')
     ADDWATER = (7, '中途加水')
     STANDBY = (8, '等待下次任务')
-    FINISH = (9, '完成任务')
+    START = (10, '开始任务')
+    BACK = (-1, '结束返回')
+
+@unique
+class CleanStateMachine(EnumDef):
+    """枚举类：清扫状态机."""
+    NONE = (0, '无任务')
+    START = (1, '开始清扫')
+    CLEANING = (2, '清扫中')
+    BACKING = (3, '结束返回中')
+    END = (4, '结束')
 
 @unique
 class ErrLevel(EnumDef):
@@ -117,4 +167,16 @@ class RfidInfo(EnumDef):
     OUT_BACK = (12, '外弯后退')
     START = (21, '起点')
     END = (22, '终点')
+    UNDEFINE = (255, '未定义')
 
+
+    
+
+#常量#####################################################################
+#json转换支持类型
+JSON_TYPE=(int,float,str,list,tuple,dict,bool)
+
+#时间显示格式
+TIME_SHOW_ALL = '%Y-%m-%d %H:%M:%S'
+TIME_SHOW_Y_M_D='%Y-%m-%d'
+TIME_SHOW_H_M_S = '%H:%M:%S'

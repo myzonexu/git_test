@@ -88,16 +88,11 @@ class Window(QMainWindow, Ui_MainWindow):
     #按钮响应
     @pyqtSlot()
     def on_pushButton_autorun_start_clicked(self):
-        robots.current.clean_task_start()
-        robots.current.task.start_time = datetime.now()
-        robots.current.task.stop_time = None
-        robots.current.task.id=-1
+        robots.current.clean_task_start()        
+        robots.current.task.start_clean_manual_id()
     @pyqtSlot()
     def on_pushButton_autorun_stop_clicked(self):
         robots.current.clean_task_stop()
-        robots.current.task.stop_time = datetime.now()
-        robots.current.clean_log.all.append(copy.deepcopy(robots.current.task))
-        robots.current.task.__init__()
     @pyqtSlot()
     def on_pushButton_autorun_charge_clicked(self):
         robots.current.charge_battery()
@@ -397,6 +392,34 @@ class Window(QMainWindow, Ui_MainWindow):
         #    #json.load(f,object_hook=task_plans.import_json)
         self.refresh_task_plan()
 
+    @pyqtSlot()
+    def on_pushButton_import_log_clicked(self):
+        """导出清扫日志."""
+        json_dict=objs_to_json_dict(robots.current.clean_log.all,"log",CleanTask.export_attr_names)
+        #print(json_dict)
+        with open('./data/log.json', 'w') as f:
+            json.dump(json_dict,f,ensure_ascii=True,indent=4)
+        print(json.dumps(json_dict,ensure_ascii=True, indent=4))
+    @pyqtSlot()
+    def on_pushButton_export_robot_clicked(self):
+        """导出机器人."""
+        #json_dict=objs_to_json_dict(robots.robots,"robots",Robot.export_attr_names)
+        json_dict=obj_attr_to_json_dict(robot1,Robot.export_attr_names)
+        #print(json_dict)
+        with open('./data/robots.json', 'w') as f:
+            json.dump(json_dict,f,ensure_ascii=True,indent=4)
+        print(json.dumps(json_dict,ensure_ascii=True, indent=4))
+
+    @pyqtSlot()
+    def on_pushButton_import_robot_clicked(self):
+        """导入机器人."""
+
+        with open('./data/robots.json', 'r') as f:
+            json_dict=json.load(f)
+            print(json_dict)
+            json_dict_to_obj(json_dict,robot2)
+            #json_to_obj(json_dict,robots.robots)
+            print(robot2.__dict__)
 
     #方法######################################################################################
     #UI额外设置

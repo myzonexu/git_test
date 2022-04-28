@@ -1,3 +1,39 @@
+
+#测试获取多级属性
+from func_config import *
+from func_robot import *
+class Response(object):
+
+    def __init__(self, status, info, data):
+        super().__init__()
+        self.status = status
+        self.info = info
+        self.data = data
+
+class ClassName(object):
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+
+a=Response(ClassName(5,6),2,3)
+print(Response.__name__)
+
+print(getattr_multilevel(a,"status.x"))
+
+print(Robot.get_export_attr_names())
+a=1
+b="1"
+c=[1,2]
+json_type=(int,float,str,list,tuple,dict,bool)
+print((a.__class__==int))
+print(b.__class__)
+print(c.__class__)
+print(type(None))
+print(isinstance(a,json_type))
+
+
+'''
 import json
 from func_task import *
 
@@ -6,7 +42,7 @@ with open('./data/task_plans.json', 'r') as f:
     #print(test)
     task_plans.import_json(json.load(f))
     #json.load(f,object_hook=task_plans.import_json)
-
+'''
 
 
 '''

@@ -28,6 +28,6 @@ if __name__ == '__main__':
     window_main = Window()
     window_main.func_list()
     window_main.show()
-    robots.init_current(robot1.unique_id)
+    robots.init_current(robot1.id)
     thread_manage()
     sys.exit(app.exec_())

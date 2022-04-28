@@ -48,9 +48,8 @@ class Base(object):
     def __init__(self):
         self._type = ""
         self.tag = 0
-        self.run_state = RunState.OFF #ValueDescriptionSet(robot_run_state)
-        self.ctrl_mode = CtrlMode.AUTO  #ValueDescriptionSet(robot_ctrl_mode)
-
+        self.run_state = RunState.OFF 
+        self.ctrl_mode = CtrlMode.AUTO 
 
 #版本
 @dataclass(init=True)
@@ -223,9 +222,11 @@ class Error(object):
 
 #清扫任务
 class CleanTask(object):
+    export_attr_names=["id","state","start_time","stop_time","mileage_driven","count_cleaned","count_add_water","count_charged"]
     def __init__(self):
         self.id=0
-        self.state = CleanTaskState.NONE #ValueDescriptionSet(clean_task_state)
+        self.state = CleanTaskState.NONE 
+        self.state_machine=CleanStateMachine.NONE
         self.start_time = None
         self.stop_time = None
         self.mileage_driven = 0.0
@@ -240,16 +241,28 @@ class CleanTask(object):
         self.time_total = 0
         self.time_estimate = 0
         self.time_remain = 0
+    
+    def start_clean_manual_id(self):
+        """
+        手动开始任务，设定id为-1~-32760.
+     
+        :returns: int,任务id
+        :raises: no exception
+        """
+        self.id =random.randint(-32760,-1)
+        return self.id
 
 class CleanTaskLog(object):
+    export_attr_names=["all"]
     def __init__(self):
         self.all=[]
 
     def list_info(self):
         list_info = []
+        str_task_id=""
         for task in self.all:
-            if task.id==-1:
-                str_task_id="手动任务"
+            if task.id<0:
+                str_task_id=f"手动任务{task.id}"
             elif task.id>0:
                 str_task_id=str(task.id)
             list_info.append([str_task_id,task.start_time.strftime("%Y-%m-%d %H:%M:%S"),task.stop_time.strftime("%Y-%m-%d %H:%M:%S"),\
@@ -307,20 +320,20 @@ class RobotGroup(QObject):
 
     def add(self,robot):
         robot.get_state()
-        if robot.unique_id is None:
+        if robot.id is None:
             print("获取ID失败")
         else:
-            self.robots[robot.unique_id]=robot
-            print("获取ID,添加机器人",robot.unique_id)
+            self.robots[robot.id]=robot
+            print("获取ID,添加机器人",robot.id)
 
-    def delete(self,unique_id):
-        self.robots.pop(unique_id)
+    def delete(self,id):
+        self.robots.pop(id)
 
-    def init_current(self,unique_id):
+    def init_current(self,id):
         if self.current is None:
-            if unique_id in self.robots:        
-                self.current=self.robots.get(unique_id)
-                #self.current_inited.emit(unique_id)
+            if id in self.robots:        
+                self.current=self.robots.get(id)
+                #self.current_inited.emit(id)
                 self.current_inited.emit()
                 print("设定当前机器人")
                 return self.current
@@ -330,13 +343,13 @@ class RobotGroup(QObject):
         else:
             print("已有当前机器人")
 
-    def set_current(self,unique_id):
+    def set_current(self,id):
         
-        if unique_id in self.robots:        
-            self.current=self.robots.get(unique_id)
-            #self.current_changed.emit(unique_id)
+        if id in self.robots:        
+            self.current=self.robots.get(id)
+            #self.current_changed.emit(id)
             self.current_changed.emit()
-            print("设定当前机器人ID为：",unique_id)
+            print("设定当前机器人ID为：",id)
             return self.current
             
         else:
@@ -373,10 +386,10 @@ class RobotGroup(QObject):
         else:
             count = len(self.robots)       
             #for id in self.robots:
-            #    list_info.append([self.robots.get(id).unique_id,self.robots.get(id).connect.ip,self.robots.get(id).connect.state.string,
+            #    list_info.append([self.robots.get(id).id,self.robots.get(id).connect.ip,self.robots.get(id).connect.state.string,
             #                      self.robots.get(id).base.run_state.string,self.robots.get(id).task.state.string,self.robots.get(id).err_count(),self.robots.get(id).warning_count()])
             for id,item in self.robots.items():
-                list_info.append([item.unique_id,item.connect.ip,item.camera.ip,item.connect.state.string,
+                list_info.append([item.id,item.connect.ip,item.camera.ip,item.connect.state.string,
                                   item.base.run_state.string,item.task.state.string,item.err_count(),item.warning_count()])
            
         return list_info
@@ -384,9 +397,10 @@ class RobotGroup(QObject):
 #机器人
 class Robot(QObject):
     state_updated=pyqtSignal()
+    export_attr_names=["id","connect.ip","camera.ip","task_plans"]
     def __init__(self,ip="127.0.0.1",camera_ip="192.168.0.64",port=502):
         super().__init__()
-        self.unique_id = None
+        self.id = -1
         self.base = Base()
         self.version = Version()
         self.connect = Connect(ip,port)
@@ -402,13 +416,26 @@ class Robot(QObject):
         self.error_chassis = Error()
         self.error_arm = Error()
         self.task = CleanTask()
+        self.clean_log= CleanTaskLog()
         self.task_plans=set([])
         self.master = SpnTcpMaster(host=ip,port=port)
         #self.camera = CameraRtsp(pc_test=True)
-        self.camera = CameraRtsp(ip=camera_ip)
-        self.clean_log=CleanTaskLog()
+        self.camera = CameraRtsp(ip=camera_ip)        
         self.log=Log()
         #self.init(ip)
+
+    @staticmethod
+    def get_export_attr_names():
+        """
+        获取对象及子对象要导出的属性名.
+    
+        :returns: list,属性名list
+        :raises: no exception
+        """
+        _names=__class__.export_attr_names+str_list_add_prefix_suffix(CameraRtsp.export_attr_names,"camera")+str_list_add_prefix_suffix(CleanTaskLog.export_attr_names,"clean_log")
+        names=list(set(_names))
+        return names
+
 
     def init(self):        
         #self.master.open()
@@ -440,7 +467,7 @@ class Robot(QObject):
 
     #获取机器人信息参数列表
     def robot_info(self):
-        robot_info = [["ID编号",self.unique_id],["连接状态",self.connect.state.string],["运行状态",self.base.run_state.string],
+        robot_info = [["ID编号",self.id],["连接状态",self.connect.state.string],["运行状态",self.base.run_state.string],
               ["速度(mm/s)    ",self.drive.speed],["转角(°)",self.drive.steer_angle],["电量(%)",self.battery.soc],["水位(%)",self.cleaner.water_level],
               ["当前位置(cm)",self.position.path_pos],["RFID功能",self.rfid.info.string],["总里程(m)",self.drive.mileage],["控制模式",self.base.ctrl_mode.string],
               ["ip地址",self.connect.ip],["程序版本",self.version.get()],["机器人时间",check_time_info(self.robot_time)]]
@@ -448,7 +475,7 @@ class Robot(QObject):
 
     #获取任务信息参数列表
     def task_info(self):
-        task_info = [["执行任务id",all_list_str(self.task_plans)],["状态",self.task.state.string],["开始时间",check_time_info(self.task.start_time)],["工作时长",self.task.time_worked],["行驶里程(m)    ",self.task.mileage_driven],
+        task_info = [["执行任务id",self.task.id],["状态",self.task.state.string],["开始时间",check_time_info(self.task.start_time)],["工作时长",self.task.time_worked],["行驶里程(m)    ",self.task.mileage_driven],
                    ["清扫数量",self.task.count_cleaned],["加水次数",self.task.count_add_water],["充电次数",self.task.count_charged],
                    ["结束时间",check_time_info(self.task.stop_time)]]            
         return task_info
@@ -474,7 +501,7 @@ class Robot(QObject):
 
     #解析读取数据
     def parse_readonly_data(self):
-        self.unique_id=self.protocol.robot_id.value
+        self.id=self.protocol.robot_id.value
 
         #有符号转为无符号
         self.protocol.robot_state.value=struct.unpack('>H', struct.pack('>h', self.protocol.robot_state.value))[0]
@@ -488,7 +515,10 @@ class Robot(QObject):
         self.drive.speed = self.protocol.robot_speed.value
         self.drive.steer_angle = self.protocol.steer_angle.value
         self.position.path_pos=self.protocol.position_path.value
-        self.rfid.info=RfidInfo(self.protocol.rfid.value)
+        if RfidInfo.has_value(self.protocol.rfid.value):
+            self.rfid.info=RfidInfo(self.protocol.rfid.value)
+        else:
+            self.rfid.info=RfidInfo.UNDEFINE
 
         #有符号转为无符号
         self.protocol.mileage_lo.value=struct.unpack('>H', struct.pack('>h', self.protocol.mileage_lo.value))[0]
@@ -551,9 +581,44 @@ class Robot(QObject):
     def get_arm_state(self):
         #如何定义？
         pass
-    def get_task_state(self):        
-        self.task.state = CleanTaskState(self.protocol.clean_state.value)
-        pass
+    def get_task_state(self): 
+        """获取任务状态，状态机判断开始、结束时间，写入清扫日志."""
+        if CleanTaskState.has_value(self.protocol.clean_state.value):
+            self.task.state = CleanTaskState(self.protocol.clean_state.value)
+
+        if self.task.state_machine is CleanStateMachine.NONE:
+            if self.task.state.value > 0:
+                self.task.state_machine=CleanStateMachine.START
+                self.task.start_time=datetime.now()
+                self.task.state_machine=CleanStateMachine.CLEANING
+            elif self.task.state is CleanTaskState.BACK:
+                pass
+                
+        elif self.task.state_machine is CleanStateMachine.CLEANING:
+            if self.task.state is CleanTaskState.BACK:                
+                self.task.state_machine=CleanStateMachine.BACKING
+            elif self.task.state is CleanTaskState.NONE:
+                self.task.state_machine = CleanStateMachine.END
+            elif self.task.state.value > 0:
+                pass
+
+
+        elif self.task.state_machine is CleanStateMachine.BACKING:
+            #if self.task.state is CleanTaskState.NONE:
+            if self.task.state.value >= 0:
+                self.task.state_machine=CleanStateMachine.END
+            elif self.task.state is CleanTaskState.BACK:
+                pass
+
+        elif self.task.state_machine is CleanStateMachine.END:
+            self.task.stop_time=datetime.now()
+            self.clean_log.all.append(copy.deepcopy(self.task))
+            self.task.__init__()
+            self.task.state_machine=CleanStateMachine.NONE
+
+        else:
+            pass
+                
     
     #同步时间
     def sync_time(self):
@@ -705,7 +770,7 @@ class Robot(QObject):
     @staticmethod
     def json_hook(dct):
         robot=Robot(dct.get('ip'),dct.get('camera_ip'))
-        robot.unique_id=dct.get('unique_id')
+        robot.id=dct.get('id')
         return robot
 
 
@@ -735,7 +800,8 @@ if config:
 else:
     robot1=Robot("192.168.1.5")
 robots.add(robot1)
-#robots.add(robot2)
-#robots.init_current(robot1.unique_id)
+robot2=Robot()
+robots.add(robot2)
+#robots.init_current(robot1.id)
 #robots.current=robot1
 
