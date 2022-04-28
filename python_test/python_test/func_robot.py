@@ -229,18 +229,21 @@ class CleanTask(object):
         self.state_machine=CleanStateMachine.NONE
         self.start_time = None
         self.stop_time = None
+        self.mileage_start = 0.0
         self.mileage_driven = 0.0
         self.mileage_total = 0.0
         self.mileage_estimate = 0.0
         self.mileage_remain = 0.0
         self.count_cleaned = 0
+        self.count_add_water_start = 0
         self.count_add_water = 0
+        self.count_charged_start = 0
         self.count_charged = 0
         self.progress = 0
-        self.time_worked = 0
-        self.time_total = 0
-        self.time_estimate = 0
-        self.time_remain = 0
+        self.time_worked = timedelta()
+        self.time_total = timedelta()
+        self.time_estimate = timedelta()
+        self.time_remain = timedelta()
     
     def start_clean_manual_id(self):
         """
@@ -251,6 +254,7 @@ class CleanTask(object):
         """
         self.id =random.randint(-32760,-1)
         return self.id
+
 
 class CleanTaskLog(object):
     export_attr_names=["all"]
@@ -475,7 +479,7 @@ class Robot(QObject):
 
     #获取任务信息参数列表
     def task_info(self):
-        task_info = [["执行任务id",self.task.id],["状态",self.task.state.string],["开始时间",check_time_info(self.task.start_time)],["工作时长",self.task.time_worked],["行驶里程(m)    ",self.task.mileage_driven],
+        task_info = [["执行任务id",self.task.id],["状态",self.task.state.string],["开始时间",check_time_info(self.task.start_time)],["工作时长",str(self.task.time_worked)],["行驶里程(m)    ",self.task.mileage_driven],
                    ["清扫数量",self.task.count_cleaned],["加水次数",self.task.count_add_water],["充电次数",self.task.count_charged],
                    ["结束时间",check_time_info(self.task.stop_time)]]            
         return task_info
@@ -533,9 +537,9 @@ class Robot(QObject):
         self.get_arm_state()
         self.get_error_chassis()
         self.get_task_state()
-        self.task.count_add_water = self.protocol.count_add_water.value
-        self.task.count_charged = self.protocol.count_charged.value
-        self.task.time_worked = self.protocol.clean_time_s.value                
+        #self.task.count_add_water = self.protocol.count_add_water.value
+        #self.task.count_charged = self.protocol.count_charged.value
+        #self.task.time_worked = self.protocol.clean_time_s.value                
 
     def get_run_state(self):
         state_1=get_bits(self.protocol.robot_state.value,0,1)
@@ -589,12 +593,27 @@ class Robot(QObject):
         if self.task.state_machine is CleanStateMachine.NONE:
             if self.task.state.value > 0:
                 self.task.state_machine=CleanStateMachine.START
-                self.task.start_time=datetime.now()
-                self.task.state_machine=CleanStateMachine.CLEANING
+                #self.task.start_time=datetime.now()
+                #self.task.state_machine=CleanStateMachine.CLEANING
             elif self.task.state is CleanTaskState.BACK:
                 pass
-                
+        elif self.task.state_machine is CleanStateMachine.START:
+            self.task.start_time=datetime.now()
+            self.task.mileage_start = self.drive.mileage
+            self.task.count_add_water_start = self.protocol.count_add_water.value
+            self.task.count_charged_start = self.protocol.count_charged.value
+            self.task.state_machine=CleanStateMachine.CLEANING
+
         elif self.task.state_machine is CleanStateMachine.CLEANING:
+            #上位机记录工作时间，时间显示：str(self.task.time_worked)[:-7]
+            #self.task.time_worked =datetime.now()-self.task.start_time
+            #读取机器人记录工作时间
+            self.task.time_worked =timedelta(hours=self.protocol.clean_time_h.value,seconds=self.protocol.clean_time_s.value)
+            
+            self.task.mileage_driven = self.drive.mileage-self.task.mileage_start
+            self.task.count_add_water = self.protocol.count_add_water.value-self.task.count_add_water_start 
+            self.task.count_charged = self.protocol.count_charged.value-self.task.count_charged_start
+
             if self.task.state is CleanTaskState.BACK:                
                 self.task.state_machine=CleanStateMachine.BACKING
             elif self.task.state is CleanTaskState.NONE:
@@ -618,7 +637,6 @@ class Robot(QObject):
 
         else:
             pass
-                
     
     #同步时间
     def sync_time(self):
