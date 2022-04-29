@@ -15,7 +15,7 @@ __author__ = 'simon'
 
 import csv
 import json
-from enum import Enum,unique
+from enum import *
 from func_common import *
 from func_defines import *
 
@@ -87,7 +87,9 @@ def obj_attr_to_json_dict(obj,attr_names):
             export_dict[name]=attr.toString("hh:mm")
         elif isinstance(attr,(datetime,)):
             export_dict[name]=attr.strftime("%Y-%m-%d %H:%M:%S")
-        elif isinstance(attr,(Enum,)):
+        elif isinstance(attr,(timedelta,)):
+            export_dict[name]=str(attr)
+        elif isinstance(attr,(enum,)):
             export_dict[name]=attr.value
         elif isinstance(attr,(set,)):
             export_dict[name]=list(attr)
@@ -119,7 +121,48 @@ def objs_to_json_dict(objs,key_objs,attr_names):
 
     json_dict[key_objs]=json_obj_list
     return json_dict
+def obj_all_to_json_dict(obj):
+    """
+    对象所有属性导出json数据dict.
 
+    :param obj: 要导出的对象
+    :returns: dict,json数据字典
+    :raises: no exception
+    """
+    for name,value in obj.__dict__:
+        pass
+
+
+def obj_to_json_dict(obj,select="export_attr_names",*,export_all=False):
+    """
+    对象导出json数据dict.
+
+    :param obj: 要导出的对象
+    :param select: str,对象选择要导出的属性名列表名称，默认为类定义的cls.export_attr_names，
+                       若无cls.export_attr_names，导出所有属性
+    :param export_all: bool,True:导出对象所有属性；False:只导出cls.export_attr_names列表内的属性
+    :returns: dict,json数据字典
+    :raises: no exception
+    """
+
+    attr_names=getattr(obj.__class__,select)
+
+    export_dict={}
+    for name in attr_names:
+        attr=getattr_multilevel(obj, name)
+        if isinstance(attr,(QDate,)):
+            export_dict[name]=attr.toString("yyyy/MM/dd")
+        elif isinstance(attr,(QTime,)):
+            export_dict[name]=attr.toString("hh:mm")
+        elif isinstance(attr,(datetime,)):
+            export_dict[name]=attr.strftime("%Y-%m-%d %H:%M:%S")
+        elif isinstance(attr,(Enum,)):
+            export_dict[name]=attr.value
+        elif isinstance(attr,(set,)):
+            export_dict[name]=list(attr)
+        else:
+            export_dict[name]=attr
+    return export_dict
 
 def json_dict_to_obj(json_dict,obj):
     """
@@ -175,34 +218,72 @@ def json_to_obj(json_dict,obj):
                 obj.append(_obj)
 
 
-#def import_json(self,json_dict):
-#    #print(json_dict)
-#    plan_list=json_dict.get("task_plans")
-#    #print(plan_list)
-#    for dct in plan_list:
-#        plan=TaskPlan()
-#        for name in plan.export_name:                
-#            attr=getattr(plan, name)
-#            attr_json=dct.get(name)
-#            if isinstance(attr,(QDate,)):
-#                setattr(plan,name,QDate.fromString(attr_json,"yyyy/MM/dd"))
-                                  
-#            elif isinstance(attr,(QTime,)):
-#                setattr(plan,name,QTime.fromString(attr_json,"hh:mm"))
-                    
-#            elif isinstance(attr,(datetime,)):
-#                setattr(plan,name,datetime.strptime(attr_json, '%Y-%m-%d %H:%M:%S'))
-                   
-#            elif isinstance(attr,(PlanType,)):
-#                setattr(plan,name,PlanType(attr_json))
-                   
-#            elif isinstance(attr,(CycleType,)):
-#                setattr(plan,name,CycleType(attr_json))
-                  
-#            elif isinstance(attr,(set,)):
-#                setattr(plan,name,set(attr_json))
-                   
-#            else:
-#                setattr(plan,name,attr_json)
-                
-#        self.all[plan.id]=plan
+def type_py_to_json(py):
+    """
+    python中json不能转换的类型变为可被json转换的类型.
+ 
+    :param py: 待转换对象
+    :returns: json可转换类型
+    :raises: no exception
+    """
+  
+    if isinstance(py,(Enum,)):
+        return py.value
+    elif isinstance(py,(datetime,)):
+        return py.strftime("%Y-%m-%d %H:%M:%S")
+    elif isinstance(py,(timedelta,)):
+        return srt(py)
+    elif isinstance(py,(QDate,)):
+        return py.toString("yyyy/MM/dd")
+    elif isinstance(py,(QTime,)):
+        return py.toString("hh:mm")
+    else:
+        return py.__dict__
+        print(f"未定义的python转json类型{type(py)}")
+
+
+
+def obj_to_dict(item,dct):
+    """
+    对象及其子对象属性转换为字典.
+ 
+    :param item: obj/list/dict,待转换对象
+    :param dct: dict/list,属性转换后保存的dict或list.
+                          若item为字典，相应dct也应为空字典；
+                          若item为列表，相应dct也应为空列表；
+    :returns: no return
+    :raises: no exception
+    """
+    if isinstance(item,dict):
+        for key,value in item.items():            
+            if isinstance(value,dict):
+                dct[key]={}
+                obj_to_dict(value,dct[key])
+            elif isinstance(value,(list,tuple,set)):
+                dct[key]=[]
+                obj_to_dict(value,dct[key])
+            elif hasattr(value,"__dict__"):
+                dct[key]={}
+                obj_to_dict(value.__dict__,dct[key])
+            else:
+                dct[key]=value
+    elif isinstance(item,(list,tuple,set)):
+        for value in item:
+            if isinstance(value,dict):
+                _dict={}
+                dct.append(_dict)
+                obj_to_dict(value,_dict)
+            elif isinstance(value,(list,tuple,set)):
+                _list=[]
+                dct.append(_list)
+                obj_to_dict(value,_list)
+            elif hasattr(value,"__dict__"):
+                _dict={}
+                dct.append(_dict)
+                obj_to_dict(value.__dict__,_dict)
+            else:
+                dct.append(value)
+    elif hasattr(item,"__dict__"):        
+        obj_to_dict(item.__dict__,dct)
+    else:
+        pass

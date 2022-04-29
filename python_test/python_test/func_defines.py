@@ -174,7 +174,8 @@ class RfidInfo(EnumDef):
 
 #常量#####################################################################
 #json转换支持类型
-JSON_TYPE=(int,float,str,list,tuple,dict,bool)
+type_json_support=(int,float,str,list,tuple,dict,bool)
+type_has_child=(dict,list,tuple)
 
 #时间显示格式
 TIME_SHOW_ALL = '%Y-%m-%d %H:%M:%S'

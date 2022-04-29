@@ -429,13 +429,19 @@ class Robot(QObject):
         #self.init(ip)
 
     @staticmethod
-    def get_export_attr_names():
+    #def get_export_attr_names(**kw):
+    #def get_export_attr_names(attr_list_name="export_attr_name",dict_all=False):
+    #def get_export_attr_names(attr_list_name="export_attr_name",*,dict_all=False):
+    def get_export_attr_names(attr_list_name="export_attr_name",**kw):
         """
         获取对象及子对象要导出的属性名.
     
         :returns: list,属性名list
         :raises: no exception
         """
+        if "dict_all" in kw:
+            if kw[dict_all] is True:
+                pass
         _names=__class__.export_attr_names+str_list_add_prefix_suffix(CameraRtsp.export_attr_names,"camera")+str_list_add_prefix_suffix(CleanTaskLog.export_attr_names,"clean_log")
         names=list(set(_names))
         return names
@@ -554,20 +560,6 @@ class Robot(QObject):
             self.base.run_state=RunState.EMERGENCY
         elif state_2==0:
             self.base.run_state=RunState.NOTASK
-
-
-        #if test_bit(self.protocol.robot_state.value,4):
-        #    self.base.run_state.value = 1
-        #if test_bit(self.protocol.robot_state.value,6):
-        #    self.base.run_state.value = 2
-        #if test_bit(self.protocol.robot_state.value,3):
-        #    self.base.run_state.value = 5
-        #print(f'{self.protocol.robot_state.value:#016b}')
-        #self.base.ctrl_mode.value = get_bits(self.protocol.robot_state.value,0,1)
-        #self.base.run_state=RunState(get_bits(self.protocol.robot_state.value,0,1))
-        #self.base.ctrl_mode = CtrlMode(get_bits(self.protocol.robot_state.value,0,1))
-        #print(f'{self.base.ctrl_mode.value:#016b}')
-        #self.base.run_state.value=struct.unpack('>H', struct.pack('>h', self.base.run_state.value))[0]
 
     def get_ctrl_mode(self):
         self.base.ctrl_mode = CtrlMode(get_bits(self.protocol.robot_state.value,0,1))

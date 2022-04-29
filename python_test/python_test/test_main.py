@@ -1,4 +1,168 @@
 
+#递归及yield
+#def recursive_items(dictionary):
+
+#    for key, value in dictionary.items():
+
+#        if type(value) is dict:
+
+#            yield from recursive_items(value)
+
+#        else:
+
+#            yield (key, value)
+
+#a = {'a': {1: {1: 2, 3: 4}, 2: {5: 6}}}
+
+#for key, value in recursive_items(a):
+
+#    print(key, value)
+
+#def recursive_items(dictionary):
+
+#    for key, value in dictionary.items():
+
+#        if type(value) is dict:
+
+#            yield (key, value)
+
+#            yield from recursive_items(value)
+
+#        else:
+
+#            yield (key, value)
+
+#a = {'a': {1: {1: 2, 3: 4}, 2: {5: 6}}}
+
+#for key, value in recursive_items(a):
+
+#    print(key, value)
+from func_robot import *
+
+a = {'a': {1: {1: 2, 3: 4}, 2: {5: 6}}}
+def fun1(dct):
+
+    for key,value in dct.items():
+        if isinstance( value,dict):
+            print(key,value)
+            fun(value)
+        else:
+            print(key,value)
+            #return key,value
+dct_test=[]
+def fun(item,dct):
+    if isinstance(item,dict):
+        for key,value in item.items():
+            
+            if isinstance(value,dict):
+                #print(key,value)
+                dct[key]={}
+                fun(value,dct[key])
+            elif isinstance(value,(list,tuple)):
+                dct[key]=[]
+                fun(value,dct[key])
+            elif hasattr(value,"__dict__"):
+                dct[key]={}
+                fun(value.__dict__,dct[key])
+            else:
+                dct[key]=value
+                print(f"{key}={value}")
+    elif isinstance(item,(list,tuple)):
+        #dct=[]
+        for value in item:
+            if isinstance(value,dict):
+                #print(value)
+                _dict={}
+                dct.append(_dict)
+                fun(value,_dict)
+            elif isinstance(value,(list,tuple)):
+                _list=[]
+                dct.append(_list)
+                fun(value,_list)
+            elif hasattr(value,"__dict__"):
+                _dict={}
+                dct.append(_dict)
+                fun(value.__dict__,_dict)
+            else:
+                dct.append(value)
+                print(f"list:{value}")
+    elif hasattr(item,"__dict__"):
+        fun(item.__dict__)
+
+def type_py_to_json(py):
+    type_json_support=(int,float,str,list,tuple,dict,bool)
+    
+    if isinstance(py,type_json_support):
+        _json=py
+    elif isinstance(py,(set,)):
+        _json=list(py)    
+    elif isinstance(py,(Enum,)):
+        _json=py.value
+    elif isinstance(py,(datetime,)):
+        _json=py.strftime("%Y-%m-%d %H:%M:%S")
+    elif isinstance(py,(QDate,)):
+        _json=py.toString("yyyy/MM/dd")
+    elif isinstance(py,(QTime,)):
+        _json=py.toString("hh:mm")
+    else:
+        print(f"未定义的python转json类型{type(py)}")
+    return _json
+
+b=[
+  {
+    "id": 1,
+    "children": [
+      {
+        "id": 2,
+        "children": ["a","b"]
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "children": []
+  },
+  {
+    "id": 4,
+    "children": [
+      {
+        "id": 5,
+        "children": [
+          {
+            "id": 6,
+            "children": [
+              {
+                "id": 7,
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
+#fun(a)
+#fun(b,dct_test)
+from func_config import *
+dct_test={}
+obj_to_dict(robot1.base,dct_test)
+#fun(b,dct_test)
+print(robot1.base.__dict__)
+print(dct_test)
+import json
+with open('./data/test.json', 'w') as f:
+    json.dump(dct_test,f,indent=4)
+
+_type=(int,float,str,list,tuple,dict,bool)
+def test(a,ty):
+    print(type(a))
+    print(isinstance(a,ty))
+
+#test(robot1.camera.ip,class)
+#print(robot1.camera.__dict__)
+
+'''
 #测试获取多级属性
 from func_config import *
 from func_robot import *
@@ -31,7 +195,8 @@ print(b.__class__)
 print(c.__class__)
 print(type(None))
 print(isinstance(a,json_type))
-
+print(getattr(robot1.__class__,"export_attr_names"))
+'''
 
 '''
 import json

@@ -1,0 +1,16 @@
+{
+    "_type": "",
+    "tag": 0,
+    "run_state": {
+        "_value_": 6,
+        "string": "\u65e0\u4efb\u52a1",
+        "_name_": "NOTASK",
+        "__objclass__": {}
+    },
+    "ctrl_mode": {
+        "_value_": 0,
+        "string": "\u81ea\u52a8",
+        "_name_": "AUTO",
+        "__objclass__": {}
+    }
+}
