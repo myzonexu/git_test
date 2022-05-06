@@ -25,7 +25,7 @@ class CameraRtsp(QObject):
     frame_captured = pyqtSignal()
     frame_no_captured = pyqtSignal()
     inited=pyqtSignal()
-    export_attr_names=["ip"]
+    filter_attr_names=["ip","port","username","passwd"]
     def __init__(self,username="admin",passwd="ylcx6666",ip="192.168.0.64",port=554,channel=1,codec="h265",pc_test=False):
         super().__init__()
         self._capture_enable=True

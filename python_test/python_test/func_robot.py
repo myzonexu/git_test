@@ -65,6 +65,7 @@ class Version:
 
 #通讯
 class Connect(object):
+    filter_attr_names=["ip","port"]
     def __init__(self,ip="127.0.0.1",port=502):
         self.is_online = False
         self.state = ConnectState.OFFLINE #ValueDescriptionSet(communication_state)
@@ -222,7 +223,7 @@ class Error(object):
 
 #清扫任务
 class CleanTask(object):
-    export_attr_names=["id","state","start_time","stop_time","mileage_driven","count_cleaned","count_add_water","count_charged"]
+    filter_attr_names=["id","state","start_time","stop_time","mileage_driven","count_cleaned","count_add_water","count_charged"]
     def __init__(self):
         self.id=0
         self.state = CleanTaskState.NONE 
@@ -257,7 +258,7 @@ class CleanTask(object):
 
 
 class CleanTaskLog(object):
-    export_attr_names=["all"]
+    filter_attr_names=["all"]
     def __init__(self):
         self.all=[]
 
@@ -401,7 +402,7 @@ class RobotGroup(QObject):
 #机器人
 class Robot(QObject):
     state_updated=pyqtSignal()
-    export_attr_names=["id","connect.ip","camera.ip","task_plans"]
+    filter_attr_names=["id","version","connect","camera","task_plans"]
     def __init__(self,ip="127.0.0.1",camera_ip="192.168.0.64",port=502):
         super().__init__()
         self.id = -1

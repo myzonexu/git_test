@@ -1,40 +1,21 @@
 {
-    "task_plans": {
-        "new_plan": {
-            "id": 0,
-            "enable": false,
-            "name": "",
-            "plan_type": 3,
-            "cycle_type": 3,
-            "cycle_value": 0,
-            "do_time": "",
-            "start_date": "",
-            "end_date": "",
-            "str_plan_time": "",
-            "assign": [],
-            "received": [],
-            "not_received": [],
-            "received_progress": 0.0,
-            "add_time": "2022-05-06 10:58:26",
-            "message_frame": [],
-            "check_state": false,
-            "info_output": "",
-            "export_name": [
-                "id",
-                "enable",
-                "name",
-                "plan_type",
-                "cycle_type",
-                "cycle_value",
-                "do_time",
-                "start_date",
-                "end_date",
-                "assign",
-                "received",
-                "add_time"
-            ]
+    "robot1": {
+        "id": 0,
+        "version": {
+            "major": 0,
+            "minor": 0,
+            "patch": 0
         },
-        "all": {},
-        "current": null
+        "connect": {
+            "ip": "127.0.0.1",
+            "port": 502
+        },
+        "camera": {
+            "ip": "192.168.0.64",
+            "port": 554,
+            "username": "admin",
+            "passwd": "ylcx6666"
+        },
+        "task_plans": []
     }
 }

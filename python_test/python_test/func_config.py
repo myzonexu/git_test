@@ -218,28 +218,7 @@ def json_to_obj(json_dict,obj):
                 obj.append(_obj)
 
 
-def type_py_to_json(py):
-    """
-    python中json不能转换的类型变为可被json转换的类型.
- 
-    :param py: 待转换对象
-    :returns: json可转换类型
-    :raises: no exception
-    """
-  
-    if isinstance(py,(Enum,)):
-        return py.value
-    elif isinstance(py,(datetime,)):
-        return py.strftime("%Y-%m-%d %H:%M:%S")
-    elif isinstance(py,(timedelta,)):
-        return str(py)
-    elif isinstance(py,(QDate,)):
-        return py.toString("yyyy/MM/dd")
-    elif isinstance(py,(QTime,)):
-        return py.toString("hh:mm")
-    else:
-        #print(f"未定义的python转json类型{type(py)}")
-        return None
+
         
 
 
@@ -289,12 +268,6 @@ def obj_to_dict(item,dct):
     else:
         pass
 '''
-def trans(key,value):
-    _item=type_py_to_json(value)
-    if _item is None:
-        obj_to_dict(value.__dict__,dct[key],key)
-    else:
-        dct[key]=_item
 
 #def obj_to_dict(item,dct,_key=None):
 #    """
@@ -374,6 +347,9 @@ def trans(key,value):
 #            dct[_key]=_item
 #    else:
 #        pass
+
+
+
 def add_item(item,after_trans,key):
     if isinstance(after_trans,(list,)):
         after_trans.append(item)
@@ -385,7 +361,30 @@ def add_item(item,after_trans,key):
         print(f"after_trans类型为{type(after_trans)},类型错误，应为list或dict")
         return False
 
-def obj_to_dict(item,after_trans,key="unnamed_obj"):
+def type_py_to_json(py):
+    """
+    python中json不能转换的类型变为可被json转换的类型.
+ 
+    :param py: 待转换对象
+    :returns: json可转换类型
+    :raises: no exception
+    """
+  
+    if isinstance(py,(Enum,)):
+        return py.value
+    elif isinstance(py,(datetime,)):
+        return py.strftime("%Y-%m-%d %H:%M:%S")
+    elif isinstance(py,(timedelta,)):
+        return str(py)
+    elif isinstance(py,(QDate,)):
+        return py.toString("yyyy/MM/dd")
+    elif isinstance(py,(QTime,)):
+        return py.toString("hh:mm")
+    else:
+        #print(f"未定义的python转json类型{type(py)}")
+        return None
+
+def obj_to_dict(item,after_trans,key="unnamed_obj",*,filter="filter_attr_names",trans_all=False):
     """
     对象及其子对象属性转换为字典.
  
@@ -393,6 +392,14 @@ def obj_to_dict(item,after_trans,key="unnamed_obj"):
     :param after_trans: dict/list,属性转换后保存的dict或list.
                           若item为字典，相应after_trans也应为空字典；
                           若item为列表，相应after_trans也应为空列表；
+    :param filter: str,对象转换属性过滤器。
+                    如需只转换部分属性，需在类（非实例）中定义一个包含这些属性名的list,例：
+                    class Example(object):
+                        filter_attr_names=["attr_1","attr_2"]
+                        def __init__(self):
+                            self.attr_1=0
+                            self.attr_2=0.0
+                            self.attr_3=""
     :returns: no return
     :raises: no exception
     """
@@ -407,7 +414,10 @@ def obj_to_dict(item,after_trans,key="unnamed_obj"):
         elif isinstance(after_trans,(list,)):
             after_trans.append(_after_trans)
         for _key,_value in item.items():
-            obj_to_dict(_value,_after_trans,_key)
+            if trans_all is True:
+                obj_to_dict(_value,_after_trans,_key,trans_all=True)
+            else:
+                obj_to_dict(_value,_after_trans,_key)
     elif isinstance(item,(list,tuple,set)):
         _after_trans=[]
         if isinstance(after_trans,(dict,)):
@@ -419,7 +429,21 @@ def obj_to_dict(item,after_trans,key="unnamed_obj"):
     elif type_py_to_json(item) != None:
         obj_to_dict(type_py_to_json(item),after_trans,key)
     elif hasattr(item,"__dict__"): 
-        obj_to_dict(item.__dict__,after_trans,key)
+        if trans_all is True:
+            obj_to_dict(item.__dict__,after_trans,key,trans_all=True)
+        else:
+            _item={}
+            if hasattr(item.__class__,filter):
+                _filter=getattr(item.__class__,filter)
+                if isinstance(_filter,list):
+                    for name in _filter:
+                        _item[name]=item.__dict__.get(name)
+                    obj_to_dict(_item,after_trans,key)
+                else:
+                    print(f"{type(_filter)}非list类型的选取属性集")
+            else:
+                obj_to_dict(item.__dict__,after_trans,key)
+        
     else:
         print(f"不支持的转换类型{type(item)}")
 
