@@ -3,7 +3,7 @@
 """
 -------------------------------------------------------------------------------
 File   Name ： func_config.py
-Description :  配置文件功能
+Description :  导入导出，配置文件
 Author      :  simon
 Create Time ： 2022.4.26
 -------------------------------------------------------------------------------
@@ -67,6 +67,7 @@ def export_csv(file,header,rows):
 #head,rows=import_csv('./data/config_robot1.csv')
 #export_csv('./data/config_robot2.csv',head,rows)
 
+'''
 def obj_attr_to_json_dict(obj,attr_names):
     """
     对象属性导出json数据dict.
@@ -218,7 +219,7 @@ def json_to_obj(json_dict,obj):
                 obj.append(_obj)
 
 
-
+'''
         
 
 
@@ -348,18 +349,36 @@ def obj_to_dict(item,dct):
 #    else:
 #        pass
 
+def type_json_to_py(json_data,py_type):
+    """
+    json类型转换为python类型.
+ 
+    :param json_data: json待转换数据
+    :param py_type: 转换为python类型
+    :returns: 转换后python数据
+    :raises: no exception
+    """
+    attr=getattr_multilevel(obj, name)
+    attr_json=value
+    if isinstance(attr,(QDate,)):
+        setattr_multilevel(obj,name,QDate.fromString(attr_json,"yyyy/MM/dd"))
+                                  
+    elif isinstance(attr,(QTime,)):
+        setattr_multilevel(obj,name,QTime.fromString(attr_json,"hh:mm"))
+                    
+    elif isinstance(attr,(datetime,)):
+        setattr_multilevel(obj,name,datetime.strptime(attr_json, '%Y-%m-%d %H:%M:%S'))
+                   
+    #elif isinstance(attr,(PlanType,)):
+    #    setattr_multilevel(obj,name,PlanType(attr_json))
+                   
+    #elif isinstance(attr,(CycleType,)):
+    #    setattr_multilevel(obj,name,CycleType(attr_json))
+                  
+    elif isinstance(attr,(set,)):
+        setattr_multilevel(obj,name,set(attr_json))
 
 
-def add_item(item,after_trans,key):
-    if isinstance(after_trans,(list,)):
-        after_trans.append(item)
-        return True
-    elif isinstance(after_trans,(dict,)):
-        after_trans[key]=item
-        return True
-    else:
-        print(f"after_trans类型为{type(after_trans)},类型错误，应为list或dict")
-        return False
 
 def type_py_to_json(py):
     """
@@ -383,6 +402,17 @@ def type_py_to_json(py):
     else:
         #print(f"未定义的python转json类型{type(py)}")
         return None
+
+def add_item(item,after_trans,key):
+    if isinstance(after_trans,(list,)):
+        after_trans.append(item)
+        return True
+    elif isinstance(after_trans,(dict,)):
+        after_trans[key]=item
+        return True
+    else:
+        print(f"after_trans类型为{type(after_trans)},类型错误，应为list或dict")
+        return False
 
 def obj_to_dict(item,after_trans,key="unnamed_obj",*,filter="filter_attr_names",trans_all=False):
     """
@@ -446,4 +476,22 @@ def obj_to_dict(item,after_trans,key="unnamed_obj",*,filter="filter_attr_names",
         
     else:
         print(f"不支持的转换类型{type(item)}")
+
+
+def obj_to_json_file(file,obj,dict_json,obj_name,filter="filter_attr_names"):
+    """
+    对象转换为json保存.
+ 
+    :param file: str,文件路径
+    :param obj: obj,待转换对象
+    :param dict_json: dict/list,保存对象转换为json可解析dict/list
+    :param obj_name: str,转换对象名称，用作json根
+    :param filter: str,对象转换属性过滤器。
+    :returns: no return
+    :raises: no exception
+    """
+    obj_to_dict(obj,dict_json,obj_name,filter=filter,trans_all=False)
+    with open(file, 'w') as f:
+        json.dump(dict_json,f,ensure_ascii=False,indent=4)
+    #print(json.dumps(dict_json,ensure_ascii=False, indent=4))
 

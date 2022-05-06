@@ -90,6 +90,7 @@ class Battery:
 #行驶状态
 @dataclass
 class Drive:
+    filter_attr_names=["mileage"]
     speed : float = 0.0
     steer_angle : float = 0.0    
     mileage :float = 0.0
@@ -97,6 +98,7 @@ class Drive:
 #位置状态
 @dataclass
 class Positon:
+    filter_attr_names=["map_id"]
     positionInitialized:bool=False
     localizationScore : float = 1.0    
     deviation_range :float = 0.0
@@ -261,6 +263,7 @@ class CleanTaskLog(object):
     filter_attr_names=["all"]
     def __init__(self):
         self.all=[]
+        #self.dict_save={}
 
     def list_info(self):
         list_info = []
@@ -293,6 +296,7 @@ class RobotGroup(QObject):
     #current_changed=pyqtSignal(int)
     current_inited=pyqtSignal()
     current_changed=pyqtSignal()
+    filter_attr_names=["robots"]
 
     def __init__(self):
         super().__init__()
@@ -304,7 +308,9 @@ class RobotGroup(QObject):
         self.local_ip = None
         self.local_ip_strlist=None
 
-        self.get_local_ip()
+        self.dict_save={}
+
+        #self.get_local_ip()
 
     def add_robot_new_scanned(self):
         for n in range(len(self.addrs_new_scanned)):
@@ -402,7 +408,7 @@ class RobotGroup(QObject):
 #机器人
 class Robot(QObject):
     state_updated=pyqtSignal()
-    filter_attr_names=["id","version","connect","camera","task_plans"]
+    filter_attr_names=["id","connect","drive","error_chassis","error_arm","camera","clean_log","task_plans"]
     def __init__(self,ip="127.0.0.1",camera_ip="192.168.0.64",port=502):
         super().__init__()
         self.id = -1
@@ -427,25 +433,7 @@ class Robot(QObject):
         #self.camera = CameraRtsp(pc_test=True)
         self.camera = CameraRtsp(ip=camera_ip)        
         self.log=Log()
-        #self.init(ip)
-
-    @staticmethod
-    #def get_export_attr_names(**kw):
-    #def get_export_attr_names(attr_list_name="export_attr_name",dict_all=False):
-    #def get_export_attr_names(attr_list_name="export_attr_name",*,dict_all=False):
-    def get_export_attr_names(attr_list_name="export_attr_name",**kw):
-        """
-        获取对象及子对象要导出的属性名.
-    
-        :returns: list,属性名list
-        :raises: no exception
-        """
-        if "dict_all" in kw:
-            if kw[dict_all] is True:
-                pass
-        _names=__class__.export_attr_names+str_list_add_prefix_suffix(CameraRtsp.export_attr_names,"camera")+str_list_add_prefix_suffix(CleanTaskLog.export_attr_names,"clean_log")
-        names=list(set(_names))
-        return names
+        #self.init(ip)  
 
 
     def init(self):        

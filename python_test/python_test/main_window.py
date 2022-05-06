@@ -370,7 +370,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.refresh_clean_log()
 
     @pyqtSlot()
-    def on_pushButton_import_log_clicked(self):
+    def on_pushButton_export_log_clicked(self):
         """导出清扫日志."""
         rows=self.refresh_clean_log()
         header=["机器人ID","任务ID","开始时间","结束时间","行驶里程","清扫数量","加水次数","充电次数"]
@@ -379,10 +379,8 @@ class Window(QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_pushButton_export_plan_clicked(self):
         """导出计划任务."""
-        task_plans.export_json_file('./data/task_plans.json')
-        #with open('./data/task_plans.json', 'w') as f:
-        #    json.dump(task_plans.export(),f,ensure_ascii=True, indent=4)
-        ##print(json.dumps(task_plans.export(),ensure_ascii=True, indent=4))
+        self.save_task_plans_data()
+        
     @pyqtSlot()
     def on_pushButton_import_plan_clicked(self):
         """导入计划任务."""
@@ -391,24 +389,11 @@ class Window(QMainWindow, Ui_MainWindow):
         #    task_plans.import_json(json.load(f))
         #    #json.load(f,object_hook=task_plans.import_json)
         self.refresh_task_plan()
-
-    @pyqtSlot()
-    def on_pushButton_import_log_clicked(self):
-        """导出清扫日志."""
-        json_dict=objs_to_json_dict(robots.current.clean_log.all,"log",CleanTask.export_attr_names)
-        #print(json_dict)
-        with open('./data/log.json', 'w') as f:
-            json.dump(json_dict,f,ensure_ascii=True,indent=4)
-        print(json.dumps(json_dict,ensure_ascii=True, indent=4))
+    
     @pyqtSlot()
     def on_pushButton_export_robot_clicked(self):
         """导出机器人."""
-        #json_dict=objs_to_json_dict(robots.robots,"robots",Robot.export_attr_names)
-        json_dict=obj_attr_to_json_dict(robot1,Robot.export_attr_names)
-        #print(json_dict)
-        with open('./data/robots.json', 'w') as f:
-            json.dump(json_dict,f,ensure_ascii=True,indent=4)
-        print(json.dumps(json_dict,ensure_ascii=True, indent=4))
+        self.save_robots_data()
 
     @pyqtSlot()
     def on_pushButton_import_robot_clicked(self):
@@ -494,6 +479,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.update_ui_table()
         self.update_ui_tab_text()
         self.update_ui_map()
+
+        self.save_robots_data()
                
 
     #更新表格显示
@@ -607,7 +594,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.dateEdit_task_ignore_start_time.setDate(QDate.currentDate())
         self.dateEdit_task_ignore_end_time.setDate(QDate.currentDate())
 
-        task_plans.import_json_file('./data/task_plans.json')
+        #task_plans.import_json_file('./data/task_plans.json')
         self.refresh_task_plan()
 
     
@@ -708,9 +695,15 @@ class Window(QMainWindow, Ui_MainWindow):
     def refresh_task_plan(self):
         """刷新任务表格."""
         table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info(),checkable=True)
+        self.save_task_plans_data()
+   
+    def save_robots_data(self):
+        """保存机器人数据."""
+        obj_to_json_file('./data/robots.json',robots,robots.dict_save,"robots")
 
-        task_plans.export_json_file('./data/task_plans.json')
-
+    def save_task_plans_data(self):
+        """保存计划任务数据."""
+        obj_to_json_file('./data/task_plans.json',task_plans,task_plans.dict_save,"task_plans")
 
 
     #多线程函数##############################################################################################

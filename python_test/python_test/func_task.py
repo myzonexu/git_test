@@ -39,7 +39,8 @@ class CycleType(Enum):
 
 class TaskPlan(object):
     """计划任务类."""
-    export_name=["id","enable","name","plan_type","cycle_type","cycle_value","do_time","start_date","end_date","assign","received","add_time"]
+
+    filter_attr_names=["id","enable","name","plan_type","cycle_type","cycle_value","do_time","start_date","end_date","assign","received","add_time"]
     def __init__(self):
         """
         初始化.
@@ -74,8 +75,6 @@ class TaskPlan(object):
 
         self.info_output = ""
     
-        self.export_name=["id","enable","name","plan_type","cycle_type","cycle_value","do_time","start_date","end_date","assign","received","add_time"]
-
     def init_id(self):
         """初始化id,1~32760随机数."""
         if self.id is 0:
@@ -272,6 +271,7 @@ class TaskPlans(QObject):
     """计划任务列表类."""
     #current_inited=pyqtSignal()
     current_changed = pyqtSignal()
+    filter_attr_names=["all"]
 
     def __init__(self):
         """初始化."""
@@ -280,6 +280,7 @@ class TaskPlans(QObject):
         #self.plan_list = []
         self.all = {}
         self.current = None
+        self.dict_save={}
 
     def set_current(self,id):        
         if id in self.all:        
@@ -336,78 +337,6 @@ class TaskPlans(QObject):
                     
         return list_info
 
-    
-    def export(self):
-        """
-        导出计划任务.
-    
-        :returns: dict,计划任务列表
-        :raises: no exception
-        """
-        plans=[]
-        dct={}
-        for id,item in self.all.items():
-            plans.append(item.export())
-        dct["task_plans"]=plans
-        return dct
-
-    def export_json_file(self,file):
-        """
-        导出json文件.
-     
-        :param file: str,json文件地址
-        :returns: no return
-        :raises: no exception
-        """
-        with open(file, 'w') as f:
-                json.dump(self.export(),f,ensure_ascii=True, indent=4)
-
-    #@staticmethod
-    def import_json(self,json_dict):
-        #print(json_dict)
-        plan_list=json_dict.get("task_plans")
-        #print(plan_list)
-        for dct in plan_list:
-            plan=TaskPlan()
-            for name in plan.export_name:                
-                attr=getattr(plan, name)
-                attr_json=dct.get(name)
-                if isinstance(attr,(QDate,)):
-                    setattr(plan,name,QDate.fromString(attr_json,"yyyy/MM/dd"))
-                                  
-                elif isinstance(attr,(QTime,)):
-                    setattr(plan,name,QTime.fromString(attr_json,"hh:mm"))
-                    
-                elif isinstance(attr,(datetime,)):
-                    setattr(plan,name,datetime.strptime(attr_json, '%Y-%m-%d %H:%M:%S'))
-                   
-                elif isinstance(attr,(PlanType,)):
-                    setattr(plan,name,PlanType(attr_json))
-                   
-                elif isinstance(attr,(CycleType,)):
-                    setattr(plan,name,CycleType(attr_json))
-                  
-                elif isinstance(attr,(set,)):
-                    setattr(plan,name,set(attr_json))
-                   
-                else:
-                    setattr(plan,name,attr_json)
-                
-            self.all[plan.id]=plan
-                   
-        #return None
-    
-    def import_json_file(self,file):
-        """
-        导入json文件.
-     
-        :param file: str,json文件地址
-        :returns: no return
-        :raises: no exception
-        """
-        with open(file, 'r') as f:
-            self.import_json(json.load(f))
-            print("导入计划json文件")
 
 #functions#####################################################################
 def set_calendar_date_format(calendar,date,color,tooltip=""):

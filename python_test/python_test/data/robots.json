@@ -1,6 +1,108 @@
 {
-    "id": 0,
-    "connect.ip": "127.0.0.1",
-    "camera.ip": "192.168.0.64",
-    "task_plans": []
+    "robots": {
+        "robots": {
+            "0": {
+                "id": 0,
+                "connect": {
+                    "ip": "127.0.0.1",
+                    "port": 502
+                },
+                "drive": {
+                    "mileage": 131.074
+                },
+                "error_chassis": {
+                    "active_error": {
+                        "1": {
+                            "code": 1,
+                            "code_dict": {
+                                "0": [
+                                    "无",
+                                    "无故障",
+                                    "无需处理"
+                                ],
+                                "1": [
+                                    "轻微故障",
+                                    "测试故障描述",
+                                    "测试处理方式"
+                                ]
+                            },
+                            "time_start": "2022-05-06 17:31:33",
+                            "time_stop": null
+                        }
+                    },
+                    "history_error": [
+                        {
+                            "code": 1,
+                            "code_dict": {
+                                "0": [
+                                    "无",
+                                    "无故障",
+                                    "无需处理"
+                                ],
+                                "1": [
+                                    "轻微故障",
+                                    "测试故障描述",
+                                    "测试处理方式"
+                                ]
+                            },
+                            "time_start": "2022-05-06 17:30:33",
+                            "time_stop": "2022-05-06 17:31:14"
+                        },
+                        {
+                            "code": 65537,
+                            "code_dict": {
+                                "0": [
+                                    "无",
+                                    "无故障",
+                                    "无需处理"
+                                ],
+                                "1": [
+                                    "轻微故障",
+                                    "测试故障描述",
+                                    "测试处理方式"
+                                ]
+                            },
+                            "time_start": "2022-05-06 17:30:50",
+                            "time_stop": "2022-05-06 17:31:14"
+                        }
+                    ]
+                },
+                "error_arm": {
+                    "active_error": {},
+                    "history_error": []
+                },
+                "camera": {
+                    "ip": "192.168.0.64",
+                    "port": 554,
+                    "username": "admin",
+                    "passwd": "ylcx6666"
+                },
+                "clean_log": {
+                    "all": [
+                        {
+                            "id": 0,
+                            "state": 0,
+                            "start_time": "2022-05-06 17:29:19",
+                            "stop_time": "2022-05-06 17:29:22",
+                            "mileage_driven": 0.0,
+                            "count_cleaned": 0,
+                            "count_add_water": 0,
+                            "count_charged": 0
+                        },
+                        {
+                            "id": 0,
+                            "state": 0,
+                            "start_time": "2022-05-06 17:29:32",
+                            "stop_time": "2022-05-06 17:29:37",
+                            "mileage_driven": 0.0,
+                            "count_cleaned": 0,
+                            "count_add_water": 0,
+                            "count_charged": 0
+                        }
+                    ]
+                },
+                "task_plans": []
+            }
+        }
+    }
 }

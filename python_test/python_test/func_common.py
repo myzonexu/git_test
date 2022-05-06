@@ -27,6 +27,7 @@ class IdItems(QObject):
     """ID项目组类."""
     #current_inited=pyqtSignal()
     current_changed = pyqtSignal()
+    filter_attr_names=["all"]
 
     def __init__(self):
         """初始化."""
@@ -34,6 +35,7 @@ class IdItems(QObject):
         self.all = {}
         self.new = None
         self.current = None
+        self.dict_save={}
 
     def set_current(self,id):        
         if id in self.all:        

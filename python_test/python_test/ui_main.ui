@@ -45,7 +45,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_ctrl">
        <attribute name="title">
@@ -2683,7 +2683,7 @@ p, li { white-space: pre-wrap; }
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_import_log">
+           <widget class="QPushButton" name="pushButton_export_log">
             <property name="text">
              <string>导出</string>
             </property>
