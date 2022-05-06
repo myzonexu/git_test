@@ -232,17 +232,18 @@ def type_py_to_json(py):
     elif isinstance(py,(datetime,)):
         return py.strftime("%Y-%m-%d %H:%M:%S")
     elif isinstance(py,(timedelta,)):
-        return srt(py)
+        return str(py)
     elif isinstance(py,(QDate,)):
         return py.toString("yyyy/MM/dd")
     elif isinstance(py,(QTime,)):
         return py.toString("hh:mm")
     else:
-        return py.__dict__
-        print(f"未定义的python转json类型{type(py)}")
+        #print(f"未定义的python转json类型{type(py)}")
+        return None
+        
 
 
-
+'''
 def obj_to_dict(item,dct):
     """
     对象及其子对象属性转换为字典.
@@ -287,3 +288,138 @@ def obj_to_dict(item,dct):
         obj_to_dict(item.__dict__,dct)
     else:
         pass
+'''
+def trans(key,value):
+    _item=type_py_to_json(value)
+    if _item is None:
+        obj_to_dict(value.__dict__,dct[key],key)
+    else:
+        dct[key]=_item
+
+#def obj_to_dict(item,dct,_key=None):
+#    """
+#    对象及其子对象属性转换为字典.
+ 
+#    :param item: obj/list/dict,待转换对象
+#    :param dct: dict/list,属性转换后保存的dict或list.
+#                          若item为字典，相应dct也应为空字典；
+#                          若item为列表，相应dct也应为空列表；
+#    :returns: no return
+#    :raises: no exception
+#    """
+#    _type_const=(int,float,str,bool)
+#    _type_bool=(None,True,False)
+
+#    if isinstance(item,dict):
+#        for key,value in item.items():            
+#            if isinstance(value,dict):
+#                dct[key]={}
+#                obj_to_dict(value,dct[key],key)
+#            elif isinstance(value,(list,tuple,set)):
+#                dct[key]=[]
+#                obj_to_dict(value,dct[key])
+#            #elif hasattr(value,"__dict__"):
+#            elif value in _type_bool:
+#                dct[key]=value
+#            elif value.__class__ not in _type_const:
+#                print(key,value)
+#                _item=type_py_to_json(value)
+#                if _item is None:
+#                    if hasattr(value,"__dict__"):
+#                        obj_to_dict(value.__dict__,dct[key],key)
+#                else:
+#                    dct[key]=_item
+
+#                #dct[key]={}
+#                #print(key)
+#                #obj_to_dict(value.__dict__,dct[key],key)
+#            else:
+#                dct[key]=value
+#    elif isinstance(item,(list,tuple,set)):
+#        for value in item:
+#            if isinstance(value,dict):
+#                _dict={}
+#                dct.append(_dict)
+#                obj_to_dict(value,_dict)
+#            elif isinstance(value,(list,tuple,set)):
+#                _list=[]
+#                dct.append(_list)
+#                obj_to_dict(value,_list)
+#            #elif hasattr(value,"__dict__"):       
+#            elif value in _type_bool:
+#                dct.append(value)
+#            elif value.__class__ not in _type_const:
+#                _item=type_py_to_json(value)
+#                if _item is None:
+#                    _dict={}
+#                    dct.append(_dict)
+#                    if hasattr(value,"__dict__"):
+#                        obj_to_dict(value.__dict__,_dict)
+#                else:
+                    
+#                    dct.append(_item)
+
+#                #dct.append(_dict)
+#                #obj_to_dict(value.__dict__,_dict)
+#            else:
+#                dct.append(value)
+
+#    #elif hasattr(item,"__dict__"): 
+#    elif item.__class__ not in _type_const:       
+#        _item=type_py_to_json(item)
+#        if _item is None:
+#            if hasattr(item,"__dict__"):
+#                obj_to_dict(item.__dict__,dct)
+#        else:
+#            dct[_key]=_item
+#    else:
+#        pass
+def add_item(item,after_trans,key):
+    if isinstance(after_trans,(list,)):
+        after_trans.append(item)
+        return True
+    elif isinstance(after_trans,(dict,)):
+        after_trans[key]=item
+        return True
+    else:
+        print(f"after_trans类型为{type(after_trans)},类型错误，应为list或dict")
+        return False
+
+def obj_to_dict(item,after_trans,key="unnamed_obj"):
+    """
+    对象及其子对象属性转换为字典.
+ 
+    :param item: obj/list/dict,待转换对象
+    :param after_trans: dict/list,属性转换后保存的dict或list.
+                          若item为字典，相应after_trans也应为空字典；
+                          若item为列表，相应after_trans也应为空列表；
+    :returns: no return
+    :raises: no exception
+    """
+    if isinstance(item,(int,float,str,bool)):
+        add_item(item,after_trans,key)
+    elif item is None:
+        add_item(item,after_trans,key)
+    elif isinstance(item,(dict,)):
+        _after_trans={}
+        if isinstance(after_trans,(dict,)):
+            after_trans[key]=_after_trans
+        elif isinstance(after_trans,(list,)):
+            after_trans.append(_after_trans)
+        for _key,_value in item.items():
+            obj_to_dict(_value,_after_trans,_key)
+    elif isinstance(item,(list,tuple,set)):
+        _after_trans=[]
+        if isinstance(after_trans,(dict,)):
+            after_trans[key]=_after_trans
+        elif isinstance(after_trans,(list,)):
+            after_trans.append(_after_trans)
+        for _value in item:
+            obj_to_dict(_value,_after_trans,key)
+    elif type_py_to_json(item) != None:
+        obj_to_dict(type_py_to_json(item),after_trans,key)
+    elif hasattr(item,"__dict__"): 
+        obj_to_dict(item.__dict__,after_trans,key)
+    else:
+        print(f"不支持的转换类型{type(item)}")
+
