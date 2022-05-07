@@ -25,19 +25,19 @@ def get_robots_state():
             if robots.current.connect.is_online:
                 robots.current.get_robot_time()
                 pass
-        for id in robots.robots:
-            robots.check_addrs_online(robots.robots.get(id))
-            robots.robots.get(id).get_state()
+        for id in robots.all:
+            robots.check_addrs_online(robots.all.get(id))
+            robots.all.get(id).get_state()
             if sec>60:
-                    robots.robots.get(id).sync_time()
+                    robots.all.get(id).sync_time()
                     sec=0
-            #if robots.robots.get(id).connect.is_online:
-            #    robots.robots.get(id).get_state()
-            #    robots.check_addrs_online(robots.robots.get(id))
+            #if robots.all.get(id).connect.is_online:
+            #    robots.all.get(id).get_state()
+            #    robots.check_addrs_online(robots.all.get(id))
 
                 ##同步时间，间隔1分钟
                 #if sec>60:
-                #    robots.robots.get(id).sync_time()
+                #    robots.all.get(id).sync_time()
                 #    sec=0
         time.sleep(1)
         sec=sec+1
@@ -56,14 +56,14 @@ def scan_robots():
                     #lock
                     new_id=new_robot.protocol.robot_id.value
                     robots.addrs_new_scanned.append([new_id,scan_ip])
-                    #robots.robots[new_id]=Robot(ip=scan_ip)
-                    #robots.robots.get(new_id).get_state()
-                    #robots.robots.get(new_id).sync_time()
+                    #robots.all[new_id]=Robot(ip=scan_ip)
+                    #robots.all.get(new_id).get_state()
+                    #robots.all.get(new_id).sync_time()
                     #robots.addrs_online.add(scan_ip)
                     #print("检测到机器人id",new_id,scan_ip)
 
                     #if robots.current==None:
-                    #    robots.current=robots.robots.get(new_id)
+                    #    robots.current=robots.all.get(new_id)
                     #    exit=0
                     if robots.current is None:
                         pass
@@ -81,8 +81,8 @@ def scan_robots():
 
 def send_modbus_write_buffer():
     while True:
-        for id in robots.robots:            
-            robots.robots.get(id).master.send_write_buffer()
+        for id in robots.all:            
+            robots.all.get(id).master.send_write_buffer()
 
             time.sleep(1)
            

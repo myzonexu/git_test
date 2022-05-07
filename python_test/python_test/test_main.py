@@ -1,3 +1,14 @@
+from func_config import *
+from func_task import *
+import json
+with open('./data/task_plans.json', 'r') as f:
+    json_dict=json.load(f)
+
+json_to_obj(json_dict.get("task_plans").get("all"),task_plans.all)
+print(task_plans.all)
+
+
+'''
 from func_robot import *
 from func_config import *
 from func_task import *
@@ -46,7 +57,7 @@ print(dct_test)
 with open('./data/test.json', 'w') as f:
     json.dump(dct_test,f,indent=4)
     pass
-
+'''
 
 
 #递归及yield

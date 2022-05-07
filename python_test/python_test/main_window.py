@@ -251,7 +251,7 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             task_plans.new_plan.init_id()
             task_plans.new_plan.enable=True
-            task_plans.new_plan.assign=task_plans.new_plan.assign | set(list(robots.robots.keys()))
+            task_plans.new_plan.assign=task_plans.new_plan.assign | set(list(robots.all.keys()))
             self.preview_task_plan(task_plans.new_plan)        
             task_plans.new_plan.add_time=datetime.now()
             #task_plans.new_plan.add_time=QDateTime.currentDateTime()
@@ -348,7 +348,7 @@ class Window(QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_pushButton_add_robot_clicked(self):
         """添加机器人."""
-        robots.robots[int(self.lineEdit_add_robot_id.text())]=Robot(ip=self.lineEdit_add_robot_ip.text(),camera_ip=self.lineEdit_add_camera_ip.text())
+        robots.all[int(self.lineEdit_add_robot_id.text())]=Robot(ip=self.lineEdit_add_robot_ip.text(),camera_ip=self.lineEdit_add_camera_ip.text())
 
     @pyqtSlot(int)
     def on_checkBox_robot_all_stateChanged(self,state):
@@ -360,7 +360,7 @@ class Window(QMainWindow, Ui_MainWindow):
         """删除所选机器人."""
         for row in range(self.tableWidget_robot_all.rowCount()):
             if self.tableWidget_robot_all.item(row,0).checkState() == Qt.Checked:
-                robots.robots.pop(int(self.tableWidget_robot_all.item(row,0).text()))
+                robots.all.pop(int(self.tableWidget_robot_all.item(row,0).text()))
         table_fill_data_list_2d(self.tableWidget_robot_all,robots.list_info(),checkable=True)
         self.checkBox_robot_all.setCheckState(Qt.Unchecked)
 
@@ -403,7 +403,7 @@ class Window(QMainWindow, Ui_MainWindow):
             json_dict=json.load(f)
             print(json_dict)
             json_dict_to_obj(json_dict,robot2)
-            #json_to_obj(json_dict,robots.robots)
+            #json_to_obj(json_dict,robots.all)
             print(robot2.__dict__)
 
     #方法######################################################################################
@@ -502,7 +502,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     #更新tab页文字
     def update_ui_tab_text(self):
-        self.tabWidget_robots_info.setTabText(3,"机器人列表(" + str(len(robots.robots)) + ")")
+        self.tabWidget_robots_info.setTabText(3,"机器人列表(" + str(len(robots.all)) + ")")
         if robots.current == None:
             pass
         else:
@@ -683,7 +683,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 pass
     def refresh_clean_log(self):
         """刷新清扫日志."""
-        for id,item in robots.robots.items():
+        for id,item in robots.all.items():
             clean_info=item.clean_log.list_info()
             for info in clean_info:
                 info.insert(0,str(id))
@@ -699,11 +699,11 @@ class Window(QMainWindow, Ui_MainWindow):
    
     def save_robots_data(self):
         """保存机器人数据."""
-        obj_to_json_file('./data/robots.json',robots,robots.dict_save,"robots")
+        obj_to_json_file('./data/robots.json',robots,robots.dict_trans,"robots")
 
     def save_task_plans_data(self):
         """保存计划任务数据."""
-        obj_to_json_file('./data/task_plans.json',task_plans,task_plans.dict_save,"task_plans")
+        obj_to_json_file('./data/task_plans.json',task_plans,task_plans.dict_trans,"task_plans")
 
 
     #多线程函数##############################################################################################

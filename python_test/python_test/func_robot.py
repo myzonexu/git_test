@@ -263,7 +263,7 @@ class CleanTaskLog(object):
     filter_attr_names=["all"]
     def __init__(self):
         self.all=[]
-        #self.dict_save={}
+        #self.dict_trans={}
 
     def list_info(self):
         list_info = []
@@ -296,11 +296,11 @@ class RobotGroup(QObject):
     #current_changed=pyqtSignal(int)
     current_inited=pyqtSignal()
     current_changed=pyqtSignal()
-    filter_attr_names=["robots"]
+    filter_attr_names=["all"]
 
     def __init__(self):
         super().__init__()
-        self.robots = {}
+        self.all = {}
         self.addrs_online=set([])
         #新检测到的ip列表，[[id1,ip1],[id2,ip2]]
         self.addrs_new_scanned=[]
@@ -308,25 +308,55 @@ class RobotGroup(QObject):
         self.local_ip = None
         self.local_ip_strlist=None
 
-        self.dict_save={}
+        self.dict_trans={}
 
         #self.get_local_ip()
+        self.import_json_file('./data/robots.json')
+        self.import_json_robots()
+    
+    def import_json_file(self,file):
+        """
+        导入json文件.
+     
+        :param file: file,json文件地址
+        :returns: no return
+        :raises: no exception
+        """
+        with open(file, 'r') as f:
+            self.dict_trans=json.load(f)
+
+    def import_json_robots(self):
+        """
+        从json导入机器人.
+     
+        :returns: no return
+        :raises: no exception
+        """
+        _robots=self.dict_trans.get("robots").get("all")
+        if _robots:
+            for _id,_robot in _robots.items():
+                _ip=_robot.get("connect").get("ip")
+                _camera_ip=_robot.get("camera").get("ip")
+                _rob=Robot(_ip,_camera_ip)
+                _rob.camera.pc_test=_robot.get("camera").get("pc_test")
+                self.all[_id]=_rob
+        
 
     def add_robot_new_scanned(self):
         for n in range(len(self.addrs_new_scanned)):
             new_id=self.addrs_new_scanned[n][0]
             new_ip=self.addrs_new_scanned[n][1]
-            if new_id in self.robots:
-                self.robots.get(new_id).set_ip(new_ip)
+            if new_id in self.all:
+                self.all.get(new_id).set_ip(new_ip)
             else:
-                self.robots[new_id]=Robot(ip=new_ip)
+                self.all[new_id]=Robot(ip=new_ip)
                 print("检测到机器人id",new_id,new_ip)
-            self.robots.get(new_id).init()
+            self.all.get(new_id).init()
             self.addrs_online.add(new_ip)
             self.addrs_new_scanned.pop(n)
 
             if self.current==None:
-                self.current=self.robots.get(new_id)
+                self.current=self.all.get(new_id)
      
 
     def add(self,robot):
@@ -334,16 +364,16 @@ class RobotGroup(QObject):
         if robot.id is None:
             print("获取ID失败")
         else:
-            self.robots[robot.id]=robot
+            self.all[robot.id]=robot
             print("获取ID,添加机器人",robot.id)
 
     def delete(self,id):
-        self.robots.pop(id)
+        self.all.pop(id)
 
     def init_current(self,id):
         if self.current is None:
-            if id in self.robots:        
-                self.current=self.robots.get(id)
+            if id in self.all:        
+                self.current=self.all.get(id)
                 #self.current_inited.emit(id)
                 self.current_inited.emit()
                 print("设定当前机器人")
@@ -356,8 +386,8 @@ class RobotGroup(QObject):
 
     def set_current(self,id):
         
-        if id in self.robots:        
-            self.current=self.robots.get(id)
+        if id in self.all:        
+            self.current=self.all.get(id)
             #self.current_changed.emit(id)
             self.current_changed.emit()
             print("设定当前机器人ID为：",id)
@@ -391,15 +421,15 @@ class RobotGroup(QObject):
 
     def list_info(self):
         list_info = []
-        if self.robots == {}:
+        if self.all == {}:
             #print("没有机器人")
             pass
         else:
-            count = len(self.robots)       
-            #for id in self.robots:
-            #    list_info.append([self.robots.get(id).id,self.robots.get(id).connect.ip,self.robots.get(id).connect.state.string,
-            #                      self.robots.get(id).base.run_state.string,self.robots.get(id).task.state.string,self.robots.get(id).err_count(),self.robots.get(id).warning_count()])
-            for id,item in self.robots.items():
+            count = len(self.all)       
+            #for id in self.all:
+            #    list_info.append([self.all.get(id).id,self.all.get(id).connect.ip,self.all.get(id).connect.state.string,
+            #                      self.all.get(id).base.run_state.string,self.all.get(id).task.state.string,self.all.get(id).err_count(),self.all.get(id).warning_count()])
+            for id,item in self.all.items():
                 list_info.append([item.id,item.connect.ip,item.camera.ip,item.connect.state.string,
                                   item.base.run_state.string,item.task.state.string,item.err_count(),item.warning_count()])
            
@@ -774,33 +804,36 @@ class Robot(QObject):
 
 
 #变量定义
-f=None
-try:
-    f = open('config.json', 'r')
-    config = json.load(f)
-except Exception as e:
-    print("无配置文件 ，采用默认配置",str(e))
-    
-    config=None
-finally:
-    if f:
-        f.close()
-#with open('config.json', 'r') as f:
-#    config = json.load(f)
-#print(config)
-
 robots = RobotGroup()
-if config:
-    if config.get("pc_test") is True:
-        robot1=Robot()
-        robot1.camera.pc_test=True
-    else:
-        robot1=Robot(config.get("ip"))
-else:
-    robot1=Robot("192.168.1.5")
-robots.add(robot1)
-robot2=Robot()
-robots.add(robot2)
-#robots.init_current(robot1.id)
-#robots.current=robot1
+
+
+#f=None
+#try:
+#    f = open('config.json', 'r')
+#    config = json.load(f)
+#except Exception as e:
+#    print("无配置文件 ，采用默认配置",str(e))
+    
+#    config=None
+#finally:
+#    if f:
+#        f.close()
+##with open('config.json', 'r') as f:
+##    config = json.load(f)
+##print(config)
+
+
+#if config:
+#    if config.get("pc_test") is True:
+#        robot1=Robot()
+#        robot1.camera.pc_test=True
+#    else:
+#        robot1=Robot(config.get("ip"))
+#else:
+#    robot1=Robot("192.168.1.5")
+#robots.add(robot1)
+#robot2=Robot()
+#robots.add(robot2)
+##robots.init_current(robot1.id)
+##robots.current=robot1
 

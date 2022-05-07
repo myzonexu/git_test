@@ -35,7 +35,7 @@ class IdItems(QObject):
         self.all = {}
         self.new = None
         self.current = None
-        self.dict_save={}
+        self.dict_trans={}
 
     def set_current(self,id):        
         if id in self.all:        

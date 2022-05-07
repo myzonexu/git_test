@@ -31,7 +31,7 @@ def import_csv(file):
     with open(file, newline='') as f:
         f_csv = csv.reader(f)
         header = next(f_csv)
-        rows=[]
+        rows = []
         for row in f_csv:
             rows.append(row)
         #print(header)
@@ -49,7 +49,7 @@ def export_csv(file,header,rows):
     :raises: no exception
     """
     with open(file,'w',newline='') as f:
-        if len(rows)==0:
+        if len(rows) == 0:
             print("空数据")
         elif type(rows[0]) is list:
             #print("list数据")
@@ -66,7 +66,6 @@ def export_csv(file,header,rows):
 
 #head,rows=import_csv('./data/config_robot1.csv')
 #export_csv('./data/config_robot2.csv',head,rows)
-
 '''
 def obj_attr_to_json_dict(obj,attr_names):
     """
@@ -285,7 +284,7 @@ def obj_to_dict(item,dct):
 #    _type_bool=(None,True,False)
 
 #    if isinstance(item,dict):
-#        for key,value in item.items():            
+#        for key,value in item.items():
 #            if isinstance(value,dict):
 #                dct[key]={}
 #                obj_to_dict(value,dct[key],key)
@@ -319,7 +318,7 @@ def obj_to_dict(item,dct):
 #                _list=[]
 #                dct.append(_list)
 #                obj_to_dict(value,_list)
-#            #elif hasattr(value,"__dict__"):       
+#            #elif hasattr(value,"__dict__"):
 #            elif value in _type_bool:
 #                dct.append(value)
 #            elif value.__class__ not in _type_const:
@@ -338,8 +337,8 @@ def obj_to_dict(item,dct):
 #            else:
 #                dct.append(value)
 
-#    #elif hasattr(item,"__dict__"): 
-#    elif item.__class__ not in _type_const:       
+#    #elif hasattr(item,"__dict__"):
+#    elif item.__class__ not in _type_const:
 #        _item=type_py_to_json(item)
 #        if _item is None:
 #            if hasattr(item,"__dict__"):
@@ -348,8 +347,7 @@ def obj_to_dict(item,dct):
 #            dct[_key]=_item
 #    else:
 #        pass
-
-def type_json_to_py(json_data,py_type):
+def type_json_to_py(json_data,py):
     """
     json类型转换为python类型.
  
@@ -358,25 +356,24 @@ def type_json_to_py(json_data,py_type):
     :returns: 转换后python数据
     :raises: no exception
     """
-    attr=getattr_multilevel(obj, name)
-    attr_json=value
-    if isinstance(attr,(QDate,)):
-        setattr_multilevel(obj,name,QDate.fromString(attr_json,"yyyy/MM/dd"))
-                                  
-    elif isinstance(attr,(QTime,)):
-        setattr_multilevel(obj,name,QTime.fromString(attr_json,"hh:mm"))
-                    
-    elif isinstance(attr,(datetime,)):
-        setattr_multilevel(obj,name,datetime.strptime(attr_json, '%Y-%m-%d %H:%M:%S'))
-                   
-    #elif isinstance(attr,(PlanType,)):
-    #    setattr_multilevel(obj,name,PlanType(attr_json))
-                   
-    #elif isinstance(attr,(CycleType,)):
-    #    setattr_multilevel(obj,name,CycleType(attr_json))
-                  
-    elif isinstance(attr,(set,)):
-        setattr_multilevel(obj,name,set(attr_json))
+    if isinstance(py,(Enum,)):
+        py = py.__class__(json_data)
+        return True
+    elif isinstance(py,(datetime,)):
+        py = datetime.strptime(json_data, '%Y-%m-%d %H:%M:%S')
+        return True
+    elif isinstance(py,(timedelta,)):
+        pass
+        return True
+    elif isinstance(py,(QDate,)):
+        py = QDate.fromString(json_data,"yyyy/MM/dd")
+        return True
+    elif isinstance(py,(QTime,)):
+        py = QTime.fromString(json_data,"yyyy/MM/dd")
+        return True
+    else:
+        #print(f"未定义的json转python类型{type(py)}")
+        return False
 
 
 
@@ -408,7 +405,7 @@ def add_item(item,after_trans,key):
         after_trans.append(item)
         return True
     elif isinstance(after_trans,(dict,)):
-        after_trans[key]=item
+        after_trans[key] = item
         return True
     else:
         print(f"after_trans类型为{type(after_trans)},类型错误，应为list或dict")
@@ -438,9 +435,9 @@ def obj_to_dict(item,after_trans,key="unnamed_obj",*,filter="filter_attr_names",
     elif item is None:
         add_item(item,after_trans,key)
     elif isinstance(item,(dict,)):
-        _after_trans={}
+        _after_trans = {}
         if isinstance(after_trans,(dict,)):
-            after_trans[key]=_after_trans
+            after_trans[key] = _after_trans
         elif isinstance(after_trans,(list,)):
             after_trans.append(_after_trans)
         for _key,_value in item.items():
@@ -449,9 +446,9 @@ def obj_to_dict(item,after_trans,key="unnamed_obj",*,filter="filter_attr_names",
             else:
                 obj_to_dict(_value,_after_trans,_key)
     elif isinstance(item,(list,tuple,set)):
-        _after_trans=[]
+        _after_trans = []
         if isinstance(after_trans,(dict,)):
-            after_trans[key]=_after_trans
+            after_trans[key] = _after_trans
         elif isinstance(after_trans,(list,)):
             after_trans.append(_after_trans)
         for _value in item:
@@ -462,12 +459,12 @@ def obj_to_dict(item,after_trans,key="unnamed_obj",*,filter="filter_attr_names",
         if trans_all is True:
             obj_to_dict(item.__dict__,after_trans,key,trans_all=True)
         else:
-            _item={}
+            _item = {}
             if hasattr(item.__class__,filter):
-                _filter=getattr(item.__class__,filter)
+                _filter = getattr(item.__class__,filter)
                 if isinstance(_filter,list):
                     for name in _filter:
-                        _item[name]=item.__dict__.get(name)
+                        _item[name] = item.__dict__.get(name)
                     obj_to_dict(_item,after_trans,key)
                 else:
                     print(f"{type(_filter)}非list类型的选取属性集")
@@ -495,3 +492,27 @@ def obj_to_json_file(file,obj,dict_json,obj_name,filter="filter_attr_names"):
         json.dump(dict_json,f,ensure_ascii=False,indent=4)
     #print(json.dumps(dict_json,ensure_ascii=False, indent=4))
 
+def json_to_obj(json_dict,obj,filter="filter_attr_names"):
+    """
+    json数据导入对象.
+ 
+    :param json_dict: dict,json数据字典
+    :param obj: obj,待导入对象
+    :returns: no return
+    :raises: no exception
+    """
+
+    if type_json_to_py(json_dict,obj) is True:
+        pass
+    elif isinstance(obj,(int,float,str,bool)):
+        obj=json_dict
+    elif json_dict is None:
+        obj=None
+    elif isinstance(json_dict,(dict,)):
+        for key,value in json_dict.items():
+            if isinstance(obj,dict):
+                if obj.get(key) is None:
+                    obj[key]={}
+                    json_to_obj(value,obj[key])
+                else:
+                    json_to_obj(value,getattr(obj,key))

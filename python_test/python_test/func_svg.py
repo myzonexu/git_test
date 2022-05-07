@@ -49,7 +49,7 @@ class SvgMap(object):
         """
         self.doc = QDomDocument('map')
         self.paths = []
-        self.robots = []
+        self.all = []
         self.load(svg_file)
         self.init_path()
         self.init_robot()
@@ -76,7 +76,7 @@ class SvgMap(object):
         """初始化机器人."""
         
         for i in range(self.doc.elementsByTagName("circle").length()):
-            self.robots.append(self.doc.elementsByTagName("circle").item(i).toElement())
+            self.all.append(self.doc.elementsByTagName("circle").item(i).toElement())
     
     def update_robot_pos(self,path_length,reverse=False):
         """
@@ -99,8 +99,8 @@ class SvgMap(object):
 
         pos = self.paths[0].parse.point(_pos)
         #print(pos.real,pos.imag )
-        self.robots[0].setAttribute("cx",str(pos.real))
-        self.robots[0].setAttribute("cy",str(pos.imag))
+        self.all[0].setAttribute("cx",str(pos.real))
+        self.all[0].setAttribute("cy",str(pos.imag))
         
 
 

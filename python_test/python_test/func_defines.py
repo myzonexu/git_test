@@ -169,7 +169,19 @@ class RfidInfo(EnumDef):
     END = (22, '终点')
     UNDEFINE = (255, '未定义')
 
+@unique
+class PlanType(EnumDef):
+    Cycle =(0,"定期执行")
+    Once = (1,"指定时间执行")
+    Ignore = (2,"指定时间不执行")
+    NONE=(3,"无")
 
+@unique
+class CycleType(EnumDef):
+    Nday = (0,"每N天") 
+    Weekday = (1,"每周N")
+    Monthday = (2,"每月N日")
+    NONE=(3,"无")
     
 
 #常量#####################################################################

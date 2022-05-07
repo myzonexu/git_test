@@ -18,24 +18,24 @@ from enum import Enum,unique
 from PyQt5.QtCore import QTime,QDate
 import random
 from func_common import *
-#from func_robot import *
+from func_defines import *
 import copy
 import json
 
 #classes#######################################################################
-@unique
-class PlanType(Enum):
-    Cycle = 0 
-    Once = 1
-    Ignore = 2
-    NONE=3
+#@unique
+#class PlanType(Enum):
+#    Cycle = 0 
+#    Once = 1
+#    Ignore = 2
+#    NONE=3
 
-@unique
-class CycleType(Enum):
-    Nday = 0 
-    Weekday = 1
-    Monthday = 2
-    NONE=3
+#@unique
+#class CycleType(Enum):
+#    Nday = 0 
+#    Weekday = 1
+#    Monthday = 2
+#    NONE=3
 
 class TaskPlan(object):
     """计划任务类."""
@@ -280,7 +280,7 @@ class TaskPlans(QObject):
         #self.plan_list = []
         self.all = {}
         self.current = None
-        self.dict_save={}
+        self.dict_trans={}
 
     def set_current(self,id):        
         if id in self.all:        
