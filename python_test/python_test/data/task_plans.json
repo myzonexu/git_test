@@ -17,22 +17,6 @@
                 "received": [],
                 "add_time": "2022-05-10 15:41:23"
             },
-            "19966": {
-                "id": 19966,
-                "enable": false,
-                "name": "BB",
-                "plan_type": 2,
-                "cycle_type": 3,
-                "cycle_value": 0,
-                "do_time": "",
-                "start_date": "2022/05/10",
-                "end_date": "2022/05/15",
-                "assign": [
-                    "1"
-                ],
-                "received": [],
-                "add_time": "2022-05-10 15:41:48"
-            },
             "31999": {
                 "id": 31999,
                 "enable": false,

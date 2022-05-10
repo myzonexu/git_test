@@ -161,9 +161,11 @@ def check_time_info(time):
     :raises: no exception
     """
     if isinstance(time,datetime):
-        info_time=time.strftime(TIME_SHOW_ALL)
-    elif time==None:
-        info_time="--:--:--"
+        #print(time.timestamp())
+        if time.timestamp()==DEFAULT_DATETIME_STAMP_START:
+            info_time="--:--:--"
+        else:
+            info_time=time.strftime(TIME_SHOW_ALL)
     else:
         info_time="错误时间值"
     return info_time

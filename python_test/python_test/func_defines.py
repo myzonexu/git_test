@@ -193,3 +193,4 @@ type_has_child=(dict,list,tuple)
 TIME_SHOW_ALL = '%Y-%m-%d %H:%M:%S'
 TIME_SHOW_Y_M_D='%Y-%m-%d'
 TIME_SHOW_H_M_S = '%H:%M:%S'
+DEFAULT_DATETIME_STAMP_START=86400

@@ -231,8 +231,8 @@ class CleanTask(object):
         self.id=0
         self.state = CleanTaskState.NONE 
         self.state_machine=CleanStateMachine.NONE
-        self.start_time = None
-        self.stop_time = None
+        self.start_time = datetime.fromtimestamp(DEFAULT_DATETIME_STAMP_START)
+        self.stop_time = datetime.fromtimestamp(DEFAULT_DATETIME_STAMP_START)
         self.mileage_start = 0.0
         self.mileage_driven = 0.0
         self.mileage_total = 0.0
@@ -340,7 +340,10 @@ class RobotGroup(QObject):
                 _camera_ip=_robot.get("camera").get("ip")
                 _rob=Robot(_ip,_camera_ip)
                 _rob.camera.pc_test=_robot.get("camera").get("pc_test")
+                _rob.import_json_clean_log(_robot.get("clean_log").get("all"))
                 self.all[_id]=_rob
+
+    
                 
 
     def add_robot_new_scanned(self):
@@ -466,6 +469,19 @@ class Robot(QObject):
         self.log=Log()
         #self.init(ip)  
 
+    def import_json_clean_log(self,json_data):
+        """
+        从json导入清扫记录.
+     
+        :returns: no return
+        :raises: no exception
+        """
+
+        if isinstance(json_data,list):
+            for _log in json_data:
+                json_to_obj(_log,self.task)
+                self.clean_log.all.append(copy.deepcopy(self.task))
+            self.task.__init__()
 
     def init(self):        
         #self.master.open()

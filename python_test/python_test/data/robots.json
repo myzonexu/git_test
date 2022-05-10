@@ -8,7 +8,7 @@
                     "port": 502
                 },
                 "drive": {
-                    "mileage": 1241.297
+                    "mileage": 1248.848
                 },
                 "error_chassis": {
                     "active_error": {},
@@ -28,11 +28,31 @@
                 "clean_log": {
                     "all": [
                         {
-                            "id": -9037,
+                            "id": -4788,
                             "state": 0,
-                            "start_time": "2022-05-10 17:48:11",
-                            "stop_time": "2022-05-10 17:48:48",
+                            "start_time": "2022-05-10 18:27:02",
+                            "stop_time": "2022-05-10 18:28:04",
                             "mileage_driven": 0.0,
+                            "count_cleaned": 0,
+                            "count_add_water": 0,
+                            "count_charged": 0
+                        },
+                        {
+                            "id": 0,
+                            "state": 0,
+                            "start_time": "2022-05-10 18:29:27",
+                            "stop_time": "2022-05-10 18:32:01",
+                            "mileage_driven": 2.9279999999998836,
+                            "count_cleaned": 0,
+                            "count_add_water": 0,
+                            "count_charged": 0
+                        },
+                        {
+                            "id": -15579,
+                            "state": 0,
+                            "start_time": "2022-05-10 18:34:24",
+                            "stop_time": "2022-05-10 18:36:00",
+                            "mileage_driven": 0.6630000000000109,
                             "count_cleaned": 0,
                             "count_add_water": 0,
                             "count_charged": 0
