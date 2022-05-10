@@ -3,9 +3,10 @@ from func_task import *
 import json
 with open('./data/task_plans.json', 'r') as f:
     json_dict=json.load(f)
-
-json_to_obj(json_dict.get("task_plans").get("all").get("24177"),task_plans.new_plan)
-print(task_plans.new_plan.__dict__)
+    print(json_dict)
+#print(task_plans.new.__dict__)
+json_to_obj(json_dict.get("task_plans").get("all").get("19966"),task_plans.new)
+print(task_plans.new.__dict__)
 
 
 '''
@@ -174,7 +175,7 @@ print(resp.__dict__)
 '''
 from func_task import *
 
-print(task_plans.new_plan.__dict__)
+print(task_plans.new.__dict__)
 '''
 
 '''

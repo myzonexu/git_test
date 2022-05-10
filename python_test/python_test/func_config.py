@@ -352,28 +352,27 @@ def type_json_to_py(json_data,py):
     json类型转换为python类型.
  
     :param json_data: json待转换数据
-    :param py_type: 转换为python类型
+    :param py: 转换为python类型
     :returns: 转换后python数据
     :raises: no exception
     """
     if isinstance(py,(Enum,)):
-        py = py.__class__(json_data)
-        return True
+        return py.__class__(json_data)
     elif isinstance(py,(datetime,)):
-        py = datetime.strptime(json_data, '%Y-%m-%d %H:%M:%S')
-        return True
+        return datetime.strptime(json_data, '%Y-%m-%d %H:%M:%S')
     elif isinstance(py,(timedelta,)):
         pass
         return True
     elif isinstance(py,(QDate,)):
-        py = QDate.fromString(json_data,"yyyy/MM/dd")
-        return True
+        return QDate.fromString(json_data,"yyyy/MM/dd")
     elif isinstance(py,(QTime,)):
-        py = QTime.fromString(json_data,"yyyy/MM/dd")
-        return True
+        return QTime.fromString(json_data,"hh:mm")
+    elif isinstance(py,(set,)):
+        if isinstance(json_data,(list,)):
+            return set(json_data)
     else:
         #print(f"未定义的json转python类型{type(py)}")
-        return False
+        return None
 
 
 
@@ -492,7 +491,7 @@ def obj_to_json_file(file,obj,dict_json,obj_name,filter="filter_attr_names"):
         json.dump(dict_json,f,ensure_ascii=False,indent=4)
     #print(json.dumps(dict_json,ensure_ascii=False, indent=4))
 
-def json_to_obj(json_dict,obj,filter="filter_attr_names"):
+def json_to_obj(json_dict,obj,attr_name="",filter="filter_attr_names"):
     """
     json数据导入对象.
  
@@ -501,18 +500,33 @@ def json_to_obj(json_dict,obj,filter="filter_attr_names"):
     :returns: no return
     :raises: no exception
     """
-
-    if type_json_to_py(json_dict,obj) is True:
-        pass
-    elif isinstance(obj,(int,float,str,bool)):
-        obj=json_dict
-    elif json_dict is None:
-        obj=None
-    elif isinstance(json_dict,(dict,)):
+    if isinstance(json_dict,(dict,)):
         for key,value in json_dict.items():
             if isinstance(obj,dict):
-                if obj.get(key) is None:
-                    obj[key]={}
-                    json_to_obj(value,obj[key])
-                else:
-                    json_to_obj(value,getattr(obj,key))
+                json_to_obj(value,getattr(obj,key))
+                #if obj.get(key) is None:
+                #    obj[key]={}
+                #    json_to_obj(value,obj[key])
+            else:
+                json_to_obj(value,obj,key)
+                #setattr(obj,key,value)
+
+    elif type_json_to_py(json_dict,getattr(obj,attr_name)) != None:
+        setattr(obj,attr_name,type_json_to_py(json_dict,getattr(obj,attr_name)))
+    elif isinstance(getattr(obj,attr_name),(int,float,str,bool)):
+        #obj=json_dict
+        setattr(obj,attr_name,json_dict)
+    elif json_dict is None:
+        #obj=None
+        setattr(obj,attr_name,None)
+    #elif isinstance(json_dict,(dict,)):
+    #    for key,value in json_dict.items():
+    #        if isinstance(obj,dict):
+    #            if obj.get(key) is None:
+    #                obj[key]={}
+    #                json_to_obj(value,obj[key])
+    #        else:
+    #            json_to_obj(value,getattr(obj,key))
+        
+    else:
+        pass

@@ -1,5 +1,54 @@
 {
     "task_plans": {
-        "all": {}
+        "all": {
+            "3357": {
+                "id": 3357,
+                "enable": false,
+                "name": "AA",
+                "plan_type": 0,
+                "cycle_type": 0,
+                "cycle_value": 3,
+                "do_time": "09:00",
+                "start_date": "2022/05/10",
+                "end_date": "",
+                "assign": [
+                    "1"
+                ],
+                "received": [],
+                "add_time": "2022-05-10 15:41:23"
+            },
+            "19966": {
+                "id": 19966,
+                "enable": false,
+                "name": "BB",
+                "plan_type": 2,
+                "cycle_type": 3,
+                "cycle_value": 0,
+                "do_time": "",
+                "start_date": "2022/05/10",
+                "end_date": "2022/05/15",
+                "assign": [
+                    "1"
+                ],
+                "received": [],
+                "add_time": "2022-05-10 15:41:48"
+            },
+            "31999": {
+                "id": 31999,
+                "enable": false,
+                "name": "CC",
+                "plan_type": 1,
+                "cycle_type": 3,
+                "cycle_value": 0,
+                "do_time": "09:00",
+                "start_date": "2022/05/20",
+                "end_date": "",
+                "assign": [
+                    "1"
+                ],
+                "received": [],
+                "add_time": "2022-05-10 17:46:47"
+            }
+        }
     }
 }

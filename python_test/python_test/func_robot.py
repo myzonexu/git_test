@@ -618,7 +618,7 @@ class Robot(QObject):
 
         elif self.task.state_machine is CleanStateMachine.CLEANING:
             #上位机记录工作时间，时间显示：str(self.task.time_worked)[:-7]
-            #self.task.time_worked =datetime.now()-self.task.start_time
+            self.task.time_worked =datetime.now()-self.task.start_time
             #读取机器人记录工作时间
             self.task.time_worked =timedelta(hours=self.protocol.clean_time_h.value,seconds=self.protocol.clean_time_s.value)
             

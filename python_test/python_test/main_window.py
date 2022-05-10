@@ -240,31 +240,31 @@ class Window(QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_pushButton_add_task_preview_clicked(self):
         """预览新增计划任务."""
-        task_plans.new_plan.check_state=True
+        task_plans.new.check_state=True
         self.preview_new_task_plan()
             
     @pyqtSlot()
     def on_pushButton_add_task_clicked(self):
         """添加新增计划任务."""
         self.set_new_task_plan()
-        if task_plans.new_plan.name is "":
+        if task_plans.new.name is "":
             QMessageBox.information(self,'提示','计划任务名称不能为空!请填写。',QMessageBox.Ok)
         else:
-            task_plans.new_plan.init_id()
-            task_plans.new_plan.enable=True
-            task_plans.new_plan.assign=task_plans.new_plan.assign | set(list(robots.all.keys()))
-            self.preview_task_plan(task_plans.new_plan)        
-            task_plans.new_plan.add_time=datetime.now()
-            #task_plans.new_plan.add_time=QDateTime.currentDateTime()
+            task_plans.new.init_id()
+            task_plans.new.enable=True
+            task_plans.new.assign=task_plans.new.assign | set(list(robots.all.keys()))
+            self.preview_task_plan(task_plans.new)        
+            task_plans.new.add_time=datetime.now()
+            #task_plans.new.add_time=QDateTime.currentDateTime()
 
-            task_plans.all[task_plans.new_plan.id]=copy.deepcopy(task_plans.new_plan)
+            task_plans.all[str(task_plans.new.id)]=copy.deepcopy(task_plans.new)
          
             self.refresh_task_plan()
             
             #清空新任务信息
             self.lineEdit_add_task_name.setText("")
-            task_plans.new_plan.__init__()
-            self.preview_task_plan(task_plans.new_plan)
+            task_plans.new.__init__()
+            self.preview_task_plan(task_plans.new)
 
     
     #计划任务列表选择
@@ -312,7 +312,7 @@ class Window(QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_pushButton_preview_plans_checked_clicked(self):
         """预览所选计划."""
-        task_plans.new_plan.check_state=False
+        task_plans.new.check_state=False
         self.get_plan_check_state()
         self.preview_task_plans()
         #self.refresh_task_plan()
@@ -320,7 +320,7 @@ class Window(QMainWindow, Ui_MainWindow):
     @pyqtSlot(int,int)
     def on_calendarWidget_task_preview_currentPageChanged(self,year,month):
         """日历翻页预览所选计划."""
-        if task_plans.new_plan.check_state is True:
+        if task_plans.new.check_state is True:
             self.preview_new_task_plan()
         else:
             self.get_plan_check_state()
@@ -336,7 +336,8 @@ class Window(QMainWindow, Ui_MainWindow):
                     #item.received.add(robot_id)
                     pass
                 else:
-                    robots.current.task_plans.add(plan_id)
+                    #robots.current.task_plans.add(plan_id)
+                    robots.current.task_plans.add(item.id)
                 item.received.add(robot_id)
 
                 self.refresh_task_plan()
@@ -416,7 +417,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.setup_ui_statusbar()
         self.setup_ui_shortcut()
         self.camera_offlined.connect(self.update_ui_camera_offline)
-        #self.calendarWidget_task_preview.currentPageChanged.connect(lambda:self.preview_task_plans(task_plans.all))
         self.table_task_plan_is_checkable=False
         
         
@@ -602,44 +602,44 @@ class Window(QMainWindow, Ui_MainWindow):
     def set_new_task_plan(self):
         """新建计划任务."""
 
-        task_plans.new_plan.name=self.lineEdit_add_task_name.text()
+        task_plans.new.name=self.lineEdit_add_task_name.text()
 
         if self.comboBox_add_plan_type.currentIndex() is PlanType.Cycle.value:
-            task_plans.new_plan.plan_type=PlanType.Cycle
+            task_plans.new.plan_type=PlanType.Cycle
 
-            task_plans.new_plan.start_date=self.dateEdit_task_cycle_start_time.date()
+            task_plans.new.start_date=self.dateEdit_task_cycle_start_time.date()
             if self.radioButton_task_cycle_stop_time.isChecked():
-                task_plans.new_plan.end_date=self.dateEdit_task_cycle_end_time.date()
+                task_plans.new.end_date=self.dateEdit_task_cycle_end_time.date()
             else:
-                task_plans.new_plan.end_date=QDate()
+                task_plans.new.end_date=QDate()
 
             if self.comboBox_task_cycle_type.currentIndex() is CycleType.Nday.value:
-                task_plans.new_plan.cycle_type=CycleType.Nday
-                task_plans.new_plan.cycle_value=self.spinBox_task_cycle_n_day.value()
-                task_plans.new_plan.do_time=self.timeEdit_task_do_time_n_day.time()
+                task_plans.new.cycle_type=CycleType.Nday
+                task_plans.new.cycle_value=self.spinBox_task_cycle_n_day.value()
+                task_plans.new.do_time=self.timeEdit_task_do_time_n_day.time()
                 
             elif self.comboBox_task_cycle_type.currentIndex() is CycleType.Weekday.value:
-                task_plans.new_plan.cycle_type=CycleType.Weekday
-                task_plans.new_plan.cycle_value=self.comboBox_task_cycle_weekday.currentIndex()+1
-                task_plans.new_plan.do_time=self.timeEdit_task_do_time_weekday.time()
+                task_plans.new.cycle_type=CycleType.Weekday
+                task_plans.new.cycle_value=self.comboBox_task_cycle_weekday.currentIndex()+1
+                task_plans.new.do_time=self.timeEdit_task_do_time_weekday.time()
 
             elif self.comboBox_task_cycle_type.currentIndex() is CycleType.Monthday.value:
-                task_plans.new_plan.cycle_type=CycleType.Monthday
-                task_plans.new_plan.cycle_value=self.spinBox_task_cycle_monthday.value()
-                task_plans.new_plan.do_time=self.timeEdit_task_do_time_monthday.time()
+                task_plans.new.cycle_type=CycleType.Monthday
+                task_plans.new.cycle_value=self.spinBox_task_cycle_monthday.value()
+                task_plans.new.do_time=self.timeEdit_task_do_time_monthday.time()
 
             else:
                 pass            
 
         elif self.comboBox_add_plan_type.currentIndex() is PlanType.Once.value:
-            task_plans.new_plan.plan_type=PlanType.Once
-            task_plans.new_plan.start_date=self.dateEdit_task_once_date.date()
-            task_plans.new_plan.do_time=self.timeEdit_task_once_time.time()
+            task_plans.new.plan_type=PlanType.Once
+            task_plans.new.start_date=self.dateEdit_task_once_date.date()
+            task_plans.new.do_time=self.timeEdit_task_once_time.time()
 
         elif self.comboBox_add_plan_type.currentIndex() is PlanType.Ignore.value:
-            task_plans.new_plan.plan_type=PlanType.Ignore
-            task_plans.new_plan.start_date=self.dateEdit_task_ignore_start_time.date()
-            task_plans.new_plan.end_date=self.dateEdit_task_ignore_end_time.date()
+            task_plans.new.plan_type=PlanType.Ignore
+            task_plans.new.start_date=self.dateEdit_task_ignore_start_time.date()
+            task_plans.new.end_date=self.dateEdit_task_ignore_end_time.date()
 
         else:
             pass
@@ -669,13 +669,14 @@ class Window(QMainWindow, Ui_MainWindow):
     def preview_new_task_plan(self):
         """预览新增任务."""
         self.set_new_task_plan()
-        self.preview_task_plan(task_plans.new_plan)
+        self.preview_task_plan(task_plans.new)
 
     def get_plan_check_state(self):
         """获取计划任务选中状态."""
         for row in range(self.tableWidget_task_plan_list.rowCount()):
             check_state=self.tableWidget_task_plan_list.item(row,0).checkState()
-            id=int(self.tableWidget_task_plan_list.item(row,0).text())
+            #id=int(self.tableWidget_task_plan_list.item(row,0).text())
+            id=self.tableWidget_task_plan_list.item(row,0).text()
             if check_state == Qt.Checked:
                 task_plans.all.get(id).check_state=True
             elif check_state == Qt.Unchecked:

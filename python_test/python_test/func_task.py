@@ -19,6 +19,7 @@ from PyQt5.QtCore import QTime,QDate
 import random
 from func_common import *
 from func_defines import *
+from func_config import *
 import copy
 import json
 
@@ -276,11 +277,14 @@ class TaskPlans(QObject):
     def __init__(self):
         """初始化."""
         super().__init__()
-        self.new_plan = TaskPlan()
+        self.new = TaskPlan()
         #self.plan_list = []
         self.all = {}
         self.current = None
         self.dict_trans={}
+        self.import_json_file('./data/task_plans.json')
+        self.import_json_plans()
+
 
     def set_current(self,id):        
         if id in self.all:        
@@ -337,6 +341,31 @@ class TaskPlans(QObject):
                     
         return list_info
 
+    
+    def import_json_file(self,file):
+        """
+        导入json文件.
+     
+        :param file: file,json文件地址
+        :returns: no return
+        :raises: no exception
+        """
+        with open(file, 'r') as f:
+            self.dict_trans=json.load(f)
+
+    def import_json_plans(self):
+        """
+        从json导入计划任务.
+     
+        :returns: no return
+        :raises: no exception
+        """
+        _plans=self.dict_trans.get("task_plans").get("all")
+        if _plans:
+            for _id,_plan in _plans.items():
+                json_to_obj(_plan,self.new)
+                self.all[_id]=copy.deepcopy(self.new)
+            self.new.__init__()
 
 #functions#####################################################################
 def set_calendar_date_format(calendar,date,color,tooltip=""):
