@@ -4,8 +4,8 @@ import json
 with open('./data/task_plans.json', 'r') as f:
     json_dict=json.load(f)
 
-json_to_obj(json_dict.get("task_plans").get("all"),task_plans.all)
-print(task_plans.all)
+json_to_obj(json_dict.get("task_plans").get("all").get("24177"),task_plans.new_plan)
+print(task_plans.new_plan.__dict__)
 
 
 '''

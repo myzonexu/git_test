@@ -81,7 +81,8 @@ def scan_robots():
 
 def send_modbus_write_buffer():
     while True:
-        for id in robots.all:            
+        #for id in robots.all: 
+        for id in robots.all.keys():
             robots.all.get(id).master.send_write_buffer()
 
             time.sleep(1)

@@ -173,7 +173,8 @@ class Window(QMainWindow, Ui_MainWindow):
     #机器人列表选择
     @pyqtSlot(int,int)
     def on_tableWidget_robot_list_cellClicked(self, row, col):
-        id = int(self.tableWidget_robot_list.item(row,0).text())
+        #id = int(self.tableWidget_robot_list.item(row,0).text())
+        id = self.tableWidget_robot_list.item(row,0).text()
         #选择ID
         if col is 0:            
             robots.set_current(id)

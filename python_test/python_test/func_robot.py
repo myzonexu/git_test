@@ -10,6 +10,7 @@ from func_modbus_tcp import *
 from func_defines import *
 from func_task import *
 import struct
+import copy
 
 #常量定义
 robot_error_code_dict={0:["无","无故障","无需处理"],1:["轻微故障","测试故障描述","测试处理方式"]}
@@ -340,7 +341,7 @@ class RobotGroup(QObject):
                 _rob=Robot(_ip,_camera_ip)
                 _rob.camera.pc_test=_robot.get("camera").get("pc_test")
                 self.all[_id]=_rob
-        
+                
 
     def add_robot_new_scanned(self):
         for n in range(len(self.addrs_new_scanned)):
@@ -364,11 +365,11 @@ class RobotGroup(QObject):
         if robot.id is None:
             print("获取ID失败")
         else:
-            self.all[robot.id]=robot
+            self.all[str(robot.id)]=robot
             print("获取ID,添加机器人",robot.id)
 
     def delete(self,id):
-        self.all.pop(id)
+        self.all.pop(str(id))
 
     def init_current(self,id):
         if self.current is None:

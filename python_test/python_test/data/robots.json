@@ -1,35 +1,17 @@
 {
     "robots": {
         "all": {
-            "0": {
-                "id": 0,
+            "1": {
+                "id": 1,
                 "connect": {
-                    "ip": "127.0.0.1",
+                    "ip": "192.168.0.5",
                     "port": 502
                 },
                 "drive": {
-                    "mileage": 131.074
+                    "mileage": 1172.363
                 },
                 "error_chassis": {
-                    "active_error": {
-                        "1": {
-                            "code": 1,
-                            "code_dict": {
-                                "0": [
-                                    "无",
-                                    "无故障",
-                                    "无需处理"
-                                ],
-                                "1": [
-                                    "轻微故障",
-                                    "测试故障描述",
-                                    "测试处理方式"
-                                ]
-                            },
-                            "time_start": "2022-05-07 17:40:35",
-                            "time_stop": null
-                        }
-                    },
+                    "active_error": {},
                     "history_error": []
                 },
                 "error_arm": {
@@ -41,17 +23,17 @@
                     "port": 554,
                     "username": "admin",
                     "passwd": "ylcx6666",
-                    "pc_test": true
+                    "pc_test": false
                 },
                 "clean_log": {
                     "all": []
                 },
                 "task_plans": []
             },
-            "1": {
+            "0": {
                 "id": 0,
                 "connect": {
-                    "ip": "192.168.1.5",
+                    "ip": "127.0.0.1",
                     "port": 502
                 },
                 "drive": {
@@ -70,7 +52,7 @@
                     "port": 554,
                     "username": "admin",
                     "passwd": "ylcx6666",
-                    "pc_test": false
+                    "pc_test": true
                 },
                 "clean_log": {
                     "all": []
