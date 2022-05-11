@@ -2,13 +2,13 @@
     "robots": {
         "all": {
             "1": {
-                "id": 1,
+                "id": 0,
                 "connect": {
                     "ip": "192.168.0.5",
                     "port": 502
                 },
                 "drive": {
-                    "mileage": 1271.644
+                    "mileage": 0.0
                 },
                 "error_chassis": {
                     "active_error": {},

@@ -617,12 +617,15 @@ class Robot(QObject):
             self.base.run_state=RunState.EMERGENCY
         elif state_2==0:
             self.base.run_state=RunState.NOTASK
-        if state_3==1:
+        if test_bit(self.protocol.robot_state.value,4):
             self.battery.charging=True
-        elif state_3==2:
+        else:
+            self.battery.charging=False
+        if test_bit(self.protocol.robot_state.value,4):
             self.cleaner.water_adding=True
-        elif state_3==0:
-            pass
+        else:
+            self.cleaner.water_adding=False
+        
 
 
     def get_ctrl_mode(self):
