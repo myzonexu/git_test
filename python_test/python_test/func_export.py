@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 -------------------------------------------------------------------------------
-File   Name ： func_config.py
+File   Name ： func_export.py
 Description :  导入导出，配置文件
 Author      :  simon
 Create Time ： 2022.4.26

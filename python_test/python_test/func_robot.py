@@ -621,7 +621,7 @@ class Robot(QObject):
             self.battery.charging=True
         else:
             self.battery.charging=False
-        if test_bit(self.protocol.robot_state.value,4):
+        if test_bit(self.protocol.robot_state.value,5):
             self.cleaner.water_adding=True
         else:
             self.cleaner.water_adding=False

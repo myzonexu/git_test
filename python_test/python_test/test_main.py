@@ -1,4 +1,4 @@
-from func_config import *
+from func_export import *
 from func_task import *
 import json
 with open('./data/task_plans.json', 'r') as f:
@@ -11,7 +11,7 @@ print(task_plans.new.__dict__)
 
 '''
 from func_robot import *
-from func_config import *
+from func_export import *
 from func_task import *
 import json
 a = {'a': {1: {1: 2, 3: 4}, 2: {5: 6}}}
@@ -103,7 +103,7 @@ with open('./data/test.json', 'w') as f:
 
 '''
 #测试获取多级属性
-from func_config import *
+from func_export import *
 from func_robot import *
 class Response(object):
 

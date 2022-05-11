@@ -19,7 +19,7 @@ from PyQt5.QtCore import QTime,QDate
 import random
 from func_common import *
 from func_defines import *
-from func_config import *
+from func_export import *
 import copy
 import json
 

@@ -27,7 +27,7 @@ from dialog_select_robot import *
 from func_task import *
 from func_robot import *
 from func_svg import *
-from func_config import *
+from func_export import *
 from func_defines import *
 
 class Window(QMainWindow, Ui_MainWindow):
@@ -54,7 +54,7 @@ class Window(QMainWindow, Ui_MainWindow):
         #self.scrollArea_camera_browser.setWidget(self.browser)
         #self.browser.load(QUrl('http://192.168.0.64/'))
         
-        self.scrollArea_camera_browser.show()
+        #self.scrollArea_camera_browser.show()
 
  
     #事件响应###################################################################################################
