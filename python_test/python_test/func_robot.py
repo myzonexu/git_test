@@ -280,6 +280,7 @@ class CleanTask(object):
         :raises: no exception
         """
         self.id =random.randint(-32760,-1)
+        #print(self.id)
         return self.id
 
 
@@ -657,6 +658,7 @@ class Robot(QObject):
             elif self.task.state is CleanTaskState.BACK:
                 pass
         elif self.task.state_machine is CleanStateMachine.START:
+            self.task.id =random.randint(1,32760)
             self.task.start_time=datetime.now()
             self.task.mileage_start = self.drive.mileage
             self.task.count_add_water_start = self.protocol.count_add_water.value

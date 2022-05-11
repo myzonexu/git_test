@@ -89,7 +89,7 @@ class Window(QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_pushButton_autorun_start_clicked(self):
         robots.current.clean_task_start()        
-        robots.current.task.start_clean_manual_id()
+        #robots.current.task.start_clean_manual_id()
     @pyqtSlot()
     def on_pushButton_autorun_stop_clicked(self):
         robots.current.clean_task_stop()
