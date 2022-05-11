@@ -513,7 +513,7 @@ def json_to_obj(json_dict,obj,attr_name="",filter="filter_attr_names"):
 
     elif type_json_to_py(json_dict,getattr(obj,attr_name)) != None:
         setattr(obj,attr_name,type_json_to_py(json_dict,getattr(obj,attr_name)))
-    elif isinstance(getattr(obj,attr_name),(int,float,str,bool)):
+    elif isinstance(getattr(obj,attr_name),(int,float,str,bool,list)):
         #obj=json_dict
         setattr(obj,attr_name,json_dict)
     elif json_dict is None:

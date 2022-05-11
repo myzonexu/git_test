@@ -1806,8 +1806,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>982</width>
-             <height>594</height>
+             <width>100</width>
+             <height>30</height>
             </rect>
            </property>
           </widget>
@@ -2718,7 +2718,7 @@ p, li { white-space: pre-wrap; }
           </column>
           <column>
            <property name="text">
-            <string>行驶里程</string>
+            <string>行驶里程(m)</string>
            </property>
           </column>
           <column>

@@ -85,8 +85,18 @@ class Battery:
     soh :int = 0
     voltage :float = 0.0
     charging:bool=False
-
-
+    
+    def info(self):
+        """
+        电池状态信息.
+    
+        :returns: str,电池状态信息
+        :raises: no exception
+        """
+        if self.charging is True:
+            return f"{self.soc}%(充电中…)"
+        else:
+            return f"{self.soc}%"
 
 #行驶状态
 @dataclass
@@ -131,6 +141,19 @@ class NaviState:
 class Cleaner:
     is_open :bool = False
     water_level :int = 0
+    water_adding:bool=False
+
+    def info(self):
+        """
+        水位状态信息.
+    
+        :returns: str,水位状态信息
+        :raises: no exception
+        """
+        if self.water_adding is True:
+            return f"{self.water_level}%(加水中…)"
+        else:
+            return f"{self.water_level}%"
 
 
 #机械臂
@@ -275,7 +298,7 @@ class CleanTaskLog(object):
             elif task.id>0:
                 str_task_id=str(task.id)
             list_info.append([str_task_id,task.start_time.strftime("%Y-%m-%d %H:%M:%S"),task.stop_time.strftime("%Y-%m-%d %H:%M:%S"),\
-                str(task.mileage_driven),str(task.count_cleaned),str(task.count_add_water),str(task.count_charged)])       
+                task.mileage_driven,task.count_cleaned,task.count_add_water,task.count_charged])       
                     
         return list_info
 
@@ -343,8 +366,6 @@ class RobotGroup(QObject):
                 _rob.import_json_clean_log(_robot.get("clean_log").get("all"))
                 self.all[_id]=_rob
 
-    
-                
 
     def add_robot_new_scanned(self):
         for n in range(len(self.addrs_new_scanned)):
@@ -510,11 +531,11 @@ class Robot(QObject):
                     self.connect.state=ConnectState.RECONNECT
                 else:
                     self.connect.state=ConnectState.OFFLINE
-
+    
     #获取机器人信息参数列表
     def robot_info(self):
         robot_info = [["ID编号",self.id],["连接状态",self.connect.state.string],["运行状态",self.base.run_state.string],
-              ["速度(mm/s)    ",self.drive.speed],["转角(°)",self.drive.steer_angle],["电量(%)",self.battery.soc],["水位(%)",self.cleaner.water_level],
+              ["速度(mm/s)    ",self.drive.speed],["转角(°)",self.drive.steer_angle],["电量(%)",self.battery.info()],["水位(%)",self.cleaner.info()],
               ["当前位置(cm)",self.position.path_pos],["RFID功能",self.rfid.info.string],["总里程(m)",self.drive.mileage],["控制模式",self.base.ctrl_mode.string],
               ["ip地址",self.connect.ip],["程序版本",self.version.get()],["机器人时间",check_time_info(self.robot_time)]]
         return robot_info
@@ -585,9 +606,9 @@ class Robot(QObject):
 
     def get_run_state(self):
         state_1=get_bits(self.protocol.robot_state.value,0,1)
-        state_2=get_bits(self.protocol.robot_state.value,2,5)
-        state_3=get_bits(self.protocol.robot_state.value,6,9)
-        #print(state_1,state_2,state_3)
+        state_2=get_bits(self.protocol.robot_state.value,2,3)
+        state_3=get_bits(self.protocol.robot_state.value,4,5)
+        #print(self.protocol.robot_state.value,state_1,state_2,state_3)
         if state_2==2:
             self.base.run_state=RunState.WORK
         elif state_2==3:
@@ -596,6 +617,13 @@ class Robot(QObject):
             self.base.run_state=RunState.EMERGENCY
         elif state_2==0:
             self.base.run_state=RunState.NOTASK
+        if state_3==1:
+            self.battery.charging=True
+        elif state_3==2:
+            self.cleaner.water_adding=True
+        elif state_3==0:
+            pass
+
 
     def get_ctrl_mode(self):
         self.base.ctrl_mode = CtrlMode(get_bits(self.protocol.robot_state.value,0,1))

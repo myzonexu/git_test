@@ -3,7 +3,7 @@
         "all": {
             "3357": {
                 "id": 3357,
-                "enable": false,
+                "enable": true,
                 "name": "AA",
                 "plan_type": 0,
                 "cycle_type": 0,
@@ -19,7 +19,7 @@
             },
             "31999": {
                 "id": 31999,
-                "enable": false,
+                "enable": true,
                 "name": "CC",
                 "plan_type": 1,
                 "cycle_type": 3,
@@ -32,6 +32,23 @@
                 ],
                 "received": [],
                 "add_time": "2022-05-10 17:46:47"
+            },
+            "23144": {
+                "id": 23144,
+                "enable": true,
+                "name": "DD",
+                "plan_type": 0,
+                "cycle_type": 0,
+                "cycle_value": 3,
+                "do_time": "09:00",
+                "start_date": "2022/05/11",
+                "end_date": "",
+                "assign": [
+                    "0",
+                    "1"
+                ],
+                "received": [],
+                "add_time": "2022-05-11 10:35:02"
             }
         }
     }

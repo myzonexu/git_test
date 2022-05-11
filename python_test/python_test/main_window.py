@@ -685,12 +685,14 @@ class Window(QMainWindow, Ui_MainWindow):
                 pass
     def refresh_clean_log(self):
         """刷新清扫日志."""
+        clean_infos=[]
         for id,item in robots.all.items():
-            clean_info=item.clean_log.list_info()
+            clean_info=item.clean_log.list_info()            
             for info in clean_info:
                 info.insert(0,str(id))
+                clean_infos.append(info)
                 
-        table_fill_data_list_2d(self.tableWidget_log_all,clean_info,checkable=True)
+        table_fill_data_list_2d(self.tableWidget_log_all,clean_infos,checkable=True)
         return clean_info
 
     
