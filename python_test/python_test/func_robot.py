@@ -838,11 +838,12 @@ class Robot(QObject):
         addr_start=3000
         self.master.write_multiple(addr_start,[0 for x in range(0, 40)])
 
-        for id in self.task_plans:
-            datas=task_plans.all.get(id).get_message_frame()
-            self.master.write_multiple(addr_start,datas)
-            print(addr_start,datas)
-            addr_start=addr_start+len(datas)
+        if self.task_plans:
+            for id in self.task_plans:
+                datas=task_plans.all.get(str(id)).get_message_frame()
+                self.master.write_multiple(addr_start,datas)
+                print(addr_start,datas)
+                addr_start=addr_start+len(datas)
             
         self.master.write_multiple(addr_start,[-1])
 

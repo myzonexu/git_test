@@ -330,17 +330,15 @@ class Window(QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_pushButton_send_task_plan_clicked(self):
         """计划任务下发."""
-        for plan_id,item in task_plans.all.items():
-            for robot_id in item.assign:
-                if plan_id in robots.current.task_plans:
-                    #item.received.add(robot_id)
-                    pass
-                else:
-                    #robots.current.task_plans.add(plan_id)
-                    robots.current.task_plans.add(item.id)
+        robots.current.task_plans=set()
+        for plan_id,item in task_plans.all.items():            
+            for robot_id in item.assign:                
+                robots.current.task_plans.add(item.id)
                 item.received.add(robot_id)
 
                 self.refresh_task_plan()
+        #print(robots.current.task_plans)
+
 
         #下发当前机器人
         robots.current.send_plan()

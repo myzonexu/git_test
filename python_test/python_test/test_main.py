@@ -1,12 +1,149 @@
-from func_export import *
-from func_task import *
-import json
-with open('./data/task_plans.json', 'r') as f:
-    json_dict=json.load(f)
-    print(json_dict)
-#print(task_plans.new.__dict__)
-json_to_obj(json_dict.get("task_plans").get("all").get("19966"),task_plans.new)
-print(task_plans.new.__dict__)
+#测试协程
+import asyncio
+import time
+
+async def say_after(delay, what):
+    await asyncio.sleep(delay)
+    print(what)
+
+async def main():
+    print(f"started at {time.strftime('%X')}")
+
+    await say_after(1, 'hello')
+    await say_after(2, 'world')
+
+    print(f"finished at {time.strftime('%X')}")
+
+async def main2():
+    task1 = asyncio.create_task(
+        say_after(1, 'hello'))
+
+    task2 = asyncio.create_task(
+        say_after(2, 'world'))
+    task3 = asyncio.create_task(
+        say_after(2, '2'))
+    task4 = asyncio.create_task(
+        say_after(1, '3'))
+    
+
+    print(f"started at {time.strftime('%X')}")
+
+    # Wait until both tasks are completed (should take
+    # around 2 seconds.)
+    await task1
+    await task2
+    await task4
+    await task3
+
+    print(f"finished at {time.strftime('%X')}")
+
+#asyncio.run(main2())
+
+import modbus_tk
+import modbus_tk.defines as cst
+from modbus_tk import modbus_tcp, hooks
+import logging
+
+async def read1(ip):
+    while True:
+        try:
+            master = modbus_tcp.TcpMaster(ip,timeout_in_sec=0)
+            print(master.execute(1, cst.READ_HOLDING_REGISTERS, 1000, 3))
+            await asyncio.sleep(1)
+        except modbus_tk.modbus.ModbusError as exc:
+            print("%s- Code=%d", exc, exc.get_exception_code())
+        except modbus_tk.modbus_tcp.socket.error as e:
+            print("连接网络: ",ip," 失败，错误：",str(e))
+            pass
+
+async def read2(ip):
+    while True:
+        try:
+            master = modbus_tcp.TcpMaster(ip,timeout_in_sec=0)
+            print(master.execute(1, cst.READ_HOLDING_REGISTERS, 1003, 3))
+            await asyncio.sleep(1)
+        except modbus_tk.modbus.ModbusError as exc:
+            print("%s- Code=%d", exc, exc.get_exception_code())
+        except modbus_tk.modbus_tcp.socket.error as e:
+            print("连接网络: ",ip," 失败，错误：",str(e))
+            pass
+
+async def test1():
+    
+    task1 = asyncio.create_task(read1("127.0.0.1"))
+    #task2 = asyncio.create_task( read2("192.168.0.5"))
+
+    
+    #await task2
+    await task1
+    
+    
+
+#read1("127.0.0.1")
+asyncio.run(test1())
+
+
+
+
+
+def main():
+    """main"""
+    logger = modbus_tk.utils.create_logger("console", level=logging.DEBUG)
+    
+    def on_after_recv(data):
+        master, bytes_data = data
+        logger.info(bytes_data)
+
+    hooks.install_hook('modbus.Master.after_recv', on_after_recv)
+
+    try:
+
+        def on_before_connect(args):
+            master = args[0]
+            logger.debug("on_before_connect {0} {1}".format(master._host, master._port))
+
+        hooks.install_hook("modbus_tcp.TcpMaster.before_connect", on_before_connect)
+
+        def on_after_recv(args):
+            response = args[1]
+            logger.debug("on_after_recv {0} bytes received".format(len(response)))
+
+        hooks.install_hook("modbus_tcp.TcpMaster.after_recv", on_after_recv)
+
+        # Connect to the slave
+        master = modbus_tcp.TcpMaster("127.0.0.1")
+        master.set_timeout(5.0)
+        #logger.info("connected")
+        
+        #master.open()
+        print("connected")
+
+        #print(dir(master))
+    
+        logger.info(master.execute(1, cst.READ_HOLDING_REGISTERS, 0, 3))
+
+        #logger.info(master.execute(1, cst.READ_HOLDING_REGISTERS, 0, 16, data_format='>f'))
+
+        # Read and write floats
+        #master.execute(1, cst.WRITE_MULTIPLE_REGISTERS, starting_address=0, output_value=[3.14,1.11,2.22], data_format='>'+3*'f')
+        #logger.info(master.execute(1, cst.READ_HOLDING_REGISTERS, 0, 2, data_format='>f'))
+
+        # send some queries
+        # logger.info(master.execute(1, cst.READ_COILS, 0, 10))
+        # logger.info(master.execute(1, cst.READ_DISCRETE_INPUTS, 0, 8))
+        # logger.info(master.execute(1, cst.READ_INPUT_REGISTERS, 100, 3))
+        # logger.info(master.execute(1, cst.READ_HOLDING_REGISTERS, 100, 12))
+        # logger.info(master.execute(1, cst.WRITE_SINGLE_COIL, 7, output_value=1))
+        # logger.info(master.execute(1, cst.WRITE_SINGLE_REGISTER, 100, output_value=54))
+        # logger.info(master.execute(1, cst.WRITE_MULTIPLE_COILS, 0, output_value=[1, 1, 0, 1, 1, 0, 1, 1]))
+        # logger.info(master.execute(1, cst.WRITE_MULTIPLE_REGISTERS, 100, output_value=xrange(12)))
+
+    except modbus_tk.modbus.ModbusError as exc:
+        logger.error("%s- Code=%d", exc, exc.get_exception_code())
+
+#main()
+
+
 
 
 '''
