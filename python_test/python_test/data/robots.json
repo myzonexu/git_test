@@ -8,7 +8,7 @@
                     "port": 502
                 },
                 "drive": {
-                    "mileage": 119.06
+                    "mileage": 216.516
                 },
                 "error_chassis": {
                     "active_error": {},
@@ -226,10 +226,54 @@
                             "count_cleaned": 0,
                             "count_add_water": 0,
                             "count_charged": 0
+                        },
+                        {
+                            "id": 10873,
+                            "state": 0,
+                            "start_time": "2022-05-12 15:07:05",
+                            "stop_time": "2022-05-12 15:15:31",
+                            "mileage_driven": 18.783000000000015,
+                            "count_cleaned": 0,
+                            "count_add_water": 0,
+                            "count_charged": 0
+                        },
+                        {
+                            "id": 7723,
+                            "state": 0,
+                            "start_time": "2022-05-12 15:17:05",
+                            "stop_time": "2022-05-12 15:25:15",
+                            "mileage_driven": 18.783000000000015,
+                            "count_cleaned": 0,
+                            "count_add_water": 0,
+                            "count_charged": 0
+                        },
+                        {
+                            "id": 32178,
+                            "state": 0,
+                            "start_time": "2022-05-12 15:44:04",
+                            "stop_time": "2022-05-12 15:53:03",
+                            "mileage_driven": 18.477000000000004,
+                            "count_cleaned": 0,
+                            "count_add_water": 0,
+                            "count_charged": 0
+                        },
+                        {
+                            "id": 28773,
+                            "state": 0,
+                            "start_time": "2022-05-12 16:12:04",
+                            "stop_time": "2022-05-12 16:15:10",
+                            "mileage_driven": 4.332999999999998,
+                            "count_cleaned": 0,
+                            "count_add_water": 0,
+                            "count_charged": 0
                         }
                     ]
                 },
-                "task_plans": []
+                "task_plans": [
+                    25736,
+                    20908,
+                    19229
+                ]
             }
         }
     }

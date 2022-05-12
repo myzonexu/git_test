@@ -836,7 +836,8 @@ class Robot(QObject):
         :raises: no exception
         """
         addr_start=3000
-        self.master.write_multiple(addr_start,[0 for x in range(0, 40)])
+        self.master.write_multiple(addr_start,[0 for x in range(0, 100)])
+        self.master.write_multiple(addr_start+100,[0 for x in range(0, 100)])
 
         if self.task_plans:
             for id in self.task_plans:

@@ -1,14 +1,14 @@
 {
     "task_plans": {
         "all": {
-            "10409": {
-                "id": 10409,
+            "20908": {
+                "id": 20908,
                 "enable": true,
-                "name": "Ã¿Ìì",
+                "name": "17£º00",
                 "plan_type": 0,
                 "cycle_type": 0,
                 "cycle_value": 1,
-                "do_time": "11:17",
+                "do_time": "17:00",
                 "start_date": "2022/05/12",
                 "end_date": "",
                 "assign": [
@@ -17,7 +17,43 @@
                 "received": [
                     "1"
                 ],
-                "add_time": "2022-05-12 11:16:04"
+                "add_time": "2022-05-12 15:09:14"
+            },
+            "19229": {
+                "id": 19229,
+                "enable": true,
+                "name": "16£º00",
+                "plan_type": 0,
+                "cycle_type": 0,
+                "cycle_value": 1,
+                "do_time": "16:00",
+                "start_date": "2022/05/12",
+                "end_date": "",
+                "assign": [
+                    "1"
+                ],
+                "received": [
+                    "1"
+                ],
+                "add_time": "2022-05-12 15:09:27"
+            },
+            "25736": {
+                "id": 25736,
+                "enable": true,
+                "name": "b",
+                "plan_type": 1,
+                "cycle_type": 3,
+                "cycle_value": 0,
+                "do_time": "15:44",
+                "start_date": "2022/05/12",
+                "end_date": "",
+                "assign": [
+                    "1"
+                ],
+                "received": [
+                    "1"
+                ],
+                "add_time": "2022-05-12 15:43:04"
             }
         }
     }
