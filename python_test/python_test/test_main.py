@@ -1,3 +1,56 @@
+#测试多进程
+import asyncio
+import time
+import modbus_tk
+import modbus_tk.defines as cst
+from modbus_tk import modbus_tcp, hooks
+import logging
+from multiprocessing import Process
+master1=None
+master2=None
+
+def read(master,ip):
+    while True:
+        try:
+            if master is None:
+                master = modbus_tcp.TcpMaster(ip,timeout_in_sec=3)
+            else:
+                #time.sleep(1)
+                print(master.execute(1, cst.READ_HOLDING_REGISTERS, 1000, 3))           
+        except modbus_tk.modbus.ModbusError as exc:
+            print("%s- Code=%d", exc, exc.get_exception_code())
+        except modbus_tk.modbus_tcp.socket.error as e:
+            print("连接网络: ",ip," 失败，错误：",str(e))
+            master = None
+            pass
+
+def read0(ip):
+    #while True:
+        try:
+            master = modbus_tcp.TcpMaster(ip,timeout_in_sec=5)
+            while True:
+                #time.sleep(1)
+                print(master.execute(1, cst.READ_HOLDING_REGISTERS, 1000, 3))           
+        except modbus_tk.modbus.ModbusError as exc:
+            print("%s- Code=%d", exc, exc.get_exception_code())
+        except modbus_tk.modbus_tcp.socket.error as e:
+            print("连接网络: ",ip," 失败，错误：",str(e))
+            pass
+
+
+if __name__=='__main__':
+    #read(master1,"127.0.0.1")
+    p1 = Process(target=read, args=(master1,"127.0.0.1",))
+    p2 = Process(target=read, args=(master2,"192.168.1.5",))
+    p1.start()
+    p2.start()
+    #p.join()
+    while 1:
+        pass
+
+
+
+'''
 #测试协程
 import asyncio
 import time
@@ -7,17 +60,7 @@ from modbus_tk import modbus_tcp, hooks
 import logging
 from multiprocessing import Process
 
-def read(ip):
-    while True:
-        try:
-            master = modbus_tcp.TcpMaster(ip,timeout_in_sec=1)
-            #time.sleep(1)
-            print(master.execute(1, cst.READ_HOLDING_REGISTERS, 1000, 3))           
-        except modbus_tk.modbus.ModbusError as exc:
-            print("%s- Code=%d", exc, exc.get_exception_code())
-        except modbus_tk.modbus_tcp.socket.error as e:
-            print("连接网络: ",ip," 失败，错误：",str(e))
-            pass
+
 
 async def read1(ip):
     while True:
@@ -53,16 +96,10 @@ async def test1():
     
     #await task2
     await task1
+asyncio.run(test1())
+'''
     
-    
-if __name__=='__main__':
-    #read("127.0.0.1")
-    #asyncio.run(test1())
-    p1 = Process(target=read, args=("127.0.0.1",))
-    p2 = Process(target=read, args=("192.168.1.5",))
-    p1.start()
-    p2.start()
-    #p.join()
+
 
 
 

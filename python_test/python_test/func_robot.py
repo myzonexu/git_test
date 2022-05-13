@@ -68,7 +68,7 @@ class Version:
 class Connect(object):
     filter_attr_names=["ip","port"]
     def __init__(self,ip="127.0.0.1",port=502):
-        self.is_online = False
+        self.is_online = True
         self.state = ConnectState.OFFLINE #ValueDescriptionSet(communication_state)
         self.ip = ip
         self.port = port
@@ -251,7 +251,7 @@ class Error(object):
 class CleanTask(object):
     filter_attr_names=["id","state","start_time","stop_time","mileage_driven","count_cleaned","count_add_water","count_charged"]
     def __init__(self):
-        self.id=0
+        self.id=""
         self.state = CleanTaskState.NONE 
         self.state_machine=CleanStateMachine.NONE
         self.start_time = datetime.fromtimestamp(DEFAULT_DATETIME_STAMP_START)
@@ -272,14 +272,14 @@ class CleanTask(object):
         self.time_estimate = timedelta()
         self.time_remain = timedelta()
     
-    def start_clean_manual_id(self):
+    def create_id(self,rob_id):
         """
-        手动开始任务，设定id为-1~-32760.
+        创建任务id，设定rob_id-任务开始时间.
      
-        :returns: int,任务id
+        :returns: str,任务id
         :raises: no exception
         """
-        self.id =random.randint(-32760,-1)
+        self.id =f"{rob_id}-{self.start_time.strftime(TIME_SHOW_ALL)}"
         #print(self.id)
         return self.id
 
@@ -287,10 +287,11 @@ class CleanTask(object):
 class CleanTaskLog(object):
     filter_attr_names=["all"]
     def __init__(self):
-        self.all=[]
+        #self.all=[]
+        self.all={}
         #self.dict_trans={}
 
-    def list_info(self):
+    def list_info_(self):
         list_info = []
         str_task_id=""
         for task in self.all:
@@ -299,6 +300,16 @@ class CleanTaskLog(object):
             elif task.id>0:
                 str_task_id=str(task.id)
             list_info.append([str_task_id,task.start_time.strftime("%Y-%m-%d %H:%M:%S"),task.stop_time.strftime("%Y-%m-%d %H:%M:%S"),\
+                task.mileage_driven,task.count_cleaned,task.count_add_water,task.count_charged])       
+                    
+        return list_info
+
+    def list_info(self):
+        list_info = []
+        
+        for task in self.all.values():
+            
+            list_info.append([task.id,task.start_time.strftime("%Y-%m-%d %H:%M:%S"),task.stop_time.strftime("%Y-%m-%d %H:%M:%S"),\
                 task.mileage_driven,task.count_cleaned,task.count_add_water,task.count_charged])       
                     
         return list_info
@@ -499,10 +510,17 @@ class Robot(QObject):
         :raises: no exception
         """
 
-        if isinstance(json_data,list):
-            for _log in json_data:
+        #if isinstance(json_data,list):
+        #    for _log in json_data:
+        #        json_to_obj(_log,self.task)
+        #        self.clean_log.all.append(copy.deepcopy(self.task))
+        #    self.task.__init__()      
+    
+         
+        if isinstance(json_data,dict):
+            for _log in json_data.values():
                 json_to_obj(_log,self.task)
-                self.clean_log.all.append(copy.deepcopy(self.task))
+                self.clean_log.all[self.task.id]=copy.deepcopy(self.task)
             self.task.__init__()
 
     def init(self):        
@@ -543,7 +561,7 @@ class Robot(QObject):
 
     #获取任务信息参数列表
     def task_info(self):
-        task_info = [["执行任务id",self.task.id],["状态",self.task.state.string],["开始时间",check_time_info(self.task.start_time)],["工作时长",str(self.task.time_worked)],["行驶里程(m)    ",self.task.mileage_driven],
+        task_info = [["任务ID",self.task.id],["状态",self.task.state.string],["开始时间",check_time_info(self.task.start_time)],["工作时长",str(self.task.time_worked)],["行驶里程(m)    ",self.task.mileage_driven],
                    ["清扫数量",self.task.count_cleaned],["加水次数",self.task.count_add_water],["充电次数",self.task.count_charged],
                    ["结束时间",check_time_info(self.task.stop_time)]]            
         return task_info
@@ -657,9 +675,10 @@ class Robot(QObject):
                 #self.task.state_machine=CleanStateMachine.CLEANING
             elif self.task.state is CleanTaskState.BACK:
                 pass
-        elif self.task.state_machine is CleanStateMachine.START:
-            self.task.id =random.randint(1,32760)
+        elif self.task.state_machine is CleanStateMachine.START:            
+            
             self.task.start_time=datetime.now()
+            self.task.create_id(self.id)
             self.task.mileage_start = self.drive.mileage
             self.task.count_add_water_start = self.protocol.count_add_water.value
             self.task.count_charged_start = self.protocol.count_charged.value
@@ -692,7 +711,9 @@ class Robot(QObject):
 
         elif self.task.state_machine is CleanStateMachine.END:
             self.task.stop_time=datetime.now()
-            self.clean_log.all.append(copy.deepcopy(self.task))
+            
+            #self.clean_log.all.append(copy.deepcopy(self.task))
+            self.clean_log.all[self.task.id]=copy.deepcopy(self.task)
             self.task.__init__()
             self.task.state_machine=CleanStateMachine.NONE
 

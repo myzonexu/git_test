@@ -89,7 +89,7 @@ class Window(QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_pushButton_autorun_start_clicked(self):
         robots.current.clean_task_start()        
-        #robots.current.task.start_clean_manual_id()
+        
     @pyqtSlot()
     def on_pushButton_autorun_stop_clicked(self):
         robots.current.clean_task_stop()
@@ -195,7 +195,7 @@ class Window(QMainWindow, Ui_MainWindow):
             pass
         #机器人
         elif index is 1:
-            
+            self.refresh_robots_list()
             pass
         #监控
         elif index is 2:
@@ -348,8 +348,8 @@ class Window(QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_pushButton_add_robot_clicked(self):
         """添加机器人."""
-        robots.all[int(self.lineEdit_add_robot_id.text())]=Robot(ip=self.lineEdit_add_robot_ip.text(),camera_ip=self.lineEdit_add_camera_ip.text())
-
+        robots.all[self.lineEdit_add_robot_id.text()]=Robot(ip=self.lineEdit_add_robot_ip.text(),camera_ip=self.lineEdit_add_camera_ip.text())
+        self.refresh_robots_list()
     @pyqtSlot(int)
     def on_checkBox_robot_all_stateChanged(self,state):
         """全选，全不选机器人."""
@@ -360,8 +360,8 @@ class Window(QMainWindow, Ui_MainWindow):
         """删除所选机器人."""
         for row in range(self.tableWidget_robot_all.rowCount()):
             if self.tableWidget_robot_all.item(row,0).checkState() == Qt.Checked:
-                robots.all.pop(int(self.tableWidget_robot_all.item(row,0).text()))
-        table_fill_data_list_2d(self.tableWidget_robot_all,robots.list_info(),checkable=True)
+                robots.all.pop(self.tableWidget_robot_all.item(row,0).text())
+        self.refresh_robots_list()
         self.checkBox_robot_all.setCheckState(Qt.Unchecked)
 
     @pyqtSlot()
@@ -375,6 +375,19 @@ class Window(QMainWindow, Ui_MainWindow):
         rows=self.refresh_clean_log()
         header=["机器人ID","任务ID","开始时间","结束时间","行驶里程","清扫数量","加水次数","充电次数"]
         export_csv('./data/clean_log.csv',header,rows)
+
+    @pyqtSlot()
+    def on_pushButton_del_clean_log_clicked(self):
+        """删除清扫日志."""
+        for row in range(self.tableWidget_log_all.rowCount()):
+            if self.tableWidget_log_all.item(row,0).checkState() == Qt.Checked:
+                _robot_id=self.tableWidget_log_all.item(row,0).text()
+                _log_id=self.tableWidget_log_all.item(row,1).text()
+                #print(_robot_id,_log_id)
+                robots.all.get(_robot_id).clean_log.all.pop(_log_id)
+                
+        self.refresh_clean_log()
+        self.checkBox_log.setCheckState(Qt.Unchecked)
 
     @pyqtSlot()
     def on_pushButton_export_plan_clicked(self):
@@ -485,7 +498,7 @@ class Window(QMainWindow, Ui_MainWindow):
     #更新表格显示
     def update_ui_table(self):
         table_fill_data_list_2d(self.tableWidget_robot_list,robots.list_info())  
-        table_fill_data_list_2d(self.tableWidget_robot_all,robots.list_info(),checkable=True)
+        #table_fill_data_list_2d(self.tableWidget_robot_all,robots.list_info(),checkable=True)
         if robots.current == None:
             pass
         else:
@@ -698,7 +711,16 @@ class Window(QMainWindow, Ui_MainWindow):
         """刷新任务表格."""
         table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info(),checkable=True)
         self.save_task_plans_data()
-   
+    
+    def refresh_robots_list(self):
+        """
+        刷新机器人列表表格.
+    
+        :returns: no return
+        :raises: no exception
+        """
+        table_fill_data_list_2d(self.tableWidget_robot_all,robots.list_info(),checkable=True)
+
     def save_robots_data(self):
         """保存机器人数据."""
         obj_to_json_file('./data/robots.json',robots,robots.dict_trans,"robots")
