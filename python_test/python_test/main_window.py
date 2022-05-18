@@ -431,7 +431,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.init_table_group()
         self.init_ui_task_plan()
         self.setup_ui_tablewidget()
-        self.setup_ui_statusbar()
+        #self.setup_ui_statusbar()
         self.setup_ui_shortcut()
         #self.camera_offlined.connect(self.update_ui_camera_offline)
         self.table_task_plan_is_checkable=False
@@ -477,7 +477,7 @@ class Window(QMainWindow, Ui_MainWindow):
             table_widget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
             table_widget.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeToContents)
 
-        for i in range(0,3):
+        for i in range(0,4):
             self.tableWidget_robot_list.horizontalHeader().setSectionResizeMode(i,QHeaderView.ResizeToContents)
 
         for j in range(0,2):
