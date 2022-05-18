@@ -1,3 +1,4 @@
+'''
 #测试多进程
 import asyncio
 import time
@@ -45,8 +46,7 @@ if __name__=='__main__':
     p1.start()
     p2.start()
     #p.join()
-    while 1:
-        pass
+
 
 
 
@@ -97,7 +97,7 @@ async def test1():
     #await task2
     await task1
 asyncio.run(test1())
-'''
+
     
 
 

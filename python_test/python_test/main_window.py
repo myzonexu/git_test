@@ -176,38 +176,38 @@ class Window(QMainWindow, Ui_MainWindow):
         #id = int(self.tableWidget_robot_list.item(row,0).text())
         id = self.tableWidget_robot_list.item(row,0).text()
         #选择ID
-        if col is 0:            
+        if col == 0:            
             robots.set_current(id)
         #选择故障
-        elif col is 5:
+        elif col == 5:
             robots.set_current(id)
             self.tabWidget_robots_info.setCurrentIndex(0)
         #选择警告
-        elif col is 6:
+        elif col == 6:
             robots.set_current(id)
             self.tabWidget_robots_info.setCurrentIndex(1)
 
     @pyqtSlot(int)
     def on_tabWidget_main_currentChanged(self,index):
         #控制
-        if index is 0:
+        if index == 0:
             robots.current.camera.enable_capture()
             pass
         #机器人
-        elif index is 1:
+        elif index == 1:
             self.refresh_robots_list()
             pass
         #监控
-        elif index is 2:
+        elif index == 2:
             self.setup_ui_camera_web()
             pass
         #计划任务
-        elif index is 3:
+        elif index == 3:
             #刷新任务
             self.refresh_task_plan()
             pass
         #日志
-        elif index is 4:
+        elif index == 4:
             #刷新日志
             self.refresh_clean_log()
             pass
@@ -220,15 +220,15 @@ class Window(QMainWindow, Ui_MainWindow):
     def on_tabWidget_robo_ctrl_currentChanged(self,index):
         """机器人控制方式tab页切换."""
         #轨道行走
-        if index is 0:
+        if index == 0:
             
             pass
         #自由行走
-        elif index is 1:
+        elif index == 1:
             QMessageBox.warning(self,'警告','当机器人与轨道连接时慎用，可能导致机器人与轨道卡死或其他意外！\n仅限自由场地或特殊情况下使用！',QMessageBox.Ok)
             pass
         #机械臂
-        elif index is 2:
+        elif index == 2:
 
             pass
 
@@ -247,7 +247,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def on_pushButton_add_task_clicked(self):
         """添加新增计划任务."""
         self.set_new_task_plan()
-        if task_plans.new.name is "":
+        if task_plans.new.name == "":
             QMessageBox.information(self,'提示','计划任务名称不能为空!请填写。',QMessageBox.Ok)
         else:
             task_plans.new.init_id()
@@ -380,7 +380,8 @@ class Window(QMainWindow, Ui_MainWindow):
         header=["机器人ID","任务ID","开始时间","结束时间","行驶里程","清扫数量","加水次数","充电次数"]
         _file_name=datetime.now().strftime(TIME_SHOW_Y_M_D)
         _file = QFileDialog.getSaveFileName(self, '保存文件',f'./清扫记录_{_file_name}.csv')
-        export_csv(_file[0],header,rows)
+        if _file[0]!="":
+            export_csv(_file[0],header,rows)
 
     @pyqtSlot()
     def on_pushButton_del_clean_log_clicked(self):
