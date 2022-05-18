@@ -165,7 +165,7 @@ class Arm(object):
 
 #故障码
 class ErrorCode(object):
-    def __init__(self,code=None,code_dict= robot_error_code_dict):
+    def __init__(self,code=0,code_dict= robot_error_code_dict):
         self.code = code
         self.code_dict=code_dict
 
@@ -204,7 +204,7 @@ class ErrorEvent(ErrorCode):
     def __init__(self,code=None,code_dict= robot_error_code_dict):
         super().__init__(code,code_dict)
         self.time_start = datetime.now()
-        self.time_stop = None
+        self.time_stop = datetime.fromtimestamp(DEFAULT_DATETIME_STAMP_START)
 
 #故障状态
 class Error(object):
@@ -374,6 +374,7 @@ class RobotGroup(QObject):
                 _ip=_robot.get("connect").get("ip")
                 _camera_ip=_robot.get("camera").get("ip")
                 _rob=Robot(_ip,_camera_ip)
+                _rob.id=_robot.get("id")
                 _rob.camera.pc_test=_robot.get("camera").get("pc_test")
                 _rob.import_json_clean_log(_robot.get("clean_log").get("all"))
                 self.all[_id]=_rob
@@ -500,6 +501,7 @@ class Robot(QObject):
         #self.camera = CameraRtsp(pc_test=True)
         self.camera = CameraRtsp(ip=camera_ip)        
         self.log=Log()
+        self.is_checked=False
         #self.init(ip)  
 
     def import_json_clean_log(self,json_data):
@@ -777,6 +779,15 @@ class Robot(QObject):
 
         pass
 
+    
+    def get_error(self):
+        """
+        获取故障信息.
+    
+        :returns: no return
+        :raises: no exception
+        """
+        pass
     #获取故障信息
     def get_error_chassis(self):
         err_code=join_byte_hi_lo(self.protocol.error_chassis_hi.value,self.protocol.error_chassis_lo.value,16)

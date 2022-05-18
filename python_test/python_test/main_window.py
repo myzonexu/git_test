@@ -42,7 +42,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.setup_ui_extra()
         self.init_robot_slot()
         self.load_map()
-        
+        #self.refresh_ui_timer()
         self.thread_manage()
         
 
@@ -348,7 +348,11 @@ class Window(QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_pushButton_add_robot_clicked(self):
         """添加机器人."""
-        robots.all[self.lineEdit_add_robot_id.text()]=Robot(ip=self.lineEdit_add_robot_ip.text(),camera_ip=self.lineEdit_add_camera_ip.text())
+        _str_id=self.lineEdit_add_robot_id.text()
+        _robot=Robot(ip=self.lineEdit_add_robot_ip.text(),camera_ip=self.lineEdit_add_camera_ip.text())
+        _robot.id=int(_str_id)
+        robots.all[_str_id]=_robot
+
         self.refresh_robots_list()
     @pyqtSlot(int)
     def on_checkBox_robot_all_stateChanged(self,state):
@@ -389,24 +393,24 @@ class Window(QMainWindow, Ui_MainWindow):
         self.refresh_clean_log()
         self.checkBox_log.setCheckState(Qt.Unchecked)
 
-    @pyqtSlot()
-    def on_pushButton_export_plan_clicked(self):
-        """导出计划任务."""
-        self.save_task_plans_data()
+    #@pyqtSlot()
+    #def on_pushButton_export_plan_clicked(self):
+    #    """导出计划任务."""
+    #    self.save_task_plans_data()
         
-    @pyqtSlot()
-    def on_pushButton_import_plan_clicked(self):
-        """导入计划任务."""
-        task_plans.import_json_file('./data/task_plans.json')
-        #with open('./data/task_plans.json', 'r') as f:
-        #    task_plans.import_json(json.load(f))
-        #    #json.load(f,object_hook=task_plans.import_json)
-        self.refresh_task_plan()
+    #@pyqtSlot()
+    #def on_pushButton_import_plan_clicked(self):
+    #    """导入计划任务."""
+    #    task_plans.import_json_file('./data/task_plans.json')
+    #    #with open('./data/task_plans.json', 'r') as f:
+    #    #    task_plans.import_json(json.load(f))
+    #    #    #json.load(f,object_hook=task_plans.import_json)
+    #    self.refresh_task_plan()
     
-    @pyqtSlot()
-    def on_pushButton_export_robot_clicked(self):
-        """导出机器人."""
-        self.save_robots_data()
+    #@pyqtSlot()
+    #def on_pushButton_export_robot_clicked(self):
+    #    """导出机器人."""
+    #    self.save_robots_data()
 
     @pyqtSlot()
     def on_pushButton_import_robot_clicked(self):
@@ -427,7 +431,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.setup_ui_tablewidget()
         self.setup_ui_statusbar()
         self.setup_ui_shortcut()
-        self.camera_offlined.connect(self.update_ui_camera_offline)
+        #self.camera_offlined.connect(self.update_ui_camera_offline)
         self.table_task_plan_is_checkable=False
         
         
@@ -491,7 +495,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.update_ui_table()
         self.update_ui_tab_text()
         self.update_ui_map()
-
+        self.refresh_robots_list()
         self.save_robots_data()
                
 
@@ -719,7 +723,32 @@ class Window(QMainWindow, Ui_MainWindow):
         :returns: no return
         :raises: no exception
         """
+        for row in range(self.tableWidget_robot_all.rowCount()):
+            _id_item=self.tableWidget_robot_all.item(row,0)
+            _rob=robots.all.get(_id_item.text())
+            if _rob is None:
+                pass
+            else:
+                if _id_item.checkState() == Qt.Checked:
+                    robots.all.get(_id_item.text()).is_checked=True
+                    #_rob=robots.all.get(tmp)
+                    #print(_rob.id,_rob.is_checked)
+                else:
+                    robots.all.get(_id_item.text()).is_checked=False
+             
         table_fill_data_list_2d(self.tableWidget_robot_all,robots.list_info(),checkable=True)
+
+        for row in range(self.tableWidget_robot_all.rowCount()):
+            _id_item=self.tableWidget_robot_all.item(row,0)
+            _rob=robots.all.get(_id_item.text())
+            if _rob is None:
+                pass
+            else:
+                if robots.all.get(_id_item.text()).is_checked is True:
+                    _id_item.setCheckState(Qt.Checked)                
+                else:
+                    _id_item.setCheckState(Qt.Unchecked)
+        
 
     def save_robots_data(self):
         """保存机器人数据."""
@@ -734,12 +763,71 @@ class Window(QMainWindow, Ui_MainWindow):
     def get_camera_frame(self):
         while True:
             if robots.current == None:
-                self.camera_offlined.emit()
+                #%self.camera_offlined.emit()
+                self.update_ui_camera_offline()
             else:
                 if robots.current.master.is_opened():
                     robots.current.camera.get_frame()
                 else:
-                    self.camera_offlined.emit() 
+                    #self.camera_offlined.emit() 
+                    self.update_ui_camera_offline
+                    pass
+
+    def get_robots_state(self):    
+        sec=0
+        while True:
+            if robots.current==None:
+                pass
+            else:
+                if robots.current.master.is_opened():
+                    robots.current.get_robot_time()
+                    pass
+            for _robot in list(robots.all.values()):
+                if _robot.master.is_opened():
+                    #print(f"获取状态，ID:{_robot.id}")
+                    _robot.get_state() 
+            for str_id in list(robots.all.keys()):
+                _robot=robots.all.get(str_id)
+                if _robot.master.is_opened():
+                    _robot.get_state()
+                    _id=_robot.id
+                    if _id != int(str_id):
+                        robots.all[str(_id)]=_robot
+                        robots.all.pop(str_id)
+
+                    if sec>60:
+                            _robot.sync_time()
+                            sec=0
+           
+            time.sleep(1)
+            sec=sec+1
+
+    def scan_robots(self):
+        while True:
+            for _robot in list(robots.all.values()):
+                if _robot.master.is_opened() is False:
+                    #print(f"重连，ID:{_robot.id}")
+                    #_robot.master.set_timeout(5)
+                    _robot.master.read(_robot.protocol.robot_id)
+                    if _robot.master.is_opened():
+                        #print(f"连接ID：{_robot.id}成功")
+                        #_robot.master.set_timeout(1)    
+                        pass               
+                else:
+                    pass
+            time.sleep(1)
+
+ 
+
+    def send_modbus_write_buffer(self):
+        while True:
+            #for id in robots.all: 
+            #for id in list(robots.all.keys()):
+            for _robot in list(robots.all.values()):
+                if _robot.master.is_opened():
+                    _robot.master.send_write_buffer()
+
+                time.sleep(1)
 
 
     #多线程管理##############################################################################################
@@ -747,5 +835,34 @@ class Window(QMainWindow, Ui_MainWindow):
         self.thread_get_camera_frame = threading.Thread(target=self.get_camera_frame, name='get_camera_frame')
         self.thread_get_camera_frame.setDaemon(True)
         self.thread_get_camera_frame.start()
+
+        #self.thread_get_robots_state = threading.Thread(target=self.get_robots_state, name='get_robots_state')
+        ##线程：发送modbus写缓存中的数据
+        #self.thread_send_modbus_write_buffer = threading.Thread(target=self.send_modbus_write_buffer, name='send_modbus_write_buffer')
+        ##线程：扫描局域网机器人
+        #self.thread_scan_robots = threading.Thread(target=self.scan_robots, name='scan_robots')
+
+        #self.thread_get_robots_state.setDaemon(True)
+        #self.thread_get_robots_state.start()
+        #self.thread_send_modbus_write_buffer.setDaemon(True)
+        #self.thread_send_modbus_write_buffer.start()
+        #self.thread_scan_robots.setDaemon(True)
+        #self.thread_scan_robots.start()
+
+    #定时刷新界面定时器
+    
+    def refresh_ui_timer(self):
+        """
+        定时器刷新界面.
+    
+        :returns: no return
+        :raises: no exception
+        """
+        
+        self.timer_ui = QTimer(self)  # 初始化一个定时器
+        self.timer_ui.timeout.connect(self.update_ui)  # 每次计时到时间时发出信号
+        self.timer_ui.start(1000)  # 设置计时间隔并启动；单位毫秒
+
+
 
     

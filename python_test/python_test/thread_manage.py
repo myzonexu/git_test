@@ -56,9 +56,14 @@ def get_robots_state():
             if _robot.master.is_opened():
                 #print(f"获取状态，ID:{_robot.id}")
                 _robot.get_state() 
+            else:
+                _robot.connect.is_online=False
+                _robot.connect.state= ConnectState.RECONNECT
+                pass
         for str_id in list(robots.all.keys()):
             _robot=robots.all.get(str_id)
             if _robot.master.is_opened():
+                #print(f"校对id，ID:{_robot.id}")
                 _robot.get_state()
                 _id=_robot.id
                 if _id != int(str_id):
@@ -110,11 +115,11 @@ def scan_robots():
     while True:
         for _robot in list(robots.all.values()):
             if _robot.master.is_opened() is False:
-                #print(f"重连，ID:{_robot.id}")
+                print(f"重连，ID:{_robot.id}")
                 #_robot.master.set_timeout(5)
                 _robot.master.read(_robot.protocol.robot_id)
                 if _robot.master.is_opened():
-                    #print(f"连接ID：{_robot.id}成功")
+                    print(f"连接ID：{_robot.id}成功")
                     #_robot.master.set_timeout(1)    
                     pass               
             else:

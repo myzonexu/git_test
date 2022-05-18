@@ -1727,13 +1727,6 @@
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_export_robot">
-            <property name="text">
-             <string>导出</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QPushButton" name="pushButton_del_robot">
             <property name="text">
              <string>删除</string>
@@ -2540,20 +2533,6 @@ p, li { white-space: pre-wrap; }
               <widget class="QPushButton" name="pushButton_send_task_plan">
                <property name="text">
                 <string>下发任务</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_export_plan">
-               <property name="text">
-                <string>导出任务</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_import_plan">
-               <property name="text">
-                <string>导入任务</string>
                </property>
               </widget>
              </item>

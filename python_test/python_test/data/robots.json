@@ -8,7 +8,7 @@
                     "port": 502
                 },
                 "drive": {
-                    "mileage": 290.576
+                    "mileage": 0.0
                 },
                 "error_chassis": {
                     "active_error": {},
@@ -26,18 +26,7 @@
                     "pc_test": false
                 },
                 "clean_log": {
-                    "all": {
-                        "1-2022-05-13 17:02:28": {
-                            "id": "1-2022-05-13 17:02:28",
-                            "state": 0,
-                            "start_time": "2022-05-13 17:02:28",
-                            "stop_time": "2022-05-13 17:03:12",
-                            "mileage_driven": 0.0,
-                            "count_cleaned": 0,
-                            "count_add_water": 0,
-                            "count_charged": 0
-                        }
-                    }
+                    "all": {}
                 },
                 "task_plans": []
             }
