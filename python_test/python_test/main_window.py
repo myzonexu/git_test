@@ -378,7 +378,9 @@ class Window(QMainWindow, Ui_MainWindow):
         """导出清扫日志."""
         rows=self.refresh_clean_log()
         header=["机器人ID","任务ID","开始时间","结束时间","行驶里程","清扫数量","加水次数","充电次数"]
-        export_csv('./data/clean_log.csv',header,rows)
+        _file_name=datetime.now().strftime(TIME_SHOW_Y_M_D)
+        _file = QFileDialog.getSaveFileName(self, '保存文件',f'./清扫记录_{_file_name}.csv')
+        export_csv(_file[0],header,rows)
 
     @pyqtSlot()
     def on_pushButton_del_clean_log_clicked(self):
