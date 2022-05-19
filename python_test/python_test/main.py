@@ -29,7 +29,8 @@ if __name__ == '__main__':
     window_main.func_list()
     window_main.show()
     #robots.init_current(robot1.id)
-    robots.init_current(list(robots.all.keys())[0])
+    if robots.all:
+        robots.init_current(list(robots.all.keys())[0])
     #robots.init_current("1")
 
     #process_manage()

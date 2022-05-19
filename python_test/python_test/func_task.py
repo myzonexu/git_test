@@ -236,36 +236,36 @@ class TaskPlan(object):
         return self.info_output
 
     
-    def export(self):
-        """
-        导出数据.
+    #def export(self):
+    #    """
+    #    导出数据.
     
-        :returns: dict,数据字典
-        :raises: no exception
-        """
-        #export_name=["id","enable","name","plan_type","cycle_type","cycle_value","do_time","start_date","end_date","assign","received","add_time"]
-        export_dict={}
-        for name in self.export_name:
-            attr=getattr(self, name,None)
-            if isinstance(attr,(QDate,)):
-                export_dict[name]=attr.toString("yyyy/MM/dd")
-            elif isinstance(attr,(QTime,)):
-                export_dict[name]=attr.toString("hh:mm")
-            elif isinstance(attr,(datetime,)):
-                export_dict[name]=attr.strftime("%Y-%m-%d %H:%M:%S")
-            elif isinstance(attr,(Enum,)):
-                export_dict[name]=attr.value
-            elif isinstance(attr,(set,)):
-                export_dict[name]=list(attr)
-            else:
-                export_dict[name]=attr
-        return export_dict
+    #    :returns: dict,数据字典
+    #    :raises: no exception
+    #    """
+    #    #export_name=["id","enable","name","plan_type","cycle_type","cycle_value","do_time","start_date","end_date","assign","received","add_time"]
+    #    export_dict={}
+    #    for name in self.export_name:
+    #        attr=getattr(self, name,None)
+    #        if isinstance(attr,(QDate,)):
+    #            export_dict[name]=attr.toString("yyyy/MM/dd")
+    #        elif isinstance(attr,(QTime,)):
+    #            export_dict[name]=attr.toString("hh:mm")
+    #        elif isinstance(attr,(datetime,)):
+    #            export_dict[name]=attr.strftime("%Y-%m-%d %H:%M:%S")
+    #        elif isinstance(attr,(Enum,)):
+    #            export_dict[name]=attr.value
+    #        elif isinstance(attr,(set,)):
+    #            export_dict[name]=list(attr)
+    #        else:
+    #            export_dict[name]=attr
+    #    return export_dict
 
-    @staticmethod
-    def json_hook(dct):
-        pass
+    #@staticmethod
+    #def json_hook(dct):
+    #    pass
         
-        return None
+    #    return None
 
 
 class TaskPlans(QObject):
@@ -282,8 +282,12 @@ class TaskPlans(QObject):
         self.all = {}
         self.current = None
         self.dict_trans={}
-        self.import_json_file('./data/task_plans.json')
-        self.import_json_plans()
+        import os
+        filename = './data/task_plans.json'
+
+        if os.path.exists(filename): 
+            self.import_json_file(filename)
+            self.import_json_plans()
 
 
     def set_current(self,id):        

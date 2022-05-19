@@ -347,8 +347,13 @@ class RobotGroup(QObject):
         self.dict_trans={}
 
         #self.get_local_ip()
-        self.import_json_file('./data/robots.json')
-        self.import_json_robots()
+
+        import os
+        filename = './data/robots.json'
+
+        if os.path.exists(filename):            
+            self.import_json_file(filename)
+            self.import_json_robots()
     
     def import_json_file(self,file):
         """

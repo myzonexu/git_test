@@ -39,6 +39,7 @@ class Window(QMainWindow, Ui_MainWindow):
        
 
     def func_list(self):
+        self.init_file_dirs()
         self.setup_ui_extra()
         self.init_robot_slot()
         self.load_map()
@@ -191,7 +192,8 @@ class Window(QMainWindow, Ui_MainWindow):
     def on_tabWidget_main_currentChanged(self,index):
         #控制
         if index == 0:
-            robots.current.camera.enable_capture()
+            if robots.current:
+                robots.current.camera.enable_capture()
             pass
         #机器人
         elif index == 1:
@@ -199,7 +201,8 @@ class Window(QMainWindow, Ui_MainWindow):
             pass
         #监控
         elif index == 2:
-            self.setup_ui_camera_web()
+            if robots.current:
+                self.setup_ui_camera_web()
             pass
         #计划任务
         elif index == 3:
@@ -352,6 +355,8 @@ class Window(QMainWindow, Ui_MainWindow):
         _robot=Robot(ip=self.lineEdit_add_robot_ip.text(),camera_ip=self.lineEdit_add_camera_ip.text())
         _robot.id=int(_str_id)
         robots.all[_str_id]=_robot
+        if robots.current is None:
+            robots.init_current(_str_id)
 
         self.refresh_robots_list()
     @pyqtSlot(int)
@@ -367,6 +372,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 robots.all.pop(self.tableWidget_robot_all.item(row,0).text())
         self.refresh_robots_list()
         self.checkBox_robot_all.setCheckState(Qt.Unchecked)
+        #self.save_robots_data()
+        self.update_ui()
 
     @pyqtSlot()
     def on_pushButton_log_refresh_clicked(self):
@@ -546,6 +553,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.browser.load(QUrl(robots.current.camera.web_url))
         self.scrollArea_camera_browser.setWidget(self.browser)
         self.scrollArea_camera_browser.show()
+        print("打开监控web页面")
 
         #if robots.current==None:
         #    pass
@@ -712,11 +720,13 @@ class Window(QMainWindow, Ui_MainWindow):
                 clean_infos.append(info)
                 
         table_fill_data_list_2d(self.tableWidget_log_all,clean_infos,checkable=True)
-        return clean_info
+        return clean_infos
 
     
     def refresh_task_plan(self):
         """刷新任务表格."""
+        for _task in task_plans.all.values():
+            _task.assign=set(list(robots.all.keys()))
         table_fill_data_list_2d(self.tableWidget_task_plan_list,task_plans.list_info(),checkable=True)
         self.save_task_plans_data()
     
@@ -762,6 +772,19 @@ class Window(QMainWindow, Ui_MainWindow):
         """保存计划任务数据."""
         obj_to_json_file('./data/task_plans.json',task_plans,task_plans.dict_trans,"task_plans")
 
+    
+    def init_file_dirs(self):
+        """
+        初始化文件目录.
+    
+        :returns: no return
+        :raises: no exception
+        """
+
+        dirs = './data'
+
+        if not os.path.exists(dirs):
+            os.makedirs(dirs)
 
     #多线程函数##############################################################################################
     def get_camera_frame(self):
