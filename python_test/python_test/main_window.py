@@ -442,6 +442,7 @@ class Window(QMainWindow, Ui_MainWindow):
     #初始化当前机器人信号槽
     def init_robot_slot(self):
         robots.current_inited.connect(self.setup_ui_robot_current_slot)
+        robots.current_changed.connect(self.setup_ui_robot_current_slot)
 
     def setup_ui_robot_current_slot(self):
         robots.current.camera.inited.connect(self.resize_camera_show)

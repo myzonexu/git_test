@@ -29,6 +29,35 @@
                     "all": {}
                 },
                 "task_plans": []
+            },
+            "0": {
+                "id": 0,
+                "connect": {
+                    "ip": "127.0.0.1",
+                    "port": 502
+                },
+                "drive": {
+                    "mileage": 0.0
+                },
+                "error_chassis": {
+                    "active_error": {},
+                    "history_error": []
+                },
+                "error_arm": {
+                    "active_error": {},
+                    "history_error": []
+                },
+                "camera": {
+                    "ip": "127.0.0.1",
+                    "port": 554,
+                    "username": "admin",
+                    "passwd": "ylcx6666",
+                    "pc_test": true
+                },
+                "clean_log": {
+                    "all": {}
+                },
+                "task_plans": []
             }
         }
     }
