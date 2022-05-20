@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="main_window">
+    <file>img/logo.png</file>
+    <file>img/logo1.jpg</file>
     <file>img/camera.jpeg</file>
   </qresource>
 </RCC>

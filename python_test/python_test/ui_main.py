@@ -21,6 +21,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
         MainWindow.setSizePolicy(sizePolicy)
         MainWindow.setMinimumSize(QtCore.QSize(1024, 700))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/main_window/img/logo.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        MainWindow.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_9 = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -665,7 +668,7 @@ class Ui_MainWindow(object):
         self.scrollArea_camera_browser.setWidgetResizable(True)
         self.scrollArea_camera_browser.setObjectName("scrollArea_camera_browser")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 100, 30))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 982, 617))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.scrollArea_camera_browser.setWidget(self.scrollAreaWidgetContents)
         self.verticalLayout_17.addWidget(self.scrollArea_camera_browser)
@@ -1094,7 +1097,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "隧道清扫机器人控制"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "隧道清扫机器人控制系统"))
         self.groupBox_map.setTitle(_translate("MainWindow", "隧道"))
         self.pushButton_on_track_forward.setText(_translate("MainWindow", "前进"))
         self.pushButton_autorun_charge.setText(_translate("MainWindow", "充电"))

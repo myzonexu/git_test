@@ -71,7 +71,6 @@
     <Compile Include="ui_test000.py" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="image.qrc" />
     <Content Include="ui_main.ui" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
