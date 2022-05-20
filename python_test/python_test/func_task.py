@@ -78,7 +78,7 @@ class TaskPlan(object):
     
     def init_id(self):
         """初始化id,1~32760随机数."""
-        if self.id is 0:
+        if self.id == 0:
             self.id = random.randint(1,32760)
         else:
             pass

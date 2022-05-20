@@ -1158,7 +1158,7 @@
              </size>
             </property>
             <property name="currentIndex">
-             <number>3</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="tab_robot_error">
              <attribute name="title">
@@ -1224,11 +1224,6 @@
                 </column>
                 <column>
                  <property name="text">
-                  <string>开始时间</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
                   <string>等级</string>
                  </property>
                 </column>
@@ -1249,110 +1244,12 @@
                 </column>
                 <column>
                  <property name="text">
-                  <string>结束时间</string>
-                 </property>
-                </column>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="tab_robot_warning">
-             <attribute name="title">
-              <string>警告(0)</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_8">
-              <item>
-               <widget class="QTableWidget" name="tableWidget_warning">
-                <attribute name="horizontalHeaderCascadingSectionResizes">
-                 <bool>true</bool>
-                </attribute>
-                <attribute name="verticalHeaderVisible">
-                 <bool>false</bool>
-                </attribute>
-                <column>
-                 <property name="text">
                   <string>开始时间</string>
                  </property>
                 </column>
                 <column>
                  <property name="text">
-                  <string>警告</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>处理</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
                   <string>结束时间</string>
-                 </property>
-                </column>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="tab_robot_log">
-             <attribute name="title">
-              <string>运行日志</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_18">
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_5">
-                <item>
-                 <widget class="QRadioButton" name="radioButton_robot_all">
-                  <property name="text">
-                   <string>所有机器人</string>
-                  </property>
-                  <property name="checked">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="radioButton_robot_selected">
-                  <property name="text">
-                   <string>当前选择机器人</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer_10">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <widget class="QTableWidget" name="tableWidget_log_info">
-                <attribute name="horizontalHeaderCascadingSectionResizes">
-                 <bool>true</bool>
-                </attribute>
-                <attribute name="verticalHeaderVisible">
-                 <bool>false</bool>
-                </attribute>
-                <column>
-                 <property name="text">
-                  <string>时间</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>类型</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>描述</string>
                  </property>
                 </column>
                </widget>
@@ -1721,8 +1618,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>982</width>
-             <height>617</height>
+             <width>100</width>
+             <height>30</height>
             </rect>
            </property>
           </widget>

@@ -9,6 +9,7 @@ from func_camera import *
 from func_modbus_tcp import *
 from func_defines import *
 from func_task import *
+from func_error import *
 import struct
 import copy
 
@@ -162,7 +163,7 @@ class Arm(object):
         self.state = ArmState.WORK #ArmState.WARN  #ValueDescriptionSet(arm_state)
         self.position = 0
 
-
+'''
 #故障码
 class ErrorCode(object):
     def __init__(self,code=0,code_dict= robot_error_code_dict):
@@ -246,7 +247,7 @@ class Error(object):
         for err in self.history_error:
             list.append(["历史故障",err.time_start.strftime(TIME_SHOW_ALL),err.level(),err.code,err.description(),err.handle(),err.time_stop.strftime(TIME_SHOW_ALL)])
         return list
-
+'''
 #清扫任务
 class CleanTask(object):
     filter_attr_names=["id","state","start_time","stop_time","mileage_driven","count_cleaned","count_add_water","count_charged"]
@@ -474,14 +475,14 @@ class RobotGroup(QObject):
             #                      self.all.get(id).base.run_state.string,self.all.get(id).task.state.string,self.all.get(id).err_count(),self.all.get(id).warning_count()])
             for id,item in self.all.items():
                 list_info.append([item.id,item.connect.ip,item.camera.ip,item.connect.state.string,
-                                  item.base.run_state.string,item.task.state.string,item.err_count(),item.warning_count()])
+                                  item.base.run_state.string,item.task.state.string,item.errors.active_count])
            
         return list_info
 
 #机器人
 class Robot(QObject):
     state_updated=pyqtSignal()
-    filter_attr_names=["id","connect","drive","error_chassis","error_arm","camera","clean_log","task_plans"]
+    filter_attr_names=["id","connect","drive","errors","camera","clean_log","task_plans"]
     def __init__(self,ip="127.0.0.1",camera_ip="192.168.0.64",port=502):
         super().__init__()
         self.id = -1
@@ -497,8 +498,10 @@ class Robot(QObject):
         self.cleaner = Cleaner()
         self.arm = Arm()
         self.robot_time = None
-        self.error_chassis = Error()
-        self.error_arm = Error()
+        #self.error_chassis = Error()
+        #self.error_arm = Error()
+        self.errors = Error()
+        self.warnings=Error()
         self.task = CleanTask()
         self.clean_log= CleanTaskLog()
         self.task_plans=set([])
@@ -541,12 +544,12 @@ class Robot(QObject):
         self.master.set_host(ip)
         #self.camera.set_ip(ip)
 
-    def err_count(self):
-        count=len(self.error_chassis.active_error)+len(self.error_arm.active_error)
-        return count
+    #def err_count(self):
+    #    count=len(self.error_chassis.active_error)+len(self.error_arm.active_error)
+    #    return count
+    #def warning_count(self):
+    #    pass
 
-    def warning_count(self):
-        pass
 
     def get_communication_state(self):
             self.connect.is_online=self.master.is_opened()
@@ -612,6 +615,7 @@ class Robot(QObject):
             self.rfid.info=RfidInfo(self.protocol.rfid.value)
         else:
             self.rfid.info=RfidInfo.UNDEFINE
+        
 
         #有符号转为无符号
         self.protocol.mileage_lo.value=struct.unpack('>H', struct.pack('>h', self.protocol.mileage_lo.value))[0]
@@ -624,11 +628,13 @@ class Robot(QObject):
         self.cleaner.is_open=(self.protocol.clean_state.value > 0)
         self.arm.position = self.protocol.clean_state.value
         self.get_arm_state()
-        self.get_error_chassis()
+        #self.get_error_chassis()
         self.get_task_state()
         #self.task.count_add_water = self.protocol.count_add_water.value
         #self.task.count_charged = self.protocol.count_charged.value
         #self.task.time_worked = self.protocol.clean_time_s.value                
+        self.errors.recv_code(self.get_errors())
+        self.warnings.recv_code(self.get_warnings())
 
     def get_run_state(self):
         state_1=get_bits(self.protocol.robot_state.value,0,1)
@@ -658,15 +664,22 @@ class Robot(QObject):
         self.base.ctrl_mode = CtrlMode(get_bits(self.protocol.robot_state.value,0,1))
 
     def get_avoide_state(self):
-        if test_bit(self.protocol.chassis_state.value,9):
+        #print(f'{self.protocol.chassis_state.value:b}')
+        _err_list=[]
+
+        if test_bit(self.protocol.chassis_state.value,7):
             self.navi.avoide_front=1
+            _err_list.append('25')
         else:
             self.navi.avoide_front=0
-        if test_bit(self.protocol.chassis_state.value,10):
+        if test_bit(self.protocol.chassis_state.value,8):
             self.navi.avoide_rear=1
+            _err_list.append('26')
         else:
             self.navi.avoide_rear=0
-        pass
+
+        return _err_list
+
     def get_arm_state(self):
         #如何定义？
         pass
@@ -784,30 +797,59 @@ class Robot(QObject):
 
         pass
 
-    
-    def get_error(self):
+    #获取底盘故障信息
+    def get_error_chassis(self):
+        _err_list=[]
+
+        for i in range(0,8):
+            if test_bit(self.protocol.error_chassis_lo.value,i):
+                _err_list.append(str(i+1))
+            if test_bit(self.protocol.error_chassis_hi.value,i):
+                _err_list.append(str(i+9))
+
+        return _err_list
+        
+    def get_errors(self):
         """
         获取故障信息.
     
         :returns: no return
         :raises: no exception
         """
-        pass
-    #获取故障信息
-    def get_error_chassis(self):
-        err_code=join_byte_hi_lo(self.protocol.error_chassis_hi.value,self.protocol.error_chassis_lo.value,16)
-        if err_code==0 :
-            self.error_chassis.clear()            
-        elif err_code not in self.error_chassis.active_error:
-            self.error_chassis.add(ErrorEvent(err_code))
+        _err_list=[]
+        _err_list+=self.get_error_chassis()
+        _err_list+=self.get_avoide_state() 
+
+        if test_bit(self.protocol.chassis_state.value,9):
+            _err_list.append('21')
+        if test_bit(self.protocol.chassis_state.value,10):
+            _err_list.append('22')
+        if test_bit(self.protocol.chassis_state.value,11):
+            _err_list.append('23')
+        if test_bit(self.protocol.arm_state.value,0):
+            _err_list.append('24')
+
+        return _err_list
+
+    def get_warnings(self):
+        """
+        获取故障信息.
+    
+        :returns: no return
+        :raises: no exception
+        """
+        _err_list=[]
+        _err_list+=self.get_avoide_state()     
+
+        return _err_list
 
     #界面控制机器人##########################################################################################################################
     #清除现行故障
     def clear_active_error(self):
         #清除底盘故障
-        self.master.write(self.protocol.chassis_set,3)
+        self.master.write(self.protocol.chassis_set,3,enable_buffer=False)
         #清除手臂故障
-        self.master.write(self.protocol.chassis_set,4)
+        self.master.write(self.protocol.chassis_set,4,enable_buffer=False)
     #任务-开始
     def clean_task_start(self):
         self.master.write(self.protocol.ctrl_mode,0)

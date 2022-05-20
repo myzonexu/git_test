@@ -169,8 +169,9 @@ class Window(QMainWindow, Ui_MainWindow):
     def on_pushButton_clear_err_clicked(self):
         if self.radioButton_err_active.isChecked():
             robots.current.clear_active_error()
+            pass
         else:
-            robots.current.error_chassis.clear_history()
+            robots.current.errors.clear_history()
     #机器人列表选择
     @pyqtSlot(int,int)
     def on_tableWidget_robot_list_cellClicked(self, row, col):
@@ -180,11 +181,11 @@ class Window(QMainWindow, Ui_MainWindow):
         if col == 0:            
             robots.set_current(id)
         #选择故障
-        elif col == 5:
+        elif col == 6:
             robots.set_current(id)
             self.tabWidget_robots_info.setCurrentIndex(0)
         #选择警告
-        elif col == 6:
+        elif col == 7:
             robots.set_current(id)
             self.tabWidget_robots_info.setCurrentIndex(1)
 
@@ -445,6 +446,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.table_task_plan_is_checkable=False
         
         
+        
 
     #初始化当前机器人信号槽
     def init_robot_slot(self):
@@ -479,7 +481,7 @@ class Window(QMainWindow, Ui_MainWindow):
     #设置表格属性
     def init_table_group(self):
         self.tableWidget_group_show = [self.tableWidget_robot_list,self.tableWidget_robot_info,self.tableWidget_task_info ,
-                                        self.tableWidget_error ,self.tableWidget_warning,self.tableWidget_log_info ,
+                                        self.tableWidget_error ,
                                         self.tableWidget_task_plan_list,self.tableWidget_robot_all,self.tableWidget_log_all ]
     def setup_ui_tablewidget(self):
         for table_widget in self.tableWidget_group_show:
@@ -489,7 +491,7 @@ class Window(QMainWindow, Ui_MainWindow):
         for i in range(0,4):
             self.tableWidget_robot_list.horizontalHeader().setSectionResizeMode(i,QHeaderView.ResizeToContents)
 
-        for j in range(0,2):
+        for j in range(0,3):
             self.tableWidget_error.horizontalHeader().setSectionResizeMode(j,QHeaderView.ResizeToContents)
 
         for j in [0,1,2,3,4,7,9]:
@@ -520,21 +522,18 @@ class Window(QMainWindow, Ui_MainWindow):
             table_fill_data_list_2d(self.tableWidget_robot_info,robots.current.robot_info())
             table_fill_data_list_2d(self.tableWidget_task_info,robots.current.task_info())
         
-
-            if self.radioButton_err_active.isChecked():
-                err_list = robots.current.error_chassis.active_err_info()
-            else:
-                err_list = robots.current.error_chassis.history_err_info()
-            table_fill_data_list_2d(self.tableWidget_error,err_list)
+            self.toggle_table_error_list()
 
     #更新tab页文字
     def update_ui_tab_text(self):
-        self.tabWidget_robots_info.setTabText(3,"机器人列表(" + str(len(robots.all)) + ")")
+        self.tabWidget_robots_info.setTabText(1,f"机器人列表({str(len(robots.all))})")
         if robots.current == None:
             pass
         else:
-            self.tabWidget_robots_info.setTabText(0,"故障(" + str(robots.current.err_count()) + ")")
-            self.tabWidget_robots_info.setTabText(1,"警告(" + str(robots.current.warning_count()) + ")")
+            #self.tabWidget_robots_info.setTabText(0,"故障(" + str(robots.current.err_count()) + ")")
+            #self.tabWidget_robots_info.setTabText(1,"警告(" + str(robots.current.warning_count()) + ")")
+            self.tabWidget_robots_info.setTabText(0,f"故障({str(robots.current.errors.active_count)})")
+            #self.tabWidget_robots_info.setTabText(1,f"警告({str(robots.current.warnings.active_count)})")
              
     #更新控件使能
     def update_ui_widget_enbaled(self):
@@ -606,9 +605,9 @@ class Window(QMainWindow, Ui_MainWindow):
     #故障信息：当前故障、历史故障切换
     def toggle_table_error_list(self):
         if self.radioButton_err_active.isChecked():
-            err_list = robots.current.error_chassis.active_err_info()
+            err_list = robots.current.errors.active_err_info
         else:
-            err_list = robots.current.error_chassis.history_err_info()
+            err_list = robots.current.errors.history_err_info
         table_fill_data_list_2d(self.tableWidget_error,err_list)
     
        

@@ -1,5 +1,48 @@
 {
     "robots": {
-        "all": {}
+        "all": {
+            "1": {
+                "id": 1,
+                "connect": {
+                    "ip": "192.168.0.5",
+                    "port": 502
+                },
+                "drive": {
+                    "mileage": 508.93
+                },
+                "errors": {
+                    "active": {
+                        "25": {
+                            "error": {
+                                "code": "25"
+                            },
+                            "is_active": true,
+                            "time_start": "2022-05-20 14:40:50",
+                            "time_stop": "1970-01-02 08:00:00"
+                        },
+                        "21": {
+                            "error": {
+                                "code": "21"
+                            },
+                            "is_active": true,
+                            "time_start": "2022-05-20 14:40:50",
+                            "time_stop": "1970-01-02 08:00:00"
+                        }
+                    },
+                    "history": []
+                },
+                "camera": {
+                    "ip": "192.168.0.64",
+                    "port": 554,
+                    "username": "admin",
+                    "passwd": "ylcx6666",
+                    "pc_test": false
+                },
+                "clean_log": {
+                    "all": {}
+                },
+                "task_plans": []
+            }
+        }
     }
 }

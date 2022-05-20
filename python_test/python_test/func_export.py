@@ -13,6 +13,7 @@ Change Activity:
 """
 __author__ = 'simon'
 
+import os
 import csv
 import json
 from enum import *
@@ -24,19 +25,24 @@ def import_csv(file):
     导入csv文件.
  
     :param file: str,文件路径
-    :param head: this is a second param
     :returns: list,list:表头,行内容
+              None,None:文件不存在或打开失败
     :raises: no exception
     """
-    with open(file, newline='') as f:
-        f_csv = csv.reader(f)
-        header = next(f_csv)
-        rows = []
-        for row in f_csv:
-            rows.append(row)
-        #print(header)
-        #print(rows)
-    return header,rows
+
+    if os.path.exists(file):              
+        with open(file, newline='') as f:
+            f_csv = csv.reader(f)
+            header = next(f_csv)
+            rows = []
+            for row in f_csv:
+                rows.append(row)
+            #print(header)
+            #print(rows)
+        return header,rows
+    else:
+        print(f'{file}不存在，失败')
+        return None,None
 
 def export_csv(file,header,rows):
     """

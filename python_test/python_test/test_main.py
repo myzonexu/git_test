@@ -1,3 +1,12 @@
+from func_error import *
+#ErrorCode.import_file('./data/error_code.csv')
+
+print(ErrorCode.error_dict)
+#a=ErrorCode('11')
+a=ErrorCode(11)
+print(a.code,a.level,a.description,a.solution)
+
+
 '''
 #测试多进程
 import asyncio
@@ -47,7 +56,7 @@ if __name__=='__main__':
     p2.start()
     #p.join()
 
-
+'''
 
 
 '''
@@ -99,7 +108,7 @@ async def test1():
 asyncio.run(test1())
 
     
-
+'''
 
 
 

@@ -34,6 +34,7 @@
     <Compile Include="func_camera.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="func_error.py" />
     <Compile Include="func_export.py">
       <SubType>Code</SubType>
     </Compile>
