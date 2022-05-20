@@ -31,6 +31,10 @@
   <property name="windowTitle">
    <string>关于</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="image.qrc">
+    <normaloff>:/main_window/img/logo.png</normaloff>:/main_window/img/logo.png</iconset>
+  </property>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
