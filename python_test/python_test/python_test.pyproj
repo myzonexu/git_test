@@ -67,6 +67,7 @@
     <Compile Include="thread_manage.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ui_about.py" />
     <Compile Include="ui_main.py" />
     <Compile Include="ui_test000.py" />
   </ItemGroup>

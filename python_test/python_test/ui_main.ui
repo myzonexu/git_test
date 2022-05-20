@@ -1623,7 +1623,7 @@
              <x>0</x>
              <y>0</y>
              <width>982</width>
-             <height>617</height>
+             <height>594</height>
             </rect>
            </property>
           </widget>
@@ -2547,6 +2547,28 @@ p, li { white-space: pre-wrap; }
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1024</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>帮助</string>
+    </property>
+    <addaction name="actionabout"/>
+   </widget>
+   <addaction name="menu"/>
+  </widget>
+  <action name="actionabout">
+   <property name="text">
+    <string>关于</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="image.qrc"/>

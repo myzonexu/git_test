@@ -22,6 +22,7 @@ from svg.path import parse_path
 
 from ui_main import Ui_MainWindow
 from dialog_select_robot import *
+from dialog_about import *
 
 #from func_main import *
 from func_task import *
@@ -403,6 +404,14 @@ class Window(QMainWindow, Ui_MainWindow):
                 
         self.refresh_clean_log()
         self.checkBox_log.setCheckState(Qt.Unchecked)
+
+    @pyqtSlot()
+    def on_actionabout_triggered(self):
+        """关于."""
+        print("about")
+        self.dialog_about=DialogAbout()
+        self.dialog_about.show()
+
 
     #@pyqtSlot()
     #def on_pushButton_export_plan_clicked(self):
