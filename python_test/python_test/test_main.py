@@ -16,6 +16,7 @@ t.end()
 b.set_track_cleaned(t)
 
 print(b.array_cleaned)
+print(b.count_cleaned)
 #for i in range(5):
 # print(b.all[i].__dict__)
 

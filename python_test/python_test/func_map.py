@@ -332,6 +332,18 @@ class CleanPointGroup(PathPointGroup):
             set_track_cleaned(tracks.current)
         else:
             print("轨迹集合类型错误")
+    
+    @property
+    def count_cleaned(self):
+        """
+        清扫标志计数.
+    
+        :returns: int,已清扫标志数量
+        :raises: no exception
+        """
+        self._count_cleaned=np.count_nonzero(self.array_cleaned)
+        #self._count_cleaned=np.nonzero(self.array_cleaned)[0].shape[0]
+        return self._count_cleaned
 
 #functions#####################################################################
 
