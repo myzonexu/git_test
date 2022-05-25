@@ -57,14 +57,16 @@ class CameraRtsp(QObject):
     def has_init(self):
         return self._has_init
     def get_rtsp_url(self):
-        self.url = "rtsp://" + self.username + ":" + self.passwd + "@" + self.ip + ":" + str(self.port) + "/" + self.codec + "/ch" + str(self.channel) + "/sub/av_stream"
+        #self.url = "rtsp://" + self.username + ":" + self.passwd + "@" + self.ip + ":" + str(self.port) + "/" + self.codec + "/ch" + str(self.channel) + "/sub/av_stream"
+        self.url = f"rtsp://{self.username}:{self.passwd}@{self.ip}:{str(self.port)}/{self.codec}/ch{str(self.channel)}/sub/av_stream"
         return self.url
     def set_ip(self,ip):
         self.ip = ip
         self.get_url()
         return self.url
     def get_web_url(self):
-        self.web_url = "http://" + self.ip
+        #self.web_url = "http://" + self.ip
+        self.web_url = f"http://{self.ip}"
         #print(self.web_url)
         return self.web_url
 

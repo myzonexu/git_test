@@ -52,7 +52,7 @@ class TaskPlan(object):
         :returns: no return
         :raises: no exception
         """
-        self.value_type_dict={"all":TaskPlan,"assign":str,"received":str,"not_received":str}
+        self.value_type_dict={"assign":{"type":str},"received":{"type":str},"not_received":{"type":str}}
 
         self.id = 0
         self.enable = False
@@ -278,7 +278,7 @@ class TaskPlans(QObject):
     def __init__(self):
         """初始化."""
         super().__init__()
-        self.value_type_dict={"all":TaskPlan}
+        self.value_type_dict={"all":{"type":TaskPlan,"key":"id"}}
         self.new = TaskPlan()
         #self.plan_list = []
         self.all = {}

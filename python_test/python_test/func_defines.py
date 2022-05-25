@@ -206,9 +206,10 @@ class ArmAction(EnumDef):
 class PathPointType(EnumDef):
     """枚举类：路径点类型."""
     NONE = (0, '空')
-    MARK = (1, '标记点')
-    RFID = (2, 'RFID点')
-    CLEAN = (3, '清扫点')
+    CHARGE = (1, '充电点')
+    WATER = (2, '加水点')
+    RFID = (3, 'RFID点')
+    CLEAN = (4, '清扫点')
     
 
 #常量#####################################################################

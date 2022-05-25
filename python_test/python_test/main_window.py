@@ -30,6 +30,7 @@ from func_robot import *
 from func_svg import *
 from func_export import *
 from func_defines import *
+from func_map import *
 
 class Window(QMainWindow, Ui_MainWindow):
     camera_offlined = pyqtSignal()
@@ -610,6 +611,10 @@ class Window(QMainWindow, Ui_MainWindow):
     def update_ui_map(self):
         svg_map.update_robot_pos(robots.current.position.path_pos,reverse=True)
         self.svgWidget.load(svg_map.doc.toByteArray())
+
+        path_1.clean_points.set_cleaned(robots.current.task.tracks)
+        print(path_1.clean_points.array_cleaned)
+        print(path_1.clean_points.count_cleaned)
 
     #故障信息：当前故障、历史故障切换
     def toggle_table_error_list(self):

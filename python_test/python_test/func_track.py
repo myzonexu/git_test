@@ -118,9 +118,9 @@ class Tracks(object):
         action_drive_last=self.current.action_drive
         action_arm_last=self.current.action_arm
         
-        if speed>0.1:
+        if speed>2:
             drive_action=DriveAction.FORWORD
-        elif speed<-0.1:
+        elif speed<-2:
             drive_action=DriveAction.BACKWORD
         else:
             drive_action=DriveAction.STOP
@@ -130,7 +130,7 @@ class Tracks(object):
         else:
             if drive_action==action_drive_last and arm_action==action_arm_last:
                 self.current.pos_end=pos
-                self.time_end = datetime.now()
+                self.current.time_end = datetime.now()
             else:
                 self.all.append(copy.deepcopy(self.current))
                 self.current.__init__()

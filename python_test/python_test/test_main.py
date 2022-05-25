@@ -17,6 +17,8 @@ b.set_track_cleaned(t)
 
 print(b.array_cleaned)
 print(b.count_cleaned)
+
+print(map_1.paths["path_1"].clean_points.__dict__)
 #for i in range(5):
 # print(b.all[i].__dict__)
 

@@ -147,27 +147,32 @@ class CleanPoint(PathPoint):
         
 class PathPointSeries(object):
 
-    def __init__(self,start_pos,num,space,class_type):
+    def __init__(self,start_pos,num,space_pos,class_type):
         """
         路径上的连续等间距点.
      
         :param start_pos: float,起始点在路径上的位置
         :param num: int,点的数量
-        :param space: float,点间距，可为负数
+        :param space_pos: float,点间距，可为负数
         :param class_type: class type,路径点类
         :returns: no return
         :raises: no exception
         """
+        self.pos_start=start_pos
+        self.count=num
+        self.pos_space=space_pos
+        self.type=class_type
+
         self.points=[]
         for i in range(0,num):
-            _point=class_type(start_pos+i*space)
+            _point=class_type(start_pos+i*space_pos)
             self.points.append(_point)
 
 class PathPointGroup(object):
 
     def __init__(self):
         """路径上的点集合."""
-        self.value_type_dict={"all":PathPoint}
+        self.value_type_dict={"all":{"type":PathPoint}}
         self.all=[]
         self._pos_list=[]        
     
@@ -289,14 +294,14 @@ class CleanPointGroup(PathPointGroup):
         :returns: no return
         :raises: no exception
         """
-        if self.array_pos==None:
+        if self.array_pos is None:
             self.init_array_pos()
-        if self.array_cleaned==None:
+        if self.array_cleaned is None:
             self.init_array_cleaned()
 
         _arm_pos=track.action_arm.value-1
 
-        _index_pos=np.where((self.array_pos>=track.pos_start)&(self.array_pos<=track.pos_end))
+        _index_pos=np.where((self.array_pos>=min(track.pos_start,track.pos_end))&(self.array_pos<=max(track.pos_start,track.pos_end)))
 
         self.array_cleaned[_index_pos,_arm_pos]=True
 
@@ -324,12 +329,12 @@ class CleanPointGroup(PathPointGroup):
         if isinstance(tracks,Tracks):
             if self._set_current is False:
                 for _track in tracks.all:
-                    set_track_cleaned(_track)
+                    self.set_track_cleaned(_track)
                 self._set_current=True
             else:
                 pass
 
-            set_track_cleaned(tracks.current)
+            self.set_track_cleaned(tracks.current)
         else:
             print("轨迹集合类型错误")
     
@@ -345,5 +350,87 @@ class CleanPointGroup(PathPointGroup):
         #self._count_cleaned=np.nonzero(self.array_cleaned)[0].shape[0]
         return self._count_cleaned
 
-#functions#####################################################################
 
+class Path(object):
+    
+    def __init__(self):
+        """
+        地图路径类.
+     
+        :returns: no return
+        :raises: no exception
+        """
+        self.id=""
+        self._path=None
+        self.clean_points=CleanPointGroup()
+        self.charge_points=PathPointGroup()
+        self.water_points=PathPointGroup()
+        self.rfid_points=PathPointGroup()
+        self.rfid_points.value_type_dict={"all":{"type":RfidPoint}}
+
+    @property
+    def path(self):
+        """
+        获取路径.
+        
+        :returns: str,svg路径
+        :raises: no exception
+        """
+        return self._path
+
+    @path.setter
+    def path(self,str_svg_path):
+        """
+        设置路径.
+         
+        :param str_svg_path: str,svg路径
+        :returns: no return
+        :raises: no exception
+        """
+        if isinstance(str_svg_path,str):
+            self._path=str_svg_path
+        else:
+            print("path类型错误")
+
+class Map(object):
+    
+    def __init__(self):
+        """
+        地图类.
+    
+        :returns: no return
+        :raises: no exception
+        """
+        self.value_type_dict={"paths":{"type":Path,"key":"id"}}
+        self.id=""
+        self.viewbox=None
+
+        self.paths={}
+
+#变量定义#####################################################################
+
+map_1=Map()
+map_1.id="map_1"
+
+path_1=Path()
+path_1.id="path_1"
+path_1.path="m0 10  300 0 240 190"
+
+map_1.paths[path_1.id]=path_1
+
+clean_points_1=PathPointSeries(100,6,50,CleanPoint)
+path_1.clean_points.add(clean_points_1)
+path_1.clean_points.init_array_pos()
+path_1.clean_points.init_array_cleaned()
+
+charge_point_1=PathPoint(5)
+charge_point_1.type=PathPointType.CHARGE
+path_1.charge_points.add(charge_point_1)
+
+water_point_1=PathPoint(550)
+water_point_1.type=PathPointType.WATER
+path_1.water_points.add(water_point_1)
+
+
+rfid_points_1=PathPointSeries(10,5,100,RfidPoint)
+path_1.rfid_points.add(rfid_points_1)
