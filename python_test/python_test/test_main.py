@@ -4,18 +4,20 @@ import time
 
 #clean=PathPointSeries(1,3,10,RfidPoint)
 #print(clean.points[0].__dict__)
-a=PathPointSeries(2,5,2,CleanPoint)
+a=PathPointSeries(1,10,1,CleanPoint)
 b=CleanPointGroup()
 b.add(a)
 t=Track()
-t.start(5,DriveAction.FORWORD,ArmAction.WALL1)
+t.start(2,DriveAction.FORWORD,ArmAction.WALL2)
 time.sleep(2)
-t.end(8)
+t.pos_end=8
+t.end()
 
 b.set_track_cleaned(t)
 
-for i in range(5):
- print(b.all[i].__dict__)
+print(b.array_cleaned)
+#for i in range(5):
+# print(b.all[i].__dict__)
 
 
 '''

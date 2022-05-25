@@ -52,7 +52,8 @@ class TaskPlan(object):
         :returns: no return
         :raises: no exception
         """
-    
+        self.value_type_dict={"all":TaskPlan,"assign":str,"received":str,"not_received":str}
+
         self.id = 0
         self.enable = False
         self.name = ""
@@ -277,14 +278,15 @@ class TaskPlans(QObject):
     def __init__(self):
         """初始化."""
         super().__init__()
+        self.value_type_dict={"all":TaskPlan}
         self.new = TaskPlan()
         #self.plan_list = []
         self.all = {}
         self.current = None
         self.dict_trans={}
+        
         import os
         filename = './data/task_plans.json'
-
         if os.path.exists(filename): 
             self.import_json_file(filename)
             self.import_json_plans()

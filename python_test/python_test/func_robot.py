@@ -342,6 +342,7 @@ class RobotGroup(QObject):
 
     def __init__(self):
         super().__init__()
+        self.value_type_dict={"all":Robot,"current":Robot}
         self.all = {}
         self.addrs_online=set([])
         #新检测到的ip列表，[[id1,ip1],[id2,ip2]]
@@ -351,6 +352,8 @@ class RobotGroup(QObject):
         self.local_ip_strlist=None
 
         self.dict_trans={}
+
+        
 
         #self.get_local_ip()
 
@@ -384,7 +387,8 @@ class RobotGroup(QObject):
             for _id,_robot in _robots.items():
                 _ip=_robot.get("connect").get("ip")
                 _camera_ip=_robot.get("camera").get("ip")
-                _rob=Robot(_ip,_camera_ip)
+                #_rob=Robot(_ip,_camera_ip)
+                _rob=self.value_type_dict.get("all")(_ip,_camera_ip)
                 _rob.id=_robot.get("id")
                 _rob.camera.pc_test=_robot.get("camera").get("pc_test")
                 _rob.import_json_clean_log(_robot.get("clean_log").get("all"))
