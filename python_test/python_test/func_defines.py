@@ -14,6 +14,7 @@ Change Activity:
 __author__ = 'simon'
 
 from enum import Enum,unique
+from datetime import datetime
 
 #classes#######################################################################
 #官方示例
@@ -182,15 +183,40 @@ class CycleType(EnumDef):
     Weekday = (1,"每周N")
     Monthday = (2,"每月N日")
     NONE=(3,"无")
+
+@unique
+class DriveAction(EnumDef):
+    """枚举类：行驶动作."""
+    STOP = (0, '停止')
+    FORWORD = (1, '前进')
+    BACKWORD = (2, '后退')
+        
+
+@unique
+class ArmAction(EnumDef):
+    """枚举类：手臂动作."""
+    ORIGIN = (0, '原点')
+    WALL1 = (1, '侧壁1')
+    WALL2 = (2, '侧壁2')
+    WALL3 = (3, '侧壁3')
+    WALL4 = (4, '侧壁4')
+    GND = (5, '地面')
+
+@unique
+class PathPointType(EnumDef):
+    """枚举类：路径点类型."""
+    NONE = (0, '空')
+    MARK = (1, '标记点')
+    RFID = (2, 'RFID点')
+    CLEAN = (3, '清扫点')
     
 
 #常量#####################################################################
-#json转换支持类型
-type_json_support=(int,float,str,list,tuple,dict,bool)
-type_has_child=(dict,list,tuple)
+
 
 #时间显示格式
 TIME_SHOW_ALL = '%Y-%m-%d %H:%M:%S'
 TIME_SHOW_Y_M_D='%Y-%m-%d'
 TIME_SHOW_H_M_S = '%H:%M:%S'
 DEFAULT_DATETIME_STAMP_START=86400
+DATETIME_NONE=datetime.fromtimestamp(DEFAULT_DATETIME_STAMP_START)

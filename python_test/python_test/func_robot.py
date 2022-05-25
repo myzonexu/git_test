@@ -10,6 +10,7 @@ from func_modbus_tcp import *
 from func_defines import *
 from func_task import *
 from func_error import *
+from func_track import *
 import struct
 import copy
 
@@ -161,7 +162,10 @@ class Cleaner:
 class Arm(object):
     def __init__(self):
         self.state = ArmState.WORK #ArmState.WARN  #ValueDescriptionSet(arm_state)
-        self.position = 0
+        self.action = ArmAction.ORIGIN
+        self.action_doing=False
+        self.action_done=False
+        self.is_warn=False
 
 '''
 #故障码
@@ -272,6 +276,7 @@ class CleanTask(object):
         self.time_total = timedelta()
         self.time_estimate = timedelta()
         self.time_remain = timedelta()
+        self.tracks=Tracks()
     
     def create_id(self,rob_id):
         """
@@ -681,8 +686,35 @@ class Robot(QObject):
         return _err_list
 
     def get_arm_state(self):
-        #如何定义？
-        pass
+        if self.protocol.clean_state.value==1:
+            self.arm.action= ArmAction.WALL1
+        elif self.protocol.clean_state.value==2:
+            self.arm.action= ArmAction.WALL2
+        elif self.protocol.clean_state.value==3:
+            self.arm.action= ArmAction.WALL3
+        elif self.protocol.clean_state.value==4:
+            self.arm.action= ArmAction.WALL4
+        elif self.protocol.clean_state.value==5:
+            self.arm.action= ArmAction.GND
+        else:
+            pass
+        #报警
+        if test_bit(self.protocol.arm_state.value,0):
+            self.arm.is_warn=True
+        else:
+            self.arm.is_warn=False        
+        #运行
+        if test_bit(self.protocol.arm_state.value,1):
+            self.arm.action_doing=True
+        else:
+            self.arm.action_doing=False
+        #到位
+        if test_bit(self.protocol.arm_state.value,2):
+            self.arm.action_done=True
+        else:
+            self.arm.action_done=False
+
+    
     def get_task_state(self): 
         """获取任务状态，状态机判断开始、结束时间，写入清扫日志."""
         if CleanTaskState.has_value(self.protocol.clean_state.value):
@@ -713,6 +745,11 @@ class Robot(QObject):
             self.task.mileage_driven = self.drive.mileage-self.task.mileage_start
             self.task.count_add_water = self.protocol.count_add_water.value-self.task.count_add_water_start 
             self.task.count_charged = self.protocol.count_charged.value-self.task.count_charged_start
+
+            #记录轨迹
+            self.task.tracks.record(self.drive.speed,self.position.path_pos,self.arm.action)
+            for i in self.task.tracks.all:
+                print(i)
 
             if self.task.state is CleanTaskState.BACK:                
                 self.task.state_machine=CleanStateMachine.BACKING

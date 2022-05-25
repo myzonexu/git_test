@@ -1,10 +1,21 @@
-from func_error import *
-#ErrorCode.import_file('./data/error_code.csv')
 
-print(ErrorCode.error_dict)
-#a=ErrorCode('11')
-a=ErrorCode(11)
-print(a.code,a.level,a.description,a.solution)
+from func_map import *
+import time
+
+#clean=PathPointSeries(1,3,10,RfidPoint)
+#print(clean.points[0].__dict__)
+a=PathPointSeries(2,5,2,CleanPoint)
+b=CleanPointGroup()
+b.add(a)
+t=Track()
+t.start(5,DriveAction.FORWORD,ArmAction.WALL1)
+time.sleep(2)
+t.end(8)
+
+b.set_track_cleaned(t)
+
+for i in range(5):
+ print(b.all[i].__dict__)
 
 
 '''
