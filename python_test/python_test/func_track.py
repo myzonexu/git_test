@@ -46,16 +46,6 @@ class Track(object):
         self.action_drive=drive_action
         self.action_arm=arm_action
             
-    #def end(self,pos):
-    #    """
-    #    轨迹结束.
-    
-    #    :param pos: float,路径位置
-    #    :returns: no return
-    #    :raises: no exception
-    #    """
-    #    self.time_end = datetime.now()
-    #    self.pos_end=pos
     def end(self):
         """
         轨迹结束.
@@ -64,7 +54,6 @@ class Track(object):
         :raises: no exception
         """
         self.time_end = datetime.now()
-        
 
 class Tracks(object):
     """类定义，轨迹集合."""
@@ -72,39 +61,8 @@ class Tracks(object):
         """初始化."""
         #self.new=Track()
         self.current=Track()
-        self.all=[]
-    
-    #def record(self,speed,pos,arm_action):
-    #    """
-    #    记录轨迹.
-     
-    #    :param speed: float,速度
-    #    :param pos: float,位置
-    #    :param arm_action: enum,机械臂动作
-    #    :returns: no return
-    #    :raises: no exception
-    #    """
-    #    action_drive_last=self.current.action_drive
-    #    action_arm_last=self.current.action_arm
-        
-    #    if speed>0:
-    #        drive_action=DriveAction.FORWORD
-    #    elif speed<0:
-    #        drive_action=DriveAction.BACKWORD
-    #    elif speed==0:
-    #        drive_action=DriveAction.STOP
-    #    else:
-    #        pass
-
-    #    if self.current.time_start == DATETIME_NONE:
-    #        self.current.start(pos,drive_action,arm_action)
-    #    else:
-    #        if drive_action==action_drive_last and arm_action==action_arm_last:
-    #            self.current.pos_end=pos
-    #        else:
-    #            self.current.end(pos)
-    #            self.all.append(copy.deepcopy(self.current))
-    #            self.current.__init__()
+        self.all=[]    
+ 
     def record(self,speed,pos,arm_action):
         """
         记录轨迹.
@@ -135,9 +93,6 @@ class Tracks(object):
                 self.all.append(copy.deepcopy(self.current))
                 self.current.__init__()
                 self.current.start(pos,drive_action,arm_action)
-
-
-
 
 
 #functions#####################################################################

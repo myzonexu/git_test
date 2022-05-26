@@ -102,22 +102,6 @@ class RfidPoint(PathPoint):
         self.value=command_value
 
 class CleanPoint(PathPoint):
-
-    #def __init__(self,pos_path,wall_num=4,gnd_num=1):
-    #    """     
-    #    路径上的清扫点.
-     
-    #    :param pos_path: float,在路径上的位置
-    #    :param mark: enum,标记
-    #    :returns: no return
-    #    :raises: no exception
-    #    """
-    #    super().__init__(pos_path)
-    #    self.type=PathPointType.CLEAN
-    #    self.num_wall=wall_num   
-    #    self.num_gnd=gnd_num
-    #    self.is_cleaned=np.zeros((wall_num+gnd_num, ),dtype=bool)
-    #    print(self.is_cleaned)
     def __init__(self,pos_path):
         """     
         路径上的清扫点.
@@ -224,16 +208,6 @@ class PathPointGroup(object):
             self._pos_list.append(p.path_pos)
         return self._pos_list
     
-    #def set_path(self,svg_path):
-    #    """
-    #    设定路径.
-     
-    #    :param svg_path: svg_path,svg路径
-    #    :returns: no return
-    #    :raises: no exception
-    #    """
-    #    self.path=svg_path
-
 class CleanPointGroup(PathPointGroup):
     
     def __init__(self):
@@ -271,21 +245,6 @@ class CleanPointGroup(PathPointGroup):
             self.array_cleaned=np.zeros((_num_point,_num_mark), dtype = bool)
         return self.array_cleaned
     
-    #def set_track_cleaned(self,track):
-    #    """
-    #    设置轨迹已清理.
-     
-    #    :param track: Track，轨迹
-    #    :returns: no return
-    #    :raises: no exception
-    #    """
-    #    _pos=np.array(self.pos_list)
-    #    _cleaned=np.where((_pos>=track.pos_start)&(_pos<=track.pos_end))
-    #    print(type(_cleaned[0]))
-    #    print(_cleaned)
-    #    _index=track.action_arm.value-1
-    #    for i in _cleaned[0].tolist():
-    #        self.all[i].is_cleaned[_index]=True      
     def set_track_cleaned(self,track):
         """
         设置轨迹已清理.
@@ -304,14 +263,6 @@ class CleanPointGroup(PathPointGroup):
         _index_pos=np.where((self.array_pos>=min(track.pos_start,track.pos_end))&(self.array_pos<=max(track.pos_start,track.pos_end)))
 
         self.array_cleaned[_index_pos,_arm_pos]=True
-
-        #_pos=np.array(self.pos_list)
-        #_cleaned=np.where((_pos>=track.pos_start)&(_pos<=track.pos_end))
-        #print(type(_cleaned[0]))
-        #print(_cleaned)
-        #_index=track.action_arm.value-1
-        #for i in _cleaned[0].tolist():
-        #    self.all[i].is_cleaned[_index]=True 
         
     def set_cleaned(self,tracks,reset_all=False):
         """

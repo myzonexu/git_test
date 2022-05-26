@@ -8,29 +8,11 @@
                     "port": 502
                 },
                 "drive": {
-                    "mileage": 609.015
+                    "mileage": 0.0
                 },
                 "errors": {
-                    "active": {
-                        "26": {
-                            "error": {
-                                "code": "26"
-                            },
-                            "is_active": true,
-                            "time_start": "2022-05-25 19:24:39",
-                            "time_stop": "1970-01-02 08:00:00"
-                        }
-                    },
-                    "history": [
-                        {
-                            "error": {
-                                "code": "26"
-                            },
-                            "is_active": false,
-                            "time_start": "2022-05-25 19:24:34",
-                            "time_stop": "2022-05-25 19:24:39"
-                        }
-                    ]
+                    "active": {},
+                    "history": []
                 },
                 "camera": {
                     "ip": "192.168.0.64",
