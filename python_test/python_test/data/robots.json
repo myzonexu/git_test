@@ -32,6 +32,36 @@
                             "count_cleaned": 0,
                             "count_add_water": 0,
                             "count_charged": 0
+                        },
+                        "1-2022-05-26 15:33:25": {
+                            "id": "1-2022-05-26 15:33:25",
+                            "state": 1,
+                            "start_time": "2022-05-26 15:33:25",
+                            "stop_time": "2022-05-26 15:41:12",
+                            "mileage_driven": 0.0,
+                            "count_cleaned": 0,
+                            "count_add_water": 0,
+                            "count_charged": 0
+                        },
+                        "1-2022-05-26 15:41:13": {
+                            "id": "1-2022-05-26 15:41:13",
+                            "state": 1,
+                            "start_time": "2022-05-26 15:41:13",
+                            "stop_time": "2022-05-26 15:48:30",
+                            "mileage_driven": 17.77699999999993,
+                            "count_cleaned": 0,
+                            "count_add_water": 0,
+                            "count_charged": 0
+                        },
+                        "1-2022-05-26 15:48:31": {
+                            "id": "1-2022-05-26 15:48:31",
+                            "state": 0,
+                            "start_time": "2022-05-26 15:48:31",
+                            "stop_time": "2022-05-26 15:55:48",
+                            "mileage_driven": 17.763000000000034,
+                            "count_cleaned": 0,
+                            "count_add_water": 0,
+                            "count_charged": 0
                         }
                     }
                 },

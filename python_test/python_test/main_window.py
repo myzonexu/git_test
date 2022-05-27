@@ -612,6 +612,7 @@ class Window(QMainWindow, Ui_MainWindow):
         svg_map.update_robot_pos(robots.current.position.path_pos,reverse=True)
         self.svgWidget.load(svg_map.doc.toByteArray())
 
+        #更新已清理标志
         path_1.clean_points.set_cleaned(robots.current.task.tracks)
         print(path_1.clean_points.array_cleaned)
         print(path_1.clean_points.count_cleaned)
@@ -622,9 +623,7 @@ class Window(QMainWindow, Ui_MainWindow):
             err_list = robots.current.errors.active_err_info
         else:
             err_list = robots.current.errors.history_err_info
-        table_fill_data_list_2d(self.tableWidget_error,err_list)
-    
-       
+        table_fill_data_list_2d(self.tableWidget_error,err_list)       
 
     
     def init_ui_task_plan(self):

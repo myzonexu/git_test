@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<?xml-stylesheet href='styles.css' type='text/css'?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="700.0px" viewBox="0 0 700.0 400.0" height="400.0px">
+  <g>
+    <g><g id="path">
+		<path id="path_1" d="m0 10  300 0 240 190" style="fill:none;stroke:black;stroke-width:4"/>
+	</g>
+	<g id="g_robot">
+		<circle id="robot_1" cx="10" cy="10" r="10" stroke="black" stroke-width="2" fill="red"/>
+		<animate attributeType="CSS" attributeName="opacity" from="1" to="0" dur="5s" repeatCount="indefinite"/>
+
+	</g>
+
+</g>
+    <g class="icon" transform="translate(50, 100) scale(1 1) translate(0, 0) scale(0.02 0.02) ">
+      <defs>
+        
+      </defs>
+      
+	<path d="M883.349497 1023.812698h-742.381131A54.270621 54.270621 0 0 1 92.585595 937.798884l37.631044-53.758633a82.173911 82.173911 0 0 1 54.014627-21.332791h661.316525a56.574562 56.574562 0 0 1 48.38277 25.599349l37.631044 53.758634a51.710686 51.710686 0 0 1-48.382771 80.63795z m0 0" p-id="21383"></path>
+	<path d="M759.704639 104.198738A346.017872 346.017872 0 0 0 275.706274 93.447012l-10.751726 10.751726a367.265332 367.265332 0 0 0 0 505.501819l247.460377 252.878906 247.247049-252.878906a367.265332 367.265332 0 0 0 0.042665-505.501819z m-247.247049 365.729371A107.474602 107.474602 0 1 1 619.932192 362.453508a107.474602 107.474602 0 0 1-107.474602 107.474601z m0 0" p-id="21384" data-spm-anchor-id="a313x.7781069.0.i4" class="selected"></path>
+    </g>
+  </g>
+</svg>

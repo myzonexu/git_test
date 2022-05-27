@@ -753,8 +753,7 @@ class Robot(QObject):
 
             #记录轨迹
             self.task.tracks.record(self.drive.speed,self.position.path_pos,self.arm.action)
-            for i in self.task.tracks.all:
-                print(i)
+            
 
             if self.task.state is CleanTaskState.BACK:                
                 self.task.state_machine=CleanStateMachine.BACKING

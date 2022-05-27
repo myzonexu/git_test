@@ -1,0 +1,109 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" 
+"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg width="100%" height="100%" version="1.1" viewBox="0 -100 1024 1024" preserveAspectRatio="xMidYMid meet"
+xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	
+	<style type="text/css">
+		.track_path {fill:none;stroke:black;stroke-width:4}
+		.clean_point {fill:yellow}
+		#icon_charge_point {fill:#1296db}
+		#icon_water_point {fill:#1296db}
+		.robot {stroke:black;stroke-width:2;fill:red}
+		.icon_origin {transform:scale(0.02,0.02) translate(-50%,-50%)}
+		#icon_origin_clean_point {transform:scale(0.01,0.01) translate(-50%,-50%)}
+		[cleaned=true] {fill:blue}
+		[cleaned=false] {fill:green}
+		.path_point {transform:translate(0px,-20px)}
+	</style>
+2
+	<g class="background">
+
+	</g>
+
+	<defs class="icon">
+		<g id="icon_charge_point">
+			<g class="icon_origin" id="icon_origin_charge_point">
+				<path d="M167.637333 210.304l60.330667 60.330667A340.266667 340.266667 0 0 0 128 512c0 94.293333 38.186667 179.626667 99.968 241.365333L167.68 813.653333C90.410667 736.469333 42.666667 629.802667 42.666667 512s47.786667-224.469333 124.970666-301.696z m688.725334 0C933.589333 287.530667 981.333333 394.197333 981.333333 512s-47.786667 224.512-124.970666 301.696l-60.330667-60.330667C857.813333 691.584 896 606.250667 896 512s-38.186667-179.541333-99.925333-241.322667L856.32 210.346667zM554.666667 213.333333v256h128l-213.333334 341.333334v-256H341.333333l213.333334-341.333334zM288.298667 330.965333l60.373333 60.373334A169.984 169.984 0 0 0 298.666667 512c0 47.146667 19.114667 89.813333 50.005333 120.661333l-60.373333 60.373334A255.36 255.36 0 0 1 213.333333 512c0-70.698667 28.672-134.698667 74.965334-181.034667z m447.445333 0.042667A255.317333 255.317333 0 0 1 810.666667 512a255.36 255.36 0 0 1-74.965334 181.034667l-60.373333-60.373334A169.984 169.984 0 0 0 725.333333 512a170.069333 170.069333 0 0 0-49.92-120.618667l60.330667-60.373333z" p-id="4003"></path>
+			</g>
+		</g>
+		<g id="icon_water_point">
+			<g class="icon_origin" id="icon_origin_water_point">
+				<path d="M401.424 288.64v172.544c96.184 10.544 93.68 12.216 93.68 56.432 0 52.616-21.552 59.536-74.544 59.536H132.096c-53.088 0-93.824-6.96-93.824-59.536 0-44.312-21.504-45.888 74.688-56.432V147.44C112.96 54.648 207.104 0.128 300.36 0.128h678.096V288.64H401.424z m-138.96 384.656c0.32-55.272-41.248-77.792-71.296-77.792-24.384 0-74.12 19.688-72.92 74.584 1.304 54.904 72.92 121.04 72.92 121.04s71.064-62.608 71.296-117.84z m-17.512 4.6c0.32 1.808 0.2 3.68-0.368 5.432-1.536 4.64-5.528 7.248-8.96 5.808-2.192-0.928-3.632-3.256-3.952-6.04-3.064-21.92-14.496-40.224-31.912-47.424h-0.088c-3.44-1.44-5.016-6.36-3.488-11.008 1.488-4.64 5.48-7.24 8.92-5.8 21.736 8.912 36 31.72 39.848 59.032z m226.144-4.64c0.272-55.232-41.344-77.76-71.344-77.76-24.384 0-74.128 19.696-72.92 74.592 1.304 54.904 72.92 121.04 72.92 121.04s71.016-62.608 71.344-117.84v-0.04z m-17.56 4.64c0.312 1.816 0.168 3.68-0.416 5.432-1.488 4.64-5.48 7.248-8.92 5.808-2.184-0.928-3.624-3.256-3.944-6.04-3.12-21.92-14.544-40.224-31.912-47.424h-0.136c-3.44-1.44-4.976-6.36-3.488-11.008 1.536-4.64 5.528-7.24 8.96-5.8 21.744 8.912 36 31.72 39.856 59.032zM262.464 904.08c0.32-55.272-41.248-77.792-71.296-77.792-24.384 0-74.12 19.688-72.92 74.584 1.304 54.896 72.92 121.04 72.92 121.04s71.064-62.608 71.296-117.88v0.048z m-17.512 4.6c0.32 1.8 0.192 3.648-0.368 5.384-1.536 4.64-5.528 7.248-8.96 5.856-2.192-0.936-3.632-3.256-3.952-6.04-3.064-21.92-14.496-40.224-31.912-47.464h-0.088c-3.44-1.4-5.016-6.32-3.488-10.96 1.488-4.648 5.48-7.248 8.92-5.856 21.736 8.96 36 31.76 39.848 59.08z m226.144-4.648c0.272-55.272-41.344-77.744-71.344-77.744-24.384 0-74.128 19.688-72.92 74.584 1.304 54.896 72.92 121.04 72.92 121.04s71.016-62.608 71.344-117.88z m-17.56 4.64c0.304 1.808 0.16 3.656-0.416 5.392-1.488 4.64-5.48 7.248-8.92 5.856-2.184-0.936-3.624-3.256-3.944-6.04-3.12-21.92-14.544-40.224-31.912-47.464h-0.136c-3.44-1.4-4.976-6.32-3.488-10.96 1.536-4.648 5.528-7.248 8.96-5.856 21.744 8.96 36 31.76 39.856 59.08z" p-id="29745"></path>
+			</g>
+		</g>
+		<g id="icon_clean_point">
+			<g class="icon_origin" id="icon_origin_clean_point">
+				<path d="M962 782c0 99.405-80.595 180-180 180h-540c-99.405 0-180-80.595-180-180v-540c0-99.405 80.595-180 180-180h540c99.405 0 180 80.595 180 180v540z" p-id="5966" ></path>
+			</g>
+		</g>
+		<g id="icon_robot">
+			<g class="icon_self" id="icon_origin_robot">
+				<circle id="robot_1" cx="0" cy="0" r="10" />
+			</g>
+		</g>
+		<g id="icon_robot_1">
+			<g class="icon_origin" id="icon_origin_robot">
+				<path d="M511.999097 511.999097m-486.524133 0a486.524133 486.524133 0 1 0 973.048266 0 486.524133 486.524133 0 1 0-973.048266 0Z" fill="#1296db" opacity=".2" p-id="22258"></path>
+				<path d="M511.999097 511.999097m-307.200542 0a307.200542 307.200542 0 1 0 614.401084 0 307.200542 307.200542 0 1 0-614.401084 0Z" fill="#1296db" p-id="22259"></path>
+				<path d="M511.999097 511.999097m-257.688367 0a257.688367 257.688367 0 1 0 515.376734 0 257.688367 257.688367 0 1 0-515.376734 0Z" fill="#1296db" p-id="22260"></path>
+			</g>
+		</g>
+
+		
+
+	</defs>
+	
+
+	<g class="tunnel_path">
+		<g class="track_path">
+			<path id="path_1" d="m0 0  300 0 240 180" />
+		</g>
+		
+
+		<g class="path_point">
+			<g class="rfid_point">
+				
+			</g>
+			<g class="charge_point">
+				<use xlink:href="#icon_charge_point" transform="translate(0, 0)"/>
+			</g>
+			
+			<g class="water_point">
+				<use xlink:href="#icon_water_point" transform="translate(400, 0)"/>
+			</g>
+			<g class=" clean_point">
+				<use xlink:href="#icon_clean_point" transform="translate(100, 0)" cleaned="true"/>
+				<use xlink:href="#icon_clean_point" transform="translate(200, 0)" cleaned="true"/>
+				<use xlink:href="#icon_clean_point" transform="translate(300, 0)" cleaned="true"/>
+				
+				<use xlink:href="#icon_clean_point" transform="translate(100, -20)" cleaned="false"/>
+				<use xlink:href="#icon_clean_point" transform="translate(200, -20)" cleaned="false"/>
+				<use xlink:href="#icon_clean_point" transform="translate(300, -20)" cleaned="false"/>
+
+				<use xlink:href="#icon_clean_point" transform="translate(100, -40)" cleaned="false"/>
+				<use xlink:href="#icon_clean_point" transform="translate(200, -40)" cleaned="false"/>
+				<use xlink:href="#icon_clean_point" transform="translate(300, -40)" cleaned="false"/>
+
+				<use xlink:href="#icon_clean_point" transform="translate(100, -60)" cleaned="false"/>
+				<use xlink:href="#icon_clean_point" transform="translate(200, -60)" cleaned="false"/>
+				<use xlink:href="#icon_clean_point" transform="translate(300, -60)" cleaned="false"/>
+
+				<use xlink:href="#icon_clean_point" transform="translate(100, 40)" cleaned="false"/>
+				<use xlink:href="#icon_clean_point" transform="translate(200, 40)" cleaned="false"/>
+				<use xlink:href="#icon_clean_point" transform="translate(300, 40)" cleaned="false"/>
+			</g>
+		</g>
+		
+		<g class="robot">
+			<g id="robot_all_1"  transform="translate(0, 0)" >
+				<use xlink:href="#icon_robot"/>
+			</g>
+			<g id="robot_all_2" transform="translate(100, 0)" >				
+				<use xlink:href="#icon_robot_1" />
+			</g>
+		</g>		
+	</g>	
+</svg>
+
