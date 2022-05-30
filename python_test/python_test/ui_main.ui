@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1024</width>
+    <width>1025</width>
     <height>700</height>
    </rect>
   </property>
@@ -1622,7 +1622,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>982</width>
+             <width>983</width>
              <height>594</height>
             </rect>
            </property>
@@ -2552,7 +2552,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1024</width>
+     <width>1025</width>
      <height>23</height>
     </rect>
    </property>

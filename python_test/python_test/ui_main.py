@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1024, 700)
+        MainWindow.resize(1025, 700)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -668,7 +668,7 @@ class Ui_MainWindow(object):
         self.scrollArea_camera_browser.setWidgetResizable(True)
         self.scrollArea_camera_browser.setObjectName("scrollArea_camera_browser")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 982, 594))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 983, 594))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.scrollArea_camera_browser.setWidget(self.scrollAreaWidgetContents)
         self.verticalLayout_17.addWidget(self.scrollArea_camera_browser)
@@ -1076,7 +1076,7 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1024, 23))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1025, 23))
         self.menuBar.setObjectName("menuBar")
         self.menu = QtWidgets.QMenu(self.menuBar)
         self.menu.setObjectName("menu")

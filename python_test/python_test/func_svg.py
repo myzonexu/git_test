@@ -124,6 +124,7 @@ class SvgMap(object):
 
 
 svg_map = SvgMap('./map/map.svg')
+#svg_map = SvgMap('./map/map - 副本.svg')
 
 '''
 #create new SVG figure

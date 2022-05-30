@@ -68,11 +68,12 @@ class Window(QMainWindow, Ui_MainWindow):
     def resizeEvent(self, QResizeEvent):
         #Window resize event.
         super().resizeEvent(QResizeEvent)
-
+        
         if robots.current == None:
             pass
         else:
             self.resize_camera_show()
+        self.resize_map_show()
 
         #print(self.svgWidget.size())
 
@@ -86,6 +87,19 @@ class Window(QMainWindow, Ui_MainWindow):
         self.groupBox_map.resize(self.groupBox_map.width() - offset_width,self.groupBox_map.height())
         self.label_camera.move(self.label_camera.x() - offset_width,self.label_camera.y())
         self.label_camera.resize(camrea_show_width,camrea_show_height)
+
+    
+    def resize_map_show(self):
+        """
+        重置地图大小.
+    
+        :returns: no return
+        :raises: no exception
+        """
+        _height=self.scrollArea_map.height()-18
+        _width=int(_height*1.5)
+        self.svgWidget.resize( QSize(_width,_height))
+        #print(_width,_height)
 
     #信号-槽响应###############################################################################################
     #按钮响应
@@ -457,6 +471,7 @@ class Window(QMainWindow, Ui_MainWindow):
         
         
         
+        
 
     #初始化当前机器人信号槽
     def init_robot_slot(self):
@@ -592,23 +607,24 @@ class Window(QMainWindow, Ui_MainWindow):
     def load_map(self):
         
         self.svgWidget = QtSvg.QSvgWidget()       
-        #self.svgWidget.renderer().setAspectRatioMode(Qt.KeepAspectRatio)
+        self.svgWidget.renderer().setAspectRatioMode(Qt.KeepAspectRatio)
         self.scrollArea_map.setWidget(self.svgWidget)
         self.hbox = QHBoxLayout()
+        self.hbox.setContentsMargins(0,0,0,0)
         #hbox.addStretch(1)
         self.hbox.addWidget(self.svgWidget)
 
-
+        
         #self.svgWidget.resize( QSize(800,600)) #固定大小，有滚动条
-        self.scrollArea_map.setLayout(self.hbox) #自适应大小，无滚动条
+        #self.scrollArea_map.setLayout(self.hbox) #自适应大小，无滚动条
 
-        self.svgWidget.load(svg_map.doc.toByteArray())
-
+        self.svgWidget.load(svg_map.doc.toByteArray()) 
         self.svgWidget.renderer().setAspectRatioMode(Qt.KeepAspectRatio)
         
 
     #更新地图
     def update_ui_map(self):
+        self.resize_map_show()
         svg_map.update_robot_pos(robots.current.position.path_pos,reverse=True)
         self.svgWidget.load(svg_map.doc.toByteArray())
 
