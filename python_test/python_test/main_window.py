@@ -630,8 +630,8 @@ class Window(QMainWindow, Ui_MainWindow):
 
         #更新已清理标志
         path_1.clean_points.set_cleaned(robots.current.task.tracks)
-        print(path_1.clean_points.array_cleaned)
-        print(path_1.clean_points.count_cleaned)
+        #print(path_1.clean_points.array_cleaned)
+        #print(path_1.clean_points.count_cleaned)
 
     #故障信息：当前故障、历史故障切换
     def toggle_table_error_list(self):

@@ -56,7 +56,7 @@ xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	</defs>
 	
 
-	<g class="tunnel_path">
+	<g class="tunnel_path" id="tunnel_path.0" transform="translate(100, -100)">
 		<g class="track_path">
 			<path id="path_1" d="m0 0  300 0 240 180" />
 		</g>
@@ -67,14 +67,14 @@ xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 				
 			</g>
 			<g class="charge_point">
-				<use xlink:href="#icon_charge_point" transform="translate(0, 0)"/>
+				<use id="charge_point.0.0" xlink:href="#icon_charge_point" transform="translate(0, 0)"/>
 			</g>
 			
 			<g class="water_point">
-				<use xlink:href="#icon_water_point" transform="translate(400, 0)"/>
+				<use id="water_point.0.0" xlink:href="#icon_water_point" transform="translate(400, 0)"/>
 			</g>
 			<g class=" clean_point">
-				<use xlink:href="#icon_clean_point" transform="translate(100, 0)" cleaned="true"/>
+				<use id="clean_point.0.0.0" xlink:href="#icon_clean_point" transform="translate(100, 0)"/>
 				<use xlink:href="#icon_clean_point" transform="translate(200, 0)" cleaned="true"/>
 				<use xlink:href="#icon_clean_point" transform="translate(300, 0)" cleaned="true"/>
 				
@@ -97,10 +97,10 @@ xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 		</g>
 		
 		<g class="robot">
-			<g id="robot_all_1"  transform="translate(0, 0)" >
+			<g id="robot.1"  transform="translate(0, 0)" >
 				<use xlink:href="#icon_robot"/>
 			</g>
-			<g id="robot_all_2" transform="translate(100, 0)" >				
+			<g id="robot.2" transform="translate(100, 0)" >				
 				<use xlink:href="#icon_robot_1" />
 			</g>
 		</g>		

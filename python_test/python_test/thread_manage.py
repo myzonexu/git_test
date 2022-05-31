@@ -72,6 +72,7 @@ def get_robots_state():
 
                 if sec>60:
                         _robot.sync_time()
+                        _robot.save_charge_data('./data/charge_log.csv')
                         sec=0
            
         time.sleep(1)

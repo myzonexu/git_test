@@ -86,6 +86,7 @@ class Battery:
     soc : int = 0
     soh :int = 0
     voltage :float = 0.0
+    current :float = 0.0
     charging:bool=False
     
     def info(self):
@@ -519,6 +520,7 @@ class Robot(QObject):
         #self.camera = CameraRtsp(pc_test=True)
         self.camera = CameraRtsp(ip=camera_ip)        
         self.log=Log()
+        self.charge_log=[]
         self.is_checked=False
         #self.init(ip)  
 
@@ -618,6 +620,7 @@ class Robot(QObject):
         self.battery.soc = self.protocol.bat_soc.value
         self.battery.soh = self.protocol.bat_soh.value
         self.battery.voltage= self.protocol.bat_voltage.value
+        self.battery.current= self.protocol.bat_current.value
         self.drive.speed = self.protocol.robot_speed.value
         self.drive.steer_angle = self.protocol.steer_angle.value
         self.position.path_pos=self.protocol.position_path.value
@@ -645,6 +648,8 @@ class Robot(QObject):
         #self.task.time_worked = self.protocol.clean_time_s.value                
         self.errors.recv_code(self.get_errors())
         self.warnings.recv_code(self.get_warnings())
+
+        #self.save_charge_data('./data/charge_log.csv')
 
     def get_run_state(self):
         state_1=get_bits(self.protocol.robot_state.value,0,1)
@@ -780,6 +785,19 @@ class Robot(QObject):
 
         else:
             pass
+    
+    def save_charge_data(self,csv_file):
+        """
+        保存充电状态至CSV.
+    
+        :returns: no return
+        :raises: no exception
+        """
+        _header=["时间","SOC","电压","电流","充电状态"]
+        _log=[datetime.now().strftime(TIME_SHOW_ALL),self.battery.soc,self.battery.voltage,self.battery.current,self.battery.charging]
+        self.charge_log.append(_log)
+        
+        export_csv(csv_file,_header,self.charge_log)
     
     #同步时间
     def sync_time(self):

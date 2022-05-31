@@ -19,8 +19,10 @@ from svg.path import Path, Line, Arc, CubicBezier, QuadraticBezier, Close
 from svg.path import parse_path
 from svgutils.compose import *
 import svgutils.transform as sg
+import xml.etree.ElementTree as ET
 
 #classes#######################################################################
+
 class SvgPath(object):
     """SVG路径类."""
     
@@ -114,12 +116,150 @@ class SvgMap(object):
         #print(pos.real,pos.imag )
         self.all[0].setAttribute("cx",str(pos.real))
         self.all[0].setAttribute("cy",str(pos.imag))
+'''   
+class SvgPathPoint(object):
+    """SVG路径上的点."""
+    
+    def __init__(self):
+        """
+        初始化类.
+     
+        :param element: 路径svg元素
+        :returns: no return
+        :raises: no exception
+        """
+        pass
+    
+      
+
+class SvgPath(object):
+    """SVG路径."""
+    
+    def __init__(self,figure_element):
+        """
+        初始化类.
+     
+        :param element: 路径svg元素
+        :returns: no return
+        :raises: no exception
+        """
+        self.element=figure_element
+        self.track_path=self.element.find_id("path_1")
+        #print(self.track_path.tostr())
+        self.id = None
+        self.parse = None
+        self.length = 0.0
+        self.is_zero_reverse= False
+        self.init()
+    
+    def init(self):
+        """
+        初始化.
+    
+        :returns: no return
+        :raises: no exception
+        """
+        self.id = self.element.root.get("id")
+        self.parse = parse_path(self.track_path.root.get("d"))
+        self.length = self.parse.length()
+        print(self.id,self.track_path.root.get("d"),self.length)
+    
+    def pos_to_xy(self,pos_length):
+        """
+        路径长度转换为xy坐标.
+     
+        :param pos_length: float,路径长度
+        :returns: no return
+        :raises: no exception
+        """
+        if self.is_zero_reverse:
+            _pos = 1 - pos_length / self.length
+        else:
+            _pos = pos_length / self.length
+         
+        if _pos > 1.0:
+            _pos = 1.0
+        elif _pos < 0.0:
+            _pos = 0.0
+
+        pos_xy = self.parse.point(_pos)
+        _x=pos_xy.real
+        _y=pos_xy.imag
+        print(_x,_y)
+        return _x,_y
+
+    
+    def add_path_point(self,copy_point,pos,offset_x,offset_y):
+        """
+        添加路径点.
+     
+        :param copy_point: element,xml元素
+        :param pos: float,路径长度
+        :param offset_x: float,x偏移
+        :param offset_y: float,y偏移
+        :returns: no return
+        :raises: no exception
+        """
+        pass
         
+
+class SvgMap(object):
+    
+    def __init__(self):
+        """
+        svg地图.
+    
+        :returns: no return
+        :raises: no exception
+        """
+        self.map=None
+        self.root=None
+        self.charge_point_0=None
+        self.path_1=None
+    
+    def load(self,svg_file):
+        """
+        加载svg文件.
+     
+        :param file: 文件路径，svg文件
+        :returns: no return
+        :raises: no exception
+        """
+        self.map = sg.fromfile(svg_file)
+        self.root =self.map.getroot()
+        #print(self.root[0].tostr())
+
+    
+    def get_tunnel_path(self):
+        """
+        获取隧路径.
+    
+        :returns: no return
+        :raises: no exception
+        """
+        self.tunnel_path=self.root.find_id("tunnel_path.0")
+        #print(self.tunnel_path.tostr())
+        self.path_1=SvgPath(self.tunnel_path)
+        
+
+    def add_point_charge(self,pos):
+        """
+        添加充电点.
+     
+        :param pos: float,点在路径上的长度位置
+        :returns: no return
+        :raises: no exception
+        """
+        self.charge_point_0=self.map.find_id("charge_point.0.0")
 
 
 
 #functions#####################################################################
+svg_map = SvgMap()
+svg_map.load('./map/map - 副本.svg')
+svg_map.get_tunnel_path()
 
+'''
 
 
 
