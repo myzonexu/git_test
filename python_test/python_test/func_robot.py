@@ -576,7 +576,7 @@ class Robot(QObject):
     #获取机器人信息参数列表
     def robot_info(self):
         robot_info = [["ID编号",self.id],["连接状态",self.connect.state.string],["运行状态",self.base.run_state.string],
-              ["速度(mm/s)    ",self.drive.speed],["转角(°)",self.drive.steer_angle],["电量(%)",self.battery.info()],["水位(%)",self.cleaner.info()],
+              ["速度(mm/s)    ",self.drive.speed],["转角(°)",self.drive.steer_angle],["电量(%)",self.battery.info()],["电压(v)",self.battery.voltage],["电流(A)",self.battery.current],["水位(%)",self.cleaner.info()],
               ["当前位置(cm)",self.position.path_pos],["RFID功能",self.rfid.info.string],["总里程(m)",self.drive.mileage],["控制模式",self.base.ctrl_mode.string],
               ["ip地址",self.connect.ip],["程序版本",self.version.get()],["机器人时间",check_time_info(self.robot_time)]]
         return robot_info
