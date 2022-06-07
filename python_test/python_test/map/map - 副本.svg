@@ -73,7 +73,7 @@ xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 			<g class="water_point">
 				<use id="water_point.0.0" xlink:href="#icon_water_point" transform="translate(400, 0)"/>
 			</g>
-			<g class=" clean_point">
+			<g class="clean_point">
 				<use id="clean_point.0.0.0" xlink:href="#icon_clean_point" transform="translate(100, 0)"/>
 				<use xlink:href="#icon_clean_point" transform="translate(200, 0)" cleaned="true"/>
 				<use xlink:href="#icon_clean_point" transform="translate(300, 0)" cleaned="true"/>

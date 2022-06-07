@@ -31,6 +31,8 @@ class PathPoint(object):
         """
         self.path_pos=pos_path
         self._type=PathPointType.NONE
+        #self.x=0.0
+        #self.y=0.0
 
     @property
     def type(self):
@@ -56,17 +58,17 @@ class PathPoint(object):
         else:
             print("值类型不匹配，应为PathPointType枚举")
     
-    def get_pos_xy(self,svg_path):
-        """
-        路径长度位置转换为xy坐标.
+    #def get_pos_xy(self,svg_path):
+    #    """
+    #    路径长度位置转换为xy坐标.
      
-        :param svg_path: svg_path,svg路径对象
-        :returns: float,float x坐标，y坐标
-        :raises: no exception
-        """
-        x,y=0.0
-        pass
-        return x,y
+    #    :param svg_path: svg_path,svg路径对象
+    #    :returns: float,float x坐标，y坐标
+    #    :raises: no exception
+    #    """
+    #    x,y=0.0
+    #    pass
+    #    return x,y
 
 
 class RfidPoint(PathPoint):

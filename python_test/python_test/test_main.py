@@ -1,24 +1,27 @@
+import numpy as np  
+import cv2  
 
-from func_map import *
-import time
+def create_zero_png(img_file,width,height):
+    """
+    创建空白透明png文件.
+ 
+    :param file: str,文件路径
+    :param width: int,图像宽度
+    :param height: int,图像高度
+    :returns: img,图像
+    :raises: no exception
+    """
+    _img = np.zeros((width,height,4), np.uint8) 
+    _img.fill(0)
+    cv2.imwrite(img_file,_img)
+    return _img
 
-#clean=PathPointSeries(1,3,10,RfidPoint)
-#print(clean.points[0].__dict__)
-a=PathPointSeries(1,10,1,CleanPoint)
-b=CleanPointGroup()
-b.add(a)
-t=Track()
-t.start(2,DriveAction.FORWORD,ArmAction.WALL2)
-time.sleep(2)
-t.pos_end=8
-t.end()
+img=create_zero_png("./123.png",400,300)
+cv2.imshow('image', img)     
+cv2.waitKey(0)  
+cv2.destroyAllWindows() 
 
-b.set_track_cleaned(t)
 
-print(b.array_cleaned)
-print(b.count_cleaned)
-
-print(map_1.paths["path_1"].clean_points.__dict__)
 #for i in range(5):
 # print(b.all[i].__dict__)
 
