@@ -21,6 +21,7 @@ from svgutils.compose import *
 import svgutils.transform as sg
 import xml.etree.ElementTree as ET
 from func_map import *
+from lxml import etree
 
 #classes#######################################################################
 '''
@@ -129,6 +130,9 @@ class SvgIcon(object):
         self.element=None
         self.width=50
         self.height=50
+        self.offset_x=-self.width/2
+        self.offset_y=-50
+
 
 class SvgPathPoint(object):
     
@@ -164,12 +168,14 @@ class SvgPath(object):
         self.id = None
         self.parse = None
         self.length = 0.0
-        self.is_zero_reverse= False
+        self.is_zero_reverse= True
         self.init()
         self.layer_charge=None
         self.layer_water=None
         self.layer_clean=None
         self.layer_robot=None
+        self.offset_x=0.0
+        self.offset_y=0.0
     
     def init(self):
         """
@@ -181,7 +187,7 @@ class SvgPath(object):
         self.id = self.element.root.get("id")
         self.parse = parse_path(self.track_path.root.get("d"))
         self.length = self.parse.length()
-        print(self.id,self.track_path.root.get("d"),self.length)
+        #print(self.id,self.track_path.root.get("d"),self.length)
 
     def get_layer(self):
         """
@@ -191,8 +197,10 @@ class SvgPath(object):
         :raises: no exception
         """
         
-        self.layer_charge=self.element.root.find("*")
-        print(self.layer_charge)
+        self.layer_charge=self.element.root.find(".//*[@class='charge_point']")
+        self.layer_water=self.element.root.find(".//*[@class='water_point']")
+        self.layer_clean=self.element.root.find(".//*[@class='clean_point']")
+        self.layer_robot=self.element.root.find(".//*[@class='robot']")
         
     
     def pos_to_xy(self,pos_length):
@@ -216,7 +224,7 @@ class SvgPath(object):
         pos_xy = self.parse.point(_pos)
         _x=pos_xy.real
         _y=pos_xy.imag
-        print(_x,_y)
+        #print(_x,_y)
         return _x,_y
     
     #def add_path_point(self,copy_point,pos,offset_x,offset_y):
@@ -231,7 +239,7 @@ class SvgPath(object):
     #    :raises: no exception
     #    """
     #    pass
-    def add_path_point(self,svg_path_point):
+    def add_path_point(self,svg_path_point,id,layer,offset_x=0,offset_y=0):
         """
         添加路径点.
      
@@ -242,7 +250,12 @@ class SvgPath(object):
         :returns: no return
         :raises: no exception
         """
-        svg_path_point.x,svg_path_point.y=self.pos_to_xy(svg_path_point.point.path_pos)
+        
+        layer.append(svg_path_point.element.root)
+        svg_path_point.element.root.set("id",id)
+        svg_path_point.x,svg_path_point.y=self.pos_to_xy(svg_path_point.point.path_pos)        
+        
+        svg_path_point.element.moveto(svg_path_point.x+svg_path_point.icon.offset_x+offset_x,svg_path_point.y+svg_path_point.icon.offset_y+offset_y)
 
 
 class SvgMap(object):
@@ -256,7 +269,13 @@ class SvgMap(object):
         """
         self.map=None
         self.root=None
+        self.string=""
+        self.doc = QDomDocument('map')
+        self.load_map=None
+        self.load_root=None
         self.charge_point_0=None
+        self.water_point_0=None
+        self.clean_points=[]
         self.path_1=None
         self.icon_robot=SvgIcon()
         self.icon_charge=SvgIcon()
@@ -280,10 +299,15 @@ class SvgMap(object):
         :returns: no return
         :raises: no exception
         """
-        self.map = sg.fromfile(svg_file)
-        self.root =self.map.getroot()
-        #print(self.root[0].tostr())
-
+        self.map=sg.SVGFigure()
+        self.map.root.set("viewBox","0 0 700 400")
+        #self.map.root.set("width","600")
+        #self.map.root.set("height","300")
+        
+        self.load_map = sg.fromfile(svg_file)
+        self.root =self.load_map.getroot()
+        self.map.append(self.root)        
+        #self.map.save("test1.svg")
     
     def get_tunnel_path(self):
         """
@@ -292,10 +316,14 @@ class SvgMap(object):
         :returns: no return
         :raises: no exception
         """
-        self.tunnel_path=self.root.find_id("tunnel_path.0")
+        self.tunnel_path=self.root.find_id("tunnel_path.0")        
         #print(self.tunnel_path.tostr())
         self.path_1=SvgPath(self.tunnel_path)
+        self.path_1.offset_x=20
+        self.path_1.offset_y=150
+        self.tunnel_path.moveto(self.path_1.offset_x,self.path_1.offset_y)
         self.path_1.get_layer()
+        
     
     def get_icon(self):
         """
@@ -304,10 +332,7 @@ class SvgMap(object):
         :returns: no return
         :raises: no exception
         """
-        self.layer_charge=None
-        self.layer_water=None
-        self.layer_clean=None
-        self.layer_robot=None
+        pass
           
         
     def get_copy(self):
@@ -318,21 +343,10 @@ class SvgMap(object):
         :raises: no exception
         """
         
-        self.copy_charge=self.root.find_id("charge_point.0.0")
-        self.copy_water=self.root.find_id("water_point.0.0")
-        self.copy_clean=self.root.find_id("clean_point.0.0.0")
+        self.copy_charge=self.root.find_id("copy_charge_point")
+        self.copy_water=self.root.find_id("copy_water_point")
+        self.copy_clean=self.root.find_id("copy_clean_point")
 
-    def get_layer(self):
-        """
-        获取复制项.
-    
-        :returns: no return
-        :raises: no exception
-        """
-        
-        self.copy_charge=self.root.find_id("charge_point.0.0")
-        self.copy_water=self.root.find_id("water_point.0.0")
-        self.copy_clean=self.root.find_id("clean_point.0.0.0")
     
     def set_charge_point(self):
         """
@@ -341,26 +355,81 @@ class SvgMap(object):
         :returns: no return
         :raises: no exception
         """
-        self.charge_point_0=SvgPathPoint(charge_point_1)        
-        self.charge_point_0.icon=self.icon_charge
-        self.path_1.add_path_point(self.charge_point_0)
+        #self.charge_point_0=SvgPathPoint(charge_point_1)        
+        #self.charge_point_0.icon=self.icon_charge
+        #self.path_1.add_path_point(self.charge_point_0)
+        #self.charge_point_0.element=copy.deepcopy(self.copy_charge)
+        #self.charge_point_0.element.root.set("id","charge_point.0.1")
+
+        #self.charge_point_0.element.moveto(self.charge_point_0.x,self.charge_point_0.y)
+        self.charge_point_0=SvgPathPoint(charge_point_1)
         self.charge_point_0.element=copy.deepcopy(self.copy_charge)
-        self.charge_point_0.element.root.set("id","charge_point.0.1")
-        self.charge_point_0.element.moveto(self.charge_point_0.x,self.charge_point_0.y)
-        print(self.charge_point_0.element.tostr())
+        self.copy_charge.root.set("display","none")
+        self.charge_point_0.icon=self.icon_charge
+        self.path_1.add_path_point(self.charge_point_0,"charge_point.0.1",self.path_1.layer_charge)
+        #print(self.charge_point_0.element.tostr())
 
-
-        
-
-    def add_point_charge(self,pos):
+    def set_water_point(self):
         """
-        添加充电点.
-     
-        :param pos: float,点在路径上的长度位置
+        设定充电点.
+    
         :returns: no return
         :raises: no exception
         """
-        self.charge_point_0=self.map.find_id("charge_point.0.0")
+        self.water_point_0=SvgPathPoint(water_point_1)
+        self.water_point_0.element=copy.deepcopy(self.copy_water)
+        self.copy_water.root.set("display","none")
+        self.water_point_0.icon=self.icon_water
+        self.path_1.add_path_point(self.water_point_0,"water_point.0.1",self.path_1.layer_water)
+        #print(self.water_point_0.element.tostr())
+
+    def set_clean_point(self):
+        """
+        设定清扫点.
+    
+        :returns: no return
+        :raises: no exception
+        """
+        #_point=SvgPathPoint(path_1.clean_points.all[0])
+        #_point.element=copy.deepcopy(self.copy_clean)
+        #_point.icon=self.icon_water
+        _num=0
+        for p in path_1.clean_points.all:
+            for i in range(5):
+                _point=SvgPathPoint(p)
+                _point.element=copy.deepcopy(self.copy_clean)
+                _point.icon=self.icon_water
+                if i<4:
+                    self.path_1.add_path_point(_point,f"clean_point.0.{str(_num)}.{str(i)}",self.path_1.layer_clean,offset_y=-30*i+10)
+                else:
+                    self.path_1.add_path_point(_point,f"clean_point.0.{str(_num)}.{str(i)}",self.path_1.layer_clean,offset_y=100)
+            _num=_num+1
+        self.copy_clean.root.set("display","none")
+
+    def append_map(self):
+        """
+        合成地图.
+    
+        :returns: no return
+        :raises: no exception
+        """
+        self.map.append(self.root)
+        #print(self.map.to_str())
+        self.map.save("test.svg")
+
+
+    def update_map(self):
+        """
+        更新地图.
+    
+        :returns: no return
+        :raises: no exception
+        """
+        #self.string=self.map.to_str() #需改encoding='UTF-8'
+        self.string=etree.tostring(self.map.root,encoding='UTF-8')
+        #self.doc.setContent(self.string)
+        #print(self.doc.toByteArray())
+      
 
 
 
@@ -368,10 +437,15 @@ class SvgMap(object):
 svg_map = SvgMap()
 svg_map.load('./map/map - 副本.svg')
 svg_map.get_tunnel_path()
-svg_map.get_icon()
 svg_map.get_copy()
+svg_map.get_icon()
 svg_map.set_charge_point()
-svg_map.path_1.add_path_point()
+svg_map.set_water_point()
+svg_map.set_clean_point()
+svg_map.append_map()
+svg_map.update_map()
+#svg_map.map.save("test.svg")
+
 
 
 

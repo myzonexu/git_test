@@ -371,12 +371,12 @@ path_1.path="m0 10  300 0 240 190"
 
 map_1.paths[path_1.id]=path_1
 
-clean_points_1=PathPointSeries(100,6,50,CleanPoint)
+clean_points_1=PathPointSeries(300,5,50,CleanPoint)
 path_1.clean_points.add(clean_points_1)
 path_1.clean_points.init_array_pos()
 path_1.clean_points.init_array_cleaned()
 
-charge_point_1=PathPoint(5)
+charge_point_1=PathPoint(50)
 charge_point_1.type=PathPointType.CHARGE
 path_1.charge_points.add(charge_point_1)
 

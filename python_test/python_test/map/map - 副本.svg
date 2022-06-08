@@ -7,15 +7,15 @@ xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	
 	<style type="text/css">
 		.track_path {fill:none;stroke:black;stroke-width:4}
-		.clean_point {fill:yellow}
+		
 		#icon_charge_point {fill:#1296db}
 		#icon_water_point {fill:#1296db}
 		.robot {stroke:black;stroke-width:2;fill:red}
-		.icon_origin {transform:scale(0.02,0.02) translate(-50%,-50%)}
+		.icon_origin {transform:scale(0.02,0.02) }
 		#icon_origin_clean_point {transform:scale(0.01,0.01) translate(-50%,-50%)}
 		[cleaned=true] {fill:blue}
 		[cleaned=false] {fill:green}
-		.path_point {transform:translate(0px,-20px)}
+		
 	</style>
 2
 	<g class="background">
@@ -56,7 +56,7 @@ xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	</defs>
 	
 
-	<g class="tunnel_path" id="tunnel_path.0" transform="translate(100, -100)">
+	<g class="tunnel_path" id="tunnel_path.0" >
 		<g class="track_path">
 			<path id="path_1" d="m0 0  300 0 240 180" />
 		</g>
@@ -67,32 +67,15 @@ xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 				
 			</g>
 			<g class="charge_point">
-				<use id="charge_point.0.0" xlink:href="#icon_charge_point" transform="translate(0, 0)"/>
+				<use id="copy_charge_point" xlink:href="#icon_charge_point" />
 			</g>
 			
 			<g class="water_point">
-				<use id="water_point.0.0" xlink:href="#icon_water_point" transform="translate(400, 0)"/>
+				<use id="copy_water_point" xlink:href="#icon_water_point"/>
 			</g>
 			<g class="clean_point">
-				<use id="clean_point.0.0.0" xlink:href="#icon_clean_point" transform="translate(100, 0)"/>
-				<use xlink:href="#icon_clean_point" transform="translate(200, 0)" cleaned="true"/>
-				<use xlink:href="#icon_clean_point" transform="translate(300, 0)" cleaned="true"/>
+				<use id="copy_clean_point" xlink:href="#icon_clean_point"/>
 				
-				<use xlink:href="#icon_clean_point" transform="translate(100, -20)" cleaned="false"/>
-				<use xlink:href="#icon_clean_point" transform="translate(200, -20)" cleaned="false"/>
-				<use xlink:href="#icon_clean_point" transform="translate(300, -20)" cleaned="false"/>
-
-				<use xlink:href="#icon_clean_point" transform="translate(100, -40)" cleaned="false"/>
-				<use xlink:href="#icon_clean_point" transform="translate(200, -40)" cleaned="false"/>
-				<use xlink:href="#icon_clean_point" transform="translate(300, -40)" cleaned="false"/>
-
-				<use xlink:href="#icon_clean_point" transform="translate(100, -60)" cleaned="false"/>
-				<use xlink:href="#icon_clean_point" transform="translate(200, -60)" cleaned="false"/>
-				<use xlink:href="#icon_clean_point" transform="translate(300, -60)" cleaned="false"/>
-
-				<use xlink:href="#icon_clean_point" transform="translate(100, 40)" cleaned="false"/>
-				<use xlink:href="#icon_clean_point" transform="translate(200, 40)" cleaned="false"/>
-				<use xlink:href="#icon_clean_point" transform="translate(300, 40)" cleaned="false"/>
 			</g>
 		</g>
 		

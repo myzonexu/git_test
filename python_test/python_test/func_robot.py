@@ -631,7 +631,11 @@ class Robot(QObject):
         
 
         #有符号转为无符号
-        self.protocol.mileage_lo.value=struct.unpack('>H', struct.pack('>h', self.protocol.mileage_lo.value))[0]
+        try:
+            self.protocol.mileage_lo.value=struct.unpack('>H', struct.pack('>h', self.protocol.mileage_lo.value))[0]
+        except Exception as e:
+            print(f'符号转换错误，数值{str(self.protocol.mileage_lo.value)}')
+
         self.drive.mileage = join_byte_hi_lo(self.protocol.mileage_hi.value,self.protocol.mileage_lo.value,16)/1000
         
 

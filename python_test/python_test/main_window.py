@@ -97,7 +97,7 @@ class Window(QMainWindow, Ui_MainWindow):
         :raises: no exception
         """
         _height=self.scrollArea_map.height()-18
-        _width=int(_height*1.5)
+        _width=int(_height*2)
         self.svgWidget.resize( QSize(_width,_height))
         #print(_width,_height)
 
@@ -618,15 +618,16 @@ class Window(QMainWindow, Ui_MainWindow):
         #self.svgWidget.resize( QSize(800,600)) #固定大小，有滚动条
         #self.scrollArea_map.setLayout(self.hbox) #自适应大小，无滚动条
 
-        self.svgWidget.load(svg_map.doc.toByteArray()) 
+        self.svgWidget.load(svg_map.string) 
         self.svgWidget.renderer().setAspectRatioMode(Qt.KeepAspectRatio)
         
 
     #更新地图
     def update_ui_map(self):
         self.resize_map_show()
-        svg_map.update_robot_pos(robots.current.position.path_pos,reverse=True)
-        self.svgWidget.load(svg_map.doc.toByteArray())
+        #svg_map.update_robot_pos(robots.current.position.path_pos,reverse=True)
+        svg_map.update_map()
+        self.svgWidget.load(svg_map.string)        
 
         #更新已清理标志
         path_1.clean_points.set_cleaned(robots.current.task.tracks)
