@@ -8,7 +8,7 @@
                     "port": 502
                 },
                 "drive": {
-                    "mileage": 3355.81
+                    "mileage": 3406.433
                 },
                 "errors": {
                     "active": {},
@@ -140,6 +140,16 @@
                             "stop_time": "2022-06-09 17:09:37",
                             "mileage_driven": 18.746000000000095,
                             "count_cleaned": 17,
+                            "count_add_water": 0,
+                            "count_charged": 0
+                        },
+                        "1-2022-06-09 17:38:58": {
+                            "id": "1-2022-06-09 17:38:58",
+                            "state": 0,
+                            "start_time": "2022-06-09 17:38:58",
+                            "stop_time": "2022-06-09 17:57:21",
+                            "mileage_driven": 5.429999999999836,
+                            "count_cleaned": 7,
                             "count_add_water": 0,
                             "count_charged": 0
                         }

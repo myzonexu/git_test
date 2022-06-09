@@ -68,7 +68,7 @@
 			
 			<g class="water_point">
 				<use id="copy_water_point" xlink:href="#icon_water_point" display="none"/>
-			<use id="water_point.0.0" xlink:href="#icon_water_point" transform="translate(135.00000000000003, -50.0) scale(1 1) "/>
+			<use id="water_point.0.0" xlink:href="#icon_water_point" transform="translate(145.0, -50.0) scale(1 1) "/>
 			</g>
 			<g class="clean_point">
 				<use id="copy_clean_point" xlink:href="#icon_clean_point" display="none"/>
@@ -102,6 +102,36 @@
 			<use id="clean_point.0.2.3" xlink:href="#icon_clean_point" transform="translate(175.00000000000003, -130.0) scale(1 1) "/>
 				
 			<use id="clean_point.0.2.4" xlink:href="#icon_clean_point" transform="translate(175.00000000000003, 40.0) scale(1 1) "/>
+				
+			<use id="clean_point.0.3.0" xlink:href="#icon_clean_point" transform="translate(125.0, -40.0) scale(1 1) "/>
+				
+			<use id="clean_point.0.3.1" xlink:href="#icon_clean_point" transform="translate(125.0, -70.0) scale(1 1) "/>
+				
+			<use id="clean_point.0.3.2" xlink:href="#icon_clean_point" transform="translate(125.0, -100.0) scale(1 1) "/>
+				
+			<use id="clean_point.0.3.3" xlink:href="#icon_clean_point" transform="translate(125.0, -130.0) scale(1 1) "/>
+				
+			<use id="clean_point.0.3.4" xlink:href="#icon_clean_point" transform="translate(125.0, 40.0) scale(1 1) "/>
+				
+			<use id="clean_point.0.4.0" xlink:href="#icon_clean_point" transform="translate(74.99999999999997, -40.0) scale(1 1) "/>
+				
+			<use id="clean_point.0.4.1" xlink:href="#icon_clean_point" transform="translate(74.99999999999997, -70.0) scale(1 1) "/>
+				
+			<use id="clean_point.0.4.2" xlink:href="#icon_clean_point" transform="translate(74.99999999999997, -100.0) scale(1 1) "/>
+				
+			<use id="clean_point.0.4.3" xlink:href="#icon_clean_point" transform="translate(74.99999999999997, -130.0) scale(1 1) "/>
+				
+			<use id="clean_point.0.4.4" xlink:href="#icon_clean_point" transform="translate(74.99999999999997, 40.0) scale(1 1) "/>
+				
+			<use id="clean_point.0.5.0" xlink:href="#icon_clean_point" transform="translate(25.00000000000002, -40.0) scale(1 1) "/>
+				
+			<use id="clean_point.0.5.1" xlink:href="#icon_clean_point" transform="translate(25.00000000000002, -70.0) scale(1 1) "/>
+				
+			<use id="clean_point.0.5.2" xlink:href="#icon_clean_point" transform="translate(25.00000000000002, -100.0) scale(1 1) "/>
+				
+			<use id="clean_point.0.5.3" xlink:href="#icon_clean_point" transform="translate(25.00000000000002, -130.0) scale(1 1) "/>
+				
+			<use id="clean_point.0.5.4" xlink:href="#icon_clean_point" transform="translate(25.00000000000002, 40.0) scale(1 1) "/>
 				
 			</g>
 		</g>
