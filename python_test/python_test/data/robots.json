@@ -8,19 +8,10 @@
                     "port": 502
                 },
                 "drive": {
-                    "mileage": 3126.948
+                    "mileage": 3355.81
                 },
                 "errors": {
-                    "active": {
-                        "23": {
-                            "error": {
-                                "code": "23"
-                            },
-                            "is_active": true,
-                            "time_start": "2022-06-09 14:53:02",
-                            "time_stop": "1970-01-02 08:00:00"
-                        }
-                    },
+                    "active": {},
                     "history": []
                 },
                 "camera": {
@@ -89,6 +80,66 @@
                             "stop_time": "2022-06-09 14:44:34",
                             "mileage_driven": 2.161999999999807,
                             "count_cleaned": 0,
+                            "count_add_water": 0,
+                            "count_charged": 0
+                        },
+                        "1-2022-06-09 15:55:58": {
+                            "id": "1-2022-06-09 15:55:58",
+                            "state": 0,
+                            "start_time": "2022-06-09 15:55:58",
+                            "stop_time": "2022-06-09 15:58:00",
+                            "mileage_driven": 3.7339999999999236,
+                            "count_cleaned": 0,
+                            "count_add_water": 0,
+                            "count_charged": 0
+                        },
+                        "1-2022-06-09 16:01:51": {
+                            "id": "1-2022-06-09 16:01:51",
+                            "state": 0,
+                            "start_time": "2022-06-09 16:01:51",
+                            "stop_time": "2022-06-09 16:06:45",
+                            "mileage_driven": 10.718000000000302,
+                            "count_cleaned": 0,
+                            "count_add_water": 0,
+                            "count_charged": 0
+                        },
+                        "1-2022-06-09 16:16:10": {
+                            "id": "1-2022-06-09 16:16:10",
+                            "state": 10,
+                            "start_time": "2022-06-09 16:16:10",
+                            "stop_time": "2022-06-09 16:24:57",
+                            "mileage_driven": 18.743999999999687,
+                            "count_cleaned": 17,
+                            "count_add_water": 0,
+                            "count_charged": 0
+                        },
+                        "1-2022-06-09 16:24:59": {
+                            "id": "1-2022-06-09 16:24:59",
+                            "state": 0,
+                            "start_time": "2022-06-09 16:24:59",
+                            "stop_time": "2022-06-09 16:26:31",
+                            "mileage_driven": 3.69399999999996,
+                            "count_cleaned": 17,
+                            "count_add_water": 0,
+                            "count_charged": 0
+                        },
+                        "1-2022-06-09 16:48:08": {
+                            "id": "1-2022-06-09 16:48:08",
+                            "state": 0,
+                            "start_time": "2022-06-09 16:48:08",
+                            "stop_time": "2022-06-09 16:57:06",
+                            "mileage_driven": 18.764999999999873,
+                            "count_cleaned": 17,
+                            "count_add_water": 0,
+                            "count_charged": 0
+                        },
+                        "1-2022-06-09 17:00:39": {
+                            "id": "1-2022-06-09 17:00:39",
+                            "state": 0,
+                            "start_time": "2022-06-09 17:00:39",
+                            "stop_time": "2022-06-09 17:09:37",
+                            "mileage_driven": 18.746000000000095,
+                            "count_cleaned": 17,
                             "count_add_water": 0,
                             "count_charged": 0
                         }

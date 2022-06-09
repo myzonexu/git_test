@@ -529,10 +529,11 @@ class Window(QMainWindow, Ui_MainWindow):
 
     #UI更新
     def update_ui(self):
+        self.update_ui_map()
         self.update_ui_widget_enbaled()
         self.update_ui_table()
         self.update_ui_tab_text()
-        self.update_ui_map()
+        #self.update_ui_map()
         self.refresh_robots_list()
         self.save_robots_data()
                
@@ -627,14 +628,17 @@ class Window(QMainWindow, Ui_MainWindow):
         self.resize_map_show()
         #svg_map.update_robot_pos(robots.current.position.path_pos,reverse=True)
         svg_map.update_robot_point(robots.current.position.path_pos)
-        #svg_map.update_clean_point()
-        svg_map.update_map()
-        self.svgWidget.load(svg_map.string)        
-
         #更新已清理标志
         path_1.clean_points.set_cleaned(robots.current.task.tracks)
         #print(path_1.clean_points.array_cleaned)
         #print(path_1.clean_points.count_cleaned)
+        
+        robots.current.task.count_cleaned=path_1.clean_points.count_cleaned
+        svg_map.update_clean_point()
+        svg_map.update_map()
+        self.svgWidget.load(svg_map.string)        
+
+        
 
     #故障信息：当前故障、历史故障切换
     def toggle_table_error_list(self):

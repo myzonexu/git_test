@@ -246,7 +246,17 @@ class CleanPointGroup(PathPointGroup):
             _num_mark=self.all[0].num_wall+self.all[0].num_gnd
             self.array_cleaned=np.zeros((_num_point,_num_mark), dtype = bool)
         return self.array_cleaned
-    
+
+    def reset_array_cleaned(self,reset=False):
+        """
+        重置清扫点状态二维数组.
+     
+        :param reset: bool，重置数组值
+        :returns: no return
+        :raises: no exception
+        """
+        self.array_cleaned[:]=reset
+
     def set_track_cleaned(self,track):
         """
         设置轨迹已清理.
@@ -371,7 +381,7 @@ path_1.path="m0 10  300 0 240 190"
 
 map_1.paths[path_1.id]=path_1
 
-clean_points_1=PathPointSeries(300,5,50,CleanPoint)
+clean_points_1=PathPointSeries(300,3,50,CleanPoint)
 path_1.clean_points.add(clean_points_1)
 path_1.clean_points.init_array_pos()
 path_1.clean_points.init_array_cleaned()
@@ -380,7 +390,7 @@ charge_point_1=PathPoint(50)
 charge_point_1.type=PathPointType.CHARGE
 path_1.charge_points.add(charge_point_1)
 
-water_point_1=PathPoint(550)
+water_point_1=PathPoint(440)
 water_point_1.type=PathPointType.WATER
 path_1.water_points.add(water_point_1)
 

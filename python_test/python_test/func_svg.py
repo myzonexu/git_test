@@ -304,6 +304,7 @@ class SvgMap(object):
         :raises: no exception
         """
         self.map=sg.SVGFigure()
+        #self.load_root=self.map.getroot()
         self.map.root.set("viewBox","0 0 700 400")
         #self.map.root.set("width","600")
         #self.map.root.set("height","300")
@@ -407,7 +408,7 @@ class SvgMap(object):
                 if i<4:
                     self.path_1.add_path_point(_point,f"clean_point.0.{_num}.{i}",self.path_1.layer_clean,offset_y=-30*i+10)
                 else:
-                    self.path_1.add_path_point(_point,f"clean_point.0.{_num}.{i}",self.path_1.layer_clean,offset_y=100)
+                    self.path_1.add_path_point(_point,f"clean_point.0.{_num}.{i}",self.path_1.layer_clean,offset_y=90)
             _num=_num+1
         self.copy_clean.root.set("display","none")
 
@@ -427,7 +428,9 @@ class SvgMap(object):
         for i in range(_pos):
             for j in range(_num):
                 #self.map.root.find_id(f"clean_point.0.{i}.{j}")
-                #self.element_clean_points.append(_element) 
+                _element=self.map.root.find(f".//*[@id='clean_point.0.{i}.{j}']")
+                
+                self.element_clean_points.append(_element) 
                 pass
 
     def set_robot_point(self):
@@ -472,14 +475,12 @@ class SvgMap(object):
         """        
         i=0
         for _state in np.nditer(path_1.clean_points.array_cleaned):
-            if _state is True:
-                self.element_clean_points[i].root.set("fill","green")
+            
+            if _state:
+                self.element_clean_points[i].set("fill","#FCA311")
             else:
-                self.element_clean_points[i].root.set("fill","red")
+                self.element_clean_points[i].set("fill","#8D99AE")
             i=i+1
-
-     
-    
 
     def append_map(self):
         """
@@ -511,7 +512,7 @@ class SvgMap(object):
 
 #functions#####################################################################
 svg_map = SvgMap()
-svg_map.load('./map/map - 副本.svg')
+svg_map.load('./map/map_base.svg')
 svg_map.get_tunnel_path()
 svg_map.get_copy()
 svg_map.get_icon()

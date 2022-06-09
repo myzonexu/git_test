@@ -11,6 +11,7 @@ from func_defines import *
 from func_task import *
 from func_error import *
 from func_track import *
+from func_map import *
 import struct
 import copy
 
@@ -785,6 +786,7 @@ class Robot(QObject):
             #self.clean_log.all.append(copy.deepcopy(self.task))
             self.clean_log.all[self.task.id]=copy.deepcopy(self.task)
             self.task.__init__()
+            path_1.clean_points.reset_array_cleaned()
             self.task.state_machine=CleanStateMachine.NONE
 
         else:
