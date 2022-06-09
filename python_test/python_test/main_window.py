@@ -626,6 +626,8 @@ class Window(QMainWindow, Ui_MainWindow):
     def update_ui_map(self):
         self.resize_map_show()
         #svg_map.update_robot_pos(robots.current.position.path_pos,reverse=True)
+        svg_map.update_robot_point(robots.current.position.path_pos)
+        #svg_map.update_clean_point()
         svg_map.update_map()
         self.svgWidget.load(svg_map.string)        
 

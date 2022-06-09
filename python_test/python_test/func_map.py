@@ -387,3 +387,6 @@ path_1.water_points.add(water_point_1)
 
 rfid_points_1=PathPointSeries(10,5,100,RfidPoint)
 path_1.rfid_points.add(rfid_points_1)
+
+robot_point_1=PathPoint(0)
+robot_point_1.type=PathPointType.ROBOT

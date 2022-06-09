@@ -275,6 +275,7 @@ class SvgMap(object):
         self.load_root=None
         self.charge_point_0=None
         self.water_point_0=None
+        self.robot_point_0=None
         self.clean_points=[]
         self.path_1=None
         self.icon_robot=SvgIcon()
@@ -285,10 +286,13 @@ class SvgMap(object):
         self.copy_charge=None
         self.copy_water=None
         self.copy_clean=None
+        self.copy_robot=None
         self.layer_charge=None
         self.layer_water=None
         self.layer_clean=None
         self.layer_robot=None
+        self.element_robot=None
+        self.element_clean_points=[]
 
     
     def load(self,svg_file):
@@ -346,6 +350,7 @@ class SvgMap(object):
         self.copy_charge=self.root.find_id("copy_charge_point")
         self.copy_water=self.root.find_id("copy_water_point")
         self.copy_clean=self.root.find_id("copy_clean_point")
+        self.copy_robot=self.root.find_id("copy_robot_point")
 
     
     def set_charge_point(self):
@@ -366,7 +371,7 @@ class SvgMap(object):
         self.charge_point_0.element=copy.deepcopy(self.copy_charge)
         self.copy_charge.root.set("display","none")
         self.charge_point_0.icon=self.icon_charge
-        self.path_1.add_path_point(self.charge_point_0,"charge_point.0.1",self.path_1.layer_charge)
+        self.path_1.add_path_point(self.charge_point_0,"charge_point.0.0",self.path_1.layer_charge)
         #print(self.charge_point_0.element.tostr())
 
     def set_water_point(self):
@@ -380,7 +385,7 @@ class SvgMap(object):
         self.water_point_0.element=copy.deepcopy(self.copy_water)
         self.copy_water.root.set("display","none")
         self.water_point_0.icon=self.icon_water
-        self.path_1.add_path_point(self.water_point_0,"water_point.0.1",self.path_1.layer_water)
+        self.path_1.add_path_point(self.water_point_0,"water_point.0.0",self.path_1.layer_water)
         #print(self.water_point_0.element.tostr())
 
     def set_clean_point(self):
@@ -400,11 +405,81 @@ class SvgMap(object):
                 _point.element=copy.deepcopy(self.copy_clean)
                 _point.icon=self.icon_water
                 if i<4:
-                    self.path_1.add_path_point(_point,f"clean_point.0.{str(_num)}.{str(i)}",self.path_1.layer_clean,offset_y=-30*i+10)
+                    self.path_1.add_path_point(_point,f"clean_point.0.{_num}.{i}",self.path_1.layer_clean,offset_y=-30*i+10)
                 else:
-                    self.path_1.add_path_point(_point,f"clean_point.0.{str(_num)}.{str(i)}",self.path_1.layer_clean,offset_y=100)
+                    self.path_1.add_path_point(_point,f"clean_point.0.{_num}.{i}",self.path_1.layer_clean,offset_y=100)
             _num=_num+1
         self.copy_clean.root.set("display","none")
+
+    def set_clean_element(self):
+        """
+        设定清扫点元素.
+    
+        :returns: no return
+        :raises: no exception
+        """    
+        pass
+        
+        _pos=path_1.clean_points.array_cleaned.shape[0]
+        _num=path_1.clean_points.array_cleaned.shape[1]
+        #print(_pos,_num)
+        _element=None
+        for i in range(_pos):
+            for j in range(_num):
+                #self.map.root.find_id(f"clean_point.0.{i}.{j}")
+                #self.element_clean_points.append(_element) 
+                pass
+
+    def set_robot_point(self):
+        """
+        设定机器人点.
+    
+        :returns: no return
+        :raises: no exception
+        """
+
+        self.robot_point_0=SvgPathPoint(robot_point_1)
+        self.robot_point_0.element=copy.deepcopy(self.copy_robot)
+        self.copy_robot.root.set("display","none")
+        self.icon_robot.offset_x=-10
+        self.icon_robot.offset_y=-10
+        self.robot_point_0.icon=self.icon_robot
+        self.path_1.add_path_point(self.robot_point_0,"robot.0.0",self.path_1.layer_robot)
+        self.element_robot=self.map.getroot().find_id("robot.0.0")
+
+    def update_robot_point(self,path_pos):
+        """
+        更新机器人点.
+    
+        :returns: no return
+        :raises: no exception
+        """
+        _x,_y=self.path_1.pos_to_xy(path_pos)
+        _x=_x+self.icon_robot.offset_x
+        _y=_y+self.icon_robot.offset_y
+        
+        #print(_x,_y)
+        #self.element_robot.moveto(_x,_y)
+        self.element_robot.root.set("transform",f"translate({_x}, {_y})")
+        #print(self.element_robot.tostr())
+
+    def update_clean_point(self):
+        """
+        更新清扫点.
+    
+        :returns: no return
+        :raises: no exception
+        """        
+        i=0
+        for _state in np.nditer(path_1.clean_points.array_cleaned):
+            if _state is True:
+                self.element_clean_points[i].root.set("fill","green")
+            else:
+                self.element_clean_points[i].root.set("fill","red")
+            i=i+1
+
+     
+    
 
     def append_map(self):
         """
@@ -414,6 +489,7 @@ class SvgMap(object):
         :raises: no exception
         """
         self.map.append(self.root)
+        
         #print(self.map.to_str())
         self.map.save("test.svg")
 
@@ -442,6 +518,9 @@ svg_map.get_icon()
 svg_map.set_charge_point()
 svg_map.set_water_point()
 svg_map.set_clean_point()
+svg_map.set_clean_element()
+svg_map.set_robot_point()
+
 svg_map.append_map()
 svg_map.update_map()
 #svg_map.map.save("test.svg")
