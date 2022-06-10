@@ -8,8 +8,8 @@ xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<style type="text/css">
 		.track_path {fill:none;stroke:black;stroke-width:4}
 
-		#icon_charge_point {fill:#1296db}
-		#icon_water_point {fill:#1296db}
+		.icon_charge_point {fill:#1296db}
+		.icon_water_point {fill:#1296db}
 		.robot {stroke:black;stroke-width:2;fill:red}
 		.icon_origin {transform:scale(0.02,0.02) }
 		#icon_origin_clean_point {transform:scale(0.01,0.01)}

@@ -3,7 +3,7 @@
   <g><style type="text/css">
 		.track_path {fill:none;stroke:black;stroke-width:4}
 
-		#icon_charge_point {fill:#1296db}
+		.icon_charge_point {fill:#1296db}
 		#icon_water_point {fill:#1296db}
 		.robot {stroke:black;stroke-width:2;fill:red}
 		.icon_origin {transform:scale(0.02,0.02) }
@@ -68,7 +68,7 @@
 			</g>
 			<g class="charge_point">
 				<use id="copy_charge_point" xlink:href="#icon_charge_point" display="none"/>
-			<use id="charge_point.0.0" xlink:href="#icon_charge_point" transform="translate(475.0, 100.0) scale(1 1) "/>
+			<use id="charge_point.0.0" xlink:href="#icon_charge_point" transform="translate(475.0, 100.0) scale(1 1) " fill="#1296db"/>
 			</g>
 			
 			<g class="water_point">

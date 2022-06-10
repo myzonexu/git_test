@@ -688,7 +688,8 @@ class Robot(QObject):
 
 
     def get_ctrl_mode(self):
-        self.base.ctrl_mode = CtrlMode(get_bits(self.protocol.robot_state.value,0,1))
+        if CtrlMode.has_value(get_bits(self.protocol.robot_state.value,0,1)):            
+            self.base.ctrl_mode = CtrlMode(get_bits(self.protocol.robot_state.value,0,1))
 
     def get_avoide_state(self):
         #print(f'{self.protocol.chassis_state.value:b}')

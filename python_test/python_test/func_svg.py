@@ -377,6 +377,8 @@ class SvgMap(object):
         self.charge_point_0.icon=self.icon_charge
         self.path_1.add_path_point(self.charge_point_0,"charge_point.0.0",self.path_1.layer_charge)
         #print(self.charge_point_0.element.tostr())
+        self.charge_point_0.element=self.map.root.find(f".//*[@id='charge_point.0.0']")
+        self.charge_point_0.element.set("fill","#1296db")
 
     def set_water_point(self):
         """
@@ -519,6 +521,20 @@ class SvgMap(object):
             else:
                 self.element_clean_points[i].set("fill","#8D99AE")
             i=i+1
+
+    def update_charge_point(self,charge_state=False):
+        """
+        更新充电点.
+    
+        :returns: no return
+        :raises: no exception
+        """
+        if charge_state:
+            self.charge_point_0.element.set("fill","green")
+                       
+        else:
+            self.charge_point_0.element.set("fill","#1296db")
+            
 
     def append_map(self):
         """

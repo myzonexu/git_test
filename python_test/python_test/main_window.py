@@ -635,6 +635,7 @@ class Window(QMainWindow, Ui_MainWindow):
         
         robots.current.task.count_cleaned=path_1.clean_points.count_cleaned
         svg_map.update_clean_point()
+        svg_map.update_charge_point(robots.current.battery.charging)
         svg_map.update_map()
         self.svgWidget.load(svg_map.string)        
 
