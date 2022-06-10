@@ -292,6 +292,9 @@ class SvgMap(object):
         self.layer_clean=None
         self.layer_robot=None
         self.element_robot=None
+        self.element_robot_point=None
+        self.element_robot_avoid_f=None
+        self.element_robot_avoid_r=None
         self.element_clean_points=[]
 
     
@@ -448,9 +451,16 @@ class SvgMap(object):
         self.icon_robot.offset_y=-10
         self.robot_point_0.icon=self.icon_robot
         self.path_1.add_path_point(self.robot_point_0,"robot.0.0",self.path_1.layer_robot)
-        self.element_robot=self.map.getroot().find_id("robot.0.0")
+        #self.element_robot=self.map.getroot().find_id("robot.0.0")
+        self.element_robot=self.map.root.find(f".//*[@id='robot.0.0']")
+        self.element_robot_point=self.element_robot.find(".//*[@class='icon_robot']")
+        self.element_robot_avoid_f=self.element_robot.find(".//*[@class='icon_avoid_f']")
+        self.element_robot_avoid_r=self.element_robot.find(".//*[@class='icon_avoid_r']")
+        self.element_robot_point.set("fill","green")
+        self.element_robot_avoid_f.set("fill","red")
+        self.element_robot_avoid_r.set("fill","red")
 
-    def update_robot_point(self,path_pos):
+    def update_robot_point(self,path_pos,robot_state=RobotMapState.OK):
         """
         更新机器人点.
     
@@ -463,8 +473,36 @@ class SvgMap(object):
         
         #print(_x,_y)
         #self.element_robot.moveto(_x,_y)
-        self.element_robot.root.set("transform",f"translate({_x}, {_y})")
+        self.element_robot.set("transform",f"translate({_x}, {_y})")
         #print(self.element_robot.tostr())
+        if robot_state==RobotMapState.OK:
+            self.element_robot_point.set("fill","green")
+            self.element_robot_avoid_f.set("display","none")
+            self.element_robot_avoid_r.set("display","none")
+        elif robot_state==RobotMapState.OFFLINE:
+            self.element_robot_point.set("fill","gray")
+            self.element_robot_avoid_f.set("display","none")
+            self.element_robot_avoid_r.set("display","none")
+        elif robot_state==RobotMapState.WARNING:
+            self.element_robot_point.set("fill","yellow")
+            self.element_robot_avoid_f.set("display","none")
+            self.element_robot_avoid_r.set("display","none")
+        elif robot_state==RobotMapState.ERROR:
+            self.element_robot_point.set("fill","red")
+            self.element_robot_avoid_f.set("display","none")
+            self.element_robot_avoid_r.set("display","none")
+        elif robot_state==RobotMapState.AVOID_F:
+            self.element_robot_point.set("fill","yellow")
+            self.element_robot_avoid_f.set("display","block")
+            self.element_robot_avoid_r.set("display","none")
+        elif robot_state==RobotMapState.AVOID_R:
+            self.element_robot_point.set("fill","yellow")
+            self.element_robot_avoid_f.set("display","none")
+            self.element_robot_avoid_r.set("display","block")
+        elif robot_state==RobotMapState.AVOID_FR:
+            self.element_robot_point.set("fill","yellow")
+            self.element_robot_avoid_f.set("display","block")
+            self.element_robot_avoid_r.set("display","block")
 
     def update_clean_point(self):
         """

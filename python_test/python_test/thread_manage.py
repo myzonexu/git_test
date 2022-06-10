@@ -61,6 +61,7 @@ def get_robots_state():
             else:
                 _robot.connect.is_online=False
                 _robot.connect.state= ConnectState.RECONNECT
+                _robot.map.state_on_map=RobotMapState.OFFLINE 
                 pass
         for str_id in list(robots.all.keys()):
             _robot=robots.all.get(str_id)

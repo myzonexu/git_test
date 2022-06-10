@@ -211,6 +211,16 @@ class PathPointType(EnumDef):
     RFID = (3, 'RFID点')
     CLEAN = (4, '清扫点')
     ROBOT = (5, '机器人点')
+
+class RobotMapState(EnumDef):
+    """枚举类：机器人在地图上状态."""
+    OK = (0, '正常')
+    OFFLINE = (1, '离线')
+    WARNING = (2, '警告')
+    ERROR = (3, '故障')
+    AVOID_F = (4, '前避障') 
+    AVOID_R = (5, '后避障')
+    AVOID_FR = (6, '前后避障') 
     
 
 #常量#####################################################################

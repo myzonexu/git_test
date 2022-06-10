@@ -323,6 +323,12 @@ class CleanTaskLog(object):
                     
         return list_info
 
+class MapInfo(object):
+    """地图信息."""
+    def __init__(self):
+        self.map_id = 0
+        self.state_on_map=RobotMapState.OK
+
 #class Plan(object):
 #    """计划类."""
 #    def __init__(self):
@@ -523,6 +529,7 @@ class Robot(QObject):
         self.log=Log()
         self.charge_log=[]
         self.is_checked=False
+        self.map=MapInfo()
         #self.init(ip)  
 
     def import_json_clean_log(self,json_data):
@@ -653,7 +660,7 @@ class Robot(QObject):
         #self.task.time_worked = self.protocol.clean_time_s.value                
         self.errors.recv_code(self.get_errors())
         self.warnings.recv_code(self.get_warnings())
-
+        self.set_state_on_map()
         #self.save_charge_data('./data/charge_log.csv')
 
     def get_run_state(self):
@@ -792,6 +799,27 @@ class Robot(QObject):
         else:
             pass
     
+    def set_state_on_map(self):
+        """
+        设置机器人在地图上显示的状态.
+    
+        :returns: no return
+        :raises: no exception
+        """
+        if self.errors.active_count():
+            self.map.state_on_map=RobotMapState.ERROR
+        elif self.navi.avoide_front==1 and self.navi.avoide_rear==0:
+            self.map.state_on_map=RobotMapState.AVOID_F
+        elif self.navi.avoide_front==0 and self.navi.avoide_rear==1:
+            self.map.state_on_map=RobotMapState.AVOID_R
+        elif self.navi.avoide_front==1 and self.navi.avoide_rear==1:
+            self.map.state_on_map=RobotMapState.AVOID_FR
+        elif self.connect.state!=ConnectState.ONLINE:
+            self.map.state_on_map=RobotMapState.OFFLINE   
+            
+        else:
+            self.map.state_on_map=RobotMapState.OK
+        
     def save_charge_data(self,csv_file):
         """
         保存充电状态至CSV.

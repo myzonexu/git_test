@@ -627,7 +627,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def update_ui_map(self):
         self.resize_map_show()
         #svg_map.update_robot_pos(robots.current.position.path_pos,reverse=True)
-        svg_map.update_robot_point(robots.current.position.path_pos)
+        svg_map.update_robot_point(robots.current.position.path_pos,robots.current.map.state_on_map)
         #更新已清理标志
         path_1.clean_points.set_cleaned(robots.current.task.tracks)
         #print(path_1.clean_points.array_cleaned)
