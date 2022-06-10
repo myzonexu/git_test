@@ -806,14 +806,15 @@ class Robot(QObject):
         :returns: no return
         :raises: no exception
         """
-        if self.errors.active_count():
-            self.map.state_on_map=RobotMapState.ERROR
-        elif self.navi.avoide_front==1 and self.navi.avoide_rear==0:
+        
+        if self.navi.avoide_front==1 and self.navi.avoide_rear==0:
             self.map.state_on_map=RobotMapState.AVOID_F
         elif self.navi.avoide_front==0 and self.navi.avoide_rear==1:
             self.map.state_on_map=RobotMapState.AVOID_R
         elif self.navi.avoide_front==1 and self.navi.avoide_rear==1:
             self.map.state_on_map=RobotMapState.AVOID_FR
+        elif self.errors.active_count:
+            self.map.state_on_map=RobotMapState.ERROR
         elif self.connect.state!=ConnectState.ONLINE:
             self.map.state_on_map=RobotMapState.OFFLINE   
             

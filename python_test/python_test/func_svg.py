@@ -492,15 +492,15 @@ class SvgMap(object):
             self.element_robot_avoid_f.set("display","none")
             self.element_robot_avoid_r.set("display","none")
         elif robot_state==RobotMapState.AVOID_F:
-            self.element_robot_point.set("fill","yellow")
+            self.element_robot_point.set("fill","red")
             self.element_robot_avoid_f.set("display","block")
             self.element_robot_avoid_r.set("display","none")
         elif robot_state==RobotMapState.AVOID_R:
-            self.element_robot_point.set("fill","yellow")
+            self.element_robot_point.set("fill","red")
             self.element_robot_avoid_f.set("display","none")
             self.element_robot_avoid_r.set("display","block")
         elif robot_state==RobotMapState.AVOID_FR:
-            self.element_robot_point.set("fill","yellow")
+            self.element_robot_point.set("fill","red")
             self.element_robot_avoid_f.set("display","block")
             self.element_robot_avoid_r.set("display","block")
 

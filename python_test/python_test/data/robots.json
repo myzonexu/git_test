@@ -1,10 +1,10 @@
 {
     "robots": {
         "all": {
-            "1": {
-                "id": 1,
+            "0": {
+                "id": 0,
                 "connect": {
-                    "ip": "192.168.0.5",
+                    "ip": "127.0.0.1",
                     "port": 502
                 },
                 "drive": {
@@ -15,145 +15,14 @@
                     "history": []
                 },
                 "camera": {
-                    "ip": "192.168.0.64",
+                    "ip": "127.0.0.1",
                     "port": 554,
                     "username": "admin",
                     "passwd": "ylcx6666",
                     "pc_test": false
                 },
                 "clean_log": {
-                    "all": {
-                        "1-2022-05-25 19:19:50": {
-                            "id": "1-2022-05-25 19:19:50",
-                            "state": 0,
-                            "start_time": "2022-05-25 19:19:50",
-                            "stop_time": "2022-05-25 19:21:18",
-                            "mileage_driven": 2.288000000000011,
-                            "count_cleaned": 0,
-                            "count_add_water": 0,
-                            "count_charged": 0
-                        },
-                        "1-2022-05-26 15:33:25": {
-                            "id": "1-2022-05-26 15:33:25",
-                            "state": 1,
-                            "start_time": "2022-05-26 15:33:25",
-                            "stop_time": "2022-05-26 15:41:12",
-                            "mileage_driven": 0.0,
-                            "count_cleaned": 0,
-                            "count_add_water": 0,
-                            "count_charged": 0
-                        },
-                        "1-2022-05-26 15:41:13": {
-                            "id": "1-2022-05-26 15:41:13",
-                            "state": 1,
-                            "start_time": "2022-05-26 15:41:13",
-                            "stop_time": "2022-05-26 15:48:30",
-                            "mileage_driven": 17.77699999999993,
-                            "count_cleaned": 0,
-                            "count_add_water": 0,
-                            "count_charged": 0
-                        },
-                        "1-2022-05-26 15:48:31": {
-                            "id": "1-2022-05-26 15:48:31",
-                            "state": 0,
-                            "start_time": "2022-05-26 15:48:31",
-                            "stop_time": "2022-05-26 15:55:48",
-                            "mileage_driven": 17.763000000000034,
-                            "count_cleaned": 0,
-                            "count_add_water": 0,
-                            "count_charged": 0
-                        },
-                        "1-2022-06-09 14:38:08": {
-                            "id": "1-2022-06-09 14:38:08",
-                            "state": 0,
-                            "start_time": "2022-06-09 14:38:08",
-                            "stop_time": "2022-06-09 14:38:57",
-                            "mileage_driven": 0.724999999999909,
-                            "count_cleaned": 0,
-                            "count_add_water": 0,
-                            "count_charged": 0
-                        },
-                        "1-2022-06-09 14:43:06": {
-                            "id": "1-2022-06-09 14:43:06",
-                            "state": 0,
-                            "start_time": "2022-06-09 14:43:06",
-                            "stop_time": "2022-06-09 14:44:34",
-                            "mileage_driven": 2.161999999999807,
-                            "count_cleaned": 0,
-                            "count_add_water": 0,
-                            "count_charged": 0
-                        },
-                        "1-2022-06-09 15:55:58": {
-                            "id": "1-2022-06-09 15:55:58",
-                            "state": 0,
-                            "start_time": "2022-06-09 15:55:58",
-                            "stop_time": "2022-06-09 15:58:00",
-                            "mileage_driven": 3.7339999999999236,
-                            "count_cleaned": 0,
-                            "count_add_water": 0,
-                            "count_charged": 0
-                        },
-                        "1-2022-06-09 16:01:51": {
-                            "id": "1-2022-06-09 16:01:51",
-                            "state": 0,
-                            "start_time": "2022-06-09 16:01:51",
-                            "stop_time": "2022-06-09 16:06:45",
-                            "mileage_driven": 10.718000000000302,
-                            "count_cleaned": 0,
-                            "count_add_water": 0,
-                            "count_charged": 0
-                        },
-                        "1-2022-06-09 16:16:10": {
-                            "id": "1-2022-06-09 16:16:10",
-                            "state": 10,
-                            "start_time": "2022-06-09 16:16:10",
-                            "stop_time": "2022-06-09 16:24:57",
-                            "mileage_driven": 18.743999999999687,
-                            "count_cleaned": 17,
-                            "count_add_water": 0,
-                            "count_charged": 0
-                        },
-                        "1-2022-06-09 16:24:59": {
-                            "id": "1-2022-06-09 16:24:59",
-                            "state": 0,
-                            "start_time": "2022-06-09 16:24:59",
-                            "stop_time": "2022-06-09 16:26:31",
-                            "mileage_driven": 3.69399999999996,
-                            "count_cleaned": 17,
-                            "count_add_water": 0,
-                            "count_charged": 0
-                        },
-                        "1-2022-06-09 16:48:08": {
-                            "id": "1-2022-06-09 16:48:08",
-                            "state": 0,
-                            "start_time": "2022-06-09 16:48:08",
-                            "stop_time": "2022-06-09 16:57:06",
-                            "mileage_driven": 18.764999999999873,
-                            "count_cleaned": 17,
-                            "count_add_water": 0,
-                            "count_charged": 0
-                        },
-                        "1-2022-06-09 17:00:39": {
-                            "id": "1-2022-06-09 17:00:39",
-                            "state": 0,
-                            "start_time": "2022-06-09 17:00:39",
-                            "stop_time": "2022-06-09 17:09:37",
-                            "mileage_driven": 18.746000000000095,
-                            "count_cleaned": 17,
-                            "count_add_water": 0,
-                            "count_charged": 0
-                        },
-                        "1-2022-06-09 17:38:58": {
-                            "id": "1-2022-06-09 17:38:58",
-                            "state": 0,
-                            "start_time": "2022-06-09 17:38:58",
-                            "stop_time": "2022-06-09 17:57:21",
-                            "mileage_driven": 5.429999999999836,
-                            "count_cleaned": 7,
-                            "count_add_water": 0,
-                            "count_charged": 0
-                        }
-                    }
+                    "all": {}
                 },
                 "task_plans": []
             }

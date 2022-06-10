@@ -2,7 +2,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 700 400">
   <g><style type="text/css">
 		.track_path {fill:none;stroke:black;stroke-width:4}
-		
+
 		#icon_charge_point {fill:#1296db}
 		#icon_water_point {fill:#1296db}
 		.robot {stroke:black;stroke-width:2;fill:red}
@@ -10,7 +10,7 @@
 		#icon_origin_clean_point {transform:scale(0.01,0.01)}
 		[cleaned=true] {fill:blue}
 		[cleaned=false] {fill:green}
-		
+
 	</style>
 2
 	<g class="background">
