@@ -5,6 +5,8 @@ from func_robot import *
 from func_common import *
 from multiprocessing import Process
 
+import func_export 
+
 def get_camera_frame():
     while True:
         if robots.current==None:
@@ -72,7 +74,7 @@ def get_robots_state():
 
                 if sec>60:
                         _robot.sync_time()
-                        _robot.save_charge_data('./data/charge_log.csv')
+                        _robot.save_charge_data(f'./data/charge_log_{func_export.str_start_time_1}.csv')
                         sec=0
            
         time.sleep(1)

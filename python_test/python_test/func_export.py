@@ -19,6 +19,8 @@ import json
 from enum import *
 from func_common import *
 from func_defines import *
+import random
+from datetime import datetime
 
 def import_csv(file):
     """
@@ -536,3 +538,8 @@ def json_to_obj(json_dict,obj,attr_name="",filter="filter_attr_names"):
         
     else:
         pass
+
+
+
+random_num_1=random.randint(100,999)
+str_start_time_1=f"{datetime.now().strftime('%Y.%m.%d_%H.%M.%S')}"
