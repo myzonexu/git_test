@@ -406,7 +406,7 @@ class SvgMap(object):
                 _point.element=copy.deepcopy(self.copy_clean)
                 _point.icon=self.icon_water
                 if i<4:
-                    self.path_1.add_path_point(_point,f"clean_point.0.{_num}.{i}",self.path_1.layer_clean,offset_y=-30*i+10)
+                    self.path_1.add_path_point(_point,f"clean_point.0.{_num}.{i}",self.path_1.layer_clean,offset_y=-30*(3-i)+10)
                 else:
                     self.path_1.add_path_point(_point,f"clean_point.0.{_num}.{i}",self.path_1.layer_clean,offset_y=90)
             _num=_num+1

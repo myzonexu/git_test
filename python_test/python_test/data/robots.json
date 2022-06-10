@@ -8,19 +8,10 @@
                     "port": 502
                 },
                 "drive": {
-                    "mileage": 3406.433
+                    "mileage": 0.0
                 },
                 "errors": {
-                    "active": {
-                        "23": {
-                            "error": {
-                                "code": "23"
-                            },
-                            "is_active": true,
-                            "time_start": "2022-06-10 11:02:55",
-                            "time_stop": "1970-01-02 08:00:00"
-                        }
-                    },
+                    "active": {},
                     "history": []
                 },
                 "camera": {
