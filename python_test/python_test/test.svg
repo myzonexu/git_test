@@ -6,7 +6,7 @@
 		.icon_charge_point {fill:#1296db}
 		.icon_water_point {fill:#1296db}
 		.robot {stroke:black;stroke-width:2;fill:red}
-		.icon_origin {transform:scale(0.02,0.02) }
+		.icon_origin {transform:scale(0.03,0.03) }
 		#icon_origin_clean_point {transform:scale(0.01,0.01)}
 		[cleaned=true] {fill:blue}
 		[cleaned=false] {fill:green}
@@ -68,12 +68,12 @@
 			</g>
 			<g class="charge_point">
 				<use id="copy_charge_point" xlink:href="#icon_charge_point" display="none"/>
-			<use id="charge_point.0.0" xlink:href="#icon_charge_point" transform="translate(475.0, 100.0) scale(1 1) " fill="#1296db"/>
+			<use id="charge_point.0.0" xlink:href="#icon_charge_point" transform="translate(485.0, 85.0) scale(1 1) " fill="#1296db"/>
 			</g>
 			
 			<g class="water_point">
 				<use id="copy_water_point" xlink:href="#icon_water_point" display="none"/>
-			<use id="water_point.0.0" xlink:href="#icon_water_point" transform="translate(160.0, -50.0) scale(1 1) " fill="#1296db"/>
+			<use id="water_point.0.0" xlink:href="#icon_water_point" transform="translate(165.00000000000003, -65.0) scale(1 1) " fill="#1296db"/>
 			</g>
 			<g class="clean_point">
 				<use id="copy_clean_point" xlink:href="#icon_clean_point" display="none"/>
@@ -150,7 +150,7 @@
 				<use class="icon_avoid_f" xlink:href="#icon_avoid" transform="translate(-20, 0)" display="none"/>
 				<use class="icon_avoid_r" xlink:href="#icon_avoid" transform="translate(20, 0)" display="none"/>
 			</g>
-		<g id="robot.0.0" transform="translate(530.0, 170.0) scale(1 1) ">				
+		<g id="robot.0.0" transform="translate(525.0, 165.0) scale(1 1) ">				
 				<use class="icon_robot" xlink:href="#icon_robot_1" fill="green"/>
 				<use class="icon_avoid_f" xlink:href="#icon_avoid" transform="translate(-20, 0)" display="none" fill="red"/>
 				<use class="icon_avoid_r" xlink:href="#icon_avoid" transform="translate(20, 0)" display="none" fill="red"/>

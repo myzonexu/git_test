@@ -128,10 +128,10 @@ class SvgIcon(object):
         :raises: no exception
         """
         self.element=None
-        self.width=50
-        self.height=50
+        self.width=30
+        self.height=30
         self.offset_x=-self.width/2
-        self.offset_y=-50
+        self.offset_y=-self.height/2
 
 
 class SvgPathPoint(object):
@@ -376,7 +376,7 @@ class SvgMap(object):
         self.charge_point_0.element=copy.deepcopy(self.copy_charge)
         self.copy_charge.root.set("display","none")
         self.charge_point_0.icon=self.icon_charge
-        self.path_1.add_path_point(self.charge_point_0,"charge_point.0.0",self.path_1.layer_charge)
+        self.path_1.add_path_point(self.charge_point_0,"charge_point.0.0",self.path_1.layer_charge,offset_y=-50)
         #print(self.charge_point_0.element.tostr())
         self.charge_point_0.element=self.map.root.find(f".//*[@id='charge_point.0.0']")
         self.charge_point_0.element.set("fill","#1296db")
@@ -392,7 +392,7 @@ class SvgMap(object):
         self.water_point_0.element=copy.deepcopy(self.copy_water)
         self.copy_water.root.set("display","none")
         self.water_point_0.icon=self.icon_water
-        self.path_1.add_path_point(self.water_point_0,"water_point.0.0",self.path_1.layer_water)
+        self.path_1.add_path_point(self.water_point_0,"water_point.0.0",self.path_1.layer_water,offset_y=-50)
         #print(self.water_point_0.element.tostr())
         self.water_point_0.element=self.map.root.find(f".//*[@id='water_point.0.0']")
         self.water_point_0.element.set("fill","#1296db")
@@ -409,7 +409,7 @@ class SvgMap(object):
         #_point.icon=self.icon_water
 
         self.icon_clean.offset_x=-5
-        self.icon_clean.offset_y=-10
+        self.icon_clean.offset_y=-5
 
         _num=0
         for p in path_1.clean_points.all:
@@ -418,9 +418,9 @@ class SvgMap(object):
                 _point.element=copy.deepcopy(self.copy_clean)
                 _point.icon=self.icon_clean
                 if i<4:
-                    self.path_1.add_path_point(_point,f"clean_point.0.{_num}.{i}",self.path_1.layer_clean,offset_x=0,offset_y=-30*(3-i)-30)
+                    self.path_1.add_path_point(_point,f"clean_point.0.{_num}.{i}",self.path_1.layer_clean,offset_x=0,offset_y=-30*(3-i)-35)
                 else:
-                    self.path_1.add_path_point(_point,f"clean_point.0.{_num}.{i}",self.path_1.layer_clean,offset_x=0,offset_y=50)
+                    self.path_1.add_path_point(_point,f"clean_point.0.{_num}.{i}",self.path_1.layer_clean,offset_x=0,offset_y=45)
             _num=_num+1
         self.copy_clean.root.set("display","none")
 
@@ -456,8 +456,8 @@ class SvgMap(object):
         self.robot_point_0=SvgPathPoint(robot_point_1)
         self.robot_point_0.element=copy.deepcopy(self.copy_robot)
         self.copy_robot.root.set("display","none")
-        self.icon_robot.offset_x=-10
-        self.icon_robot.offset_y=-10
+        #self.icon_robot.offset_x=-10
+        #self.icon_robot.offset_y=-10
         self.robot_point_0.icon=self.icon_robot
         self.path_1.add_path_point(self.robot_point_0,"robot.0.0",self.path_1.layer_robot)
         #self.element_robot=self.map.getroot().find_id("robot.0.0")

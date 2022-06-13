@@ -97,7 +97,7 @@ class Window(QMainWindow, Ui_MainWindow):
         :raises: no exception
         """
         _height=self.scrollArea_map.height()-18
-        _width=int(_height*2)
+        _width=int(_height*700/400)
         self.svgWidget.resize( QSize(_width,_height))
         #print(_width,_height)
 
