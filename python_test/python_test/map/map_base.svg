@@ -6,7 +6,7 @@
 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	
 	<style type="text/css">
-		.track_path {fill:none;stroke:black;stroke-width:4}
+		.track_path {fill:none;stroke:black;stroke-width:4;opacity:0.2}
 
 		.icon_charge_point {fill:#1296db}
 		.icon_water_point {fill:#1296db}

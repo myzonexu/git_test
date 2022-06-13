@@ -390,7 +390,7 @@ charge_point_1=PathPoint(50)
 charge_point_1.type=PathPointType.CHARGE
 path_1.charge_points.add(charge_point_1)
 
-water_point_1=PathPoint(430)
+water_point_1=PathPoint(415)
 water_point_1.type=PathPointType.WATER
 path_1.water_points.add(water_point_1)
 

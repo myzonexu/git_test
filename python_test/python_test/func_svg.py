@@ -243,8 +243,9 @@ class SvgPath(object):
         """
         添加路径点.
      
-        :param copy_point: element,xml元素
-        :param pos: float,路径长度
+        :param svg_path_point: SvgPathPoint,路径点
+        :param id: str,点在svg中元素id
+        :param layer: element,点添加在路径的哪个层
         :param offset_x: float,x偏移
         :param offset_y: float,y偏移
         :returns: no return
@@ -393,6 +394,8 @@ class SvgMap(object):
         self.water_point_0.icon=self.icon_water
         self.path_1.add_path_point(self.water_point_0,"water_point.0.0",self.path_1.layer_water)
         #print(self.water_point_0.element.tostr())
+        self.water_point_0.element=self.map.root.find(f".//*[@id='water_point.0.0']")
+        self.water_point_0.element.set("fill","#1296db")
 
     def set_clean_point(self):
         """
@@ -404,16 +407,20 @@ class SvgMap(object):
         #_point=SvgPathPoint(path_1.clean_points.all[0])
         #_point.element=copy.deepcopy(self.copy_clean)
         #_point.icon=self.icon_water
+
+        self.icon_clean.offset_x=-5
+        self.icon_clean.offset_y=-10
+
         _num=0
         for p in path_1.clean_points.all:
             for i in range(5):
                 _point=SvgPathPoint(p)
                 _point.element=copy.deepcopy(self.copy_clean)
-                _point.icon=self.icon_water
+                _point.icon=self.icon_clean
                 if i<4:
-                    self.path_1.add_path_point(_point,f"clean_point.0.{_num}.{i}",self.path_1.layer_clean,offset_y=-30*(3-i)+10)
+                    self.path_1.add_path_point(_point,f"clean_point.0.{_num}.{i}",self.path_1.layer_clean,offset_x=0,offset_y=-30*(3-i)-30)
                 else:
-                    self.path_1.add_path_point(_point,f"clean_point.0.{_num}.{i}",self.path_1.layer_clean,offset_y=90)
+                    self.path_1.add_path_point(_point,f"clean_point.0.{_num}.{i}",self.path_1.layer_clean,offset_x=0,offset_y=50)
             _num=_num+1
         self.copy_clean.root.set("display","none")
 
@@ -534,7 +541,19 @@ class SvgMap(object):
                        
         else:
             self.charge_point_0.element.set("fill","#1296db")
-            
+
+    def update_water_point(self,water_state=False):
+        """
+        更新加水点.
+    
+        :returns: no return
+        :raises: no exception
+        """
+        if water_state:
+            self.water_point_0.element.set("fill","green")
+                       
+        else:
+            self.water_point_0.element.set("fill","#1296db")        
 
     def append_map(self):
         """
