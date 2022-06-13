@@ -558,7 +558,7 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             #self.tabWidget_robots_info.setTabText(0,"故障(" + str(robots.current.err_count()) + ")")
             #self.tabWidget_robots_info.setTabText(1,"警告(" + str(robots.current.warning_count()) + ")")
-            self.tabWidget_robots_info.setTabText(0,f"故障({str(robots.current.errors.active_count)})")
+            self.tabWidget_robots_info.setTabText(0,f"报警({str(robots.current.errors.active_count)})")
             #self.tabWidget_robots_info.setTabText(1,f"警告({str(robots.current.warnings.active_count)})")
              
     #更新控件使能

@@ -1162,11 +1162,11 @@
              </size>
             </property>
             <property name="currentIndex">
-             <number>1</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="tab_robot_error">
              <attribute name="title">
-              <string>故障(0)</string>
+              <string>报警(0)</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_22">
               <item>
@@ -1622,8 +1622,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>983</width>
-             <height>594</height>
+             <width>100</width>
+             <height>30</height>
             </rect>
            </property>
           </widget>
